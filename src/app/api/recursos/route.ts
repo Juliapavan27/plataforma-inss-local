@@ -1,0 +1,164 @@
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { appealCreateSchema } from "@/lib/validations";
+import { auth, hashPassword } from "@/lib/auth";
+import { stripe, isStripeConfigured, PRICE_RECURSO_CENTS } from "@/lib/stripe";
+import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
+
+export async function POST(req: Request) {
+  const ip = getClientIp(req);
+  const rl = rateLimit(`recursos:create:${ip}`, {
+    max: 10,
+    windowMs: 60 * 60_000,
+    blockMs: 30 * 60_000,
+  });
+  if (!rl.ok) return tooManyRequests(rl);
+  try {
+    const body = await req.json();
+    const data = appealCreateSchema.parse(body);
+
+    // Identifica usuário: usa sessão, senão cria usuário leve (lead) com senha aleatória.
+    const session = await auth();
+    let userId: string;
+
+    if (session?.user) {
+      userId = session.user.id;
+      await db.user.update({
+        where: { id: userId },
+        data: {
+          cpf: data.cpf,
+          phone: data.phone,
+          name: data.name ?? session.user.name,
+        } as any,
+      });
+    } else {
+      const existing = await db.user.findUnique({
+        where: { email: data.email.toLowerCase() },
+      });
+      if (existing) {
+        userId = existing.id;
+        await db.user.update({
+          where: { id: existing.id },
+          data: { cpf: data.cpf, phone: data.phone, name: data.fullName },
+        });
+      } else {
+        // Cria usuário "lead" — senha temporária (o usuário define depois via reset).
+        const tempPwd = crypto.randomUUID();
+        const user = await db.user.create({
+          data: {
+            email: data.email.toLowerCase(),
+            name: data.fullName,
+            cpf: data.cpf,
+            phone: data.phone,
+            passwordHash: await hashPassword(tempPwd),
+          },
+        });
+        userId = user.id;
+      }
+    }
+
+    const extraFacts: Record<string, unknown> = {};
+    if (data.hasMedicalReport !== undefined)
+      extraFacts.possui_laudo_medico = data.hasMedicalReport;
+    if (data.medicalCondition) extraFacts.condicao_medica = data.medicalCondition;
+    if (data.medicalLimitations) extraFacts.limitacoes_funcionais = data.medicalLimitations;
+    if (data.workHistory) extraFacts.historico_contribuicoes = data.workHistory;
+    if (data.insuredCategory) extraFacts.categoria_segurado = data.insuredCategory;
+    if (data.gracePeriodContext) extraFacts.periodo_graca_contexto = data.gracePeriodContext;
+    if (data.familyIncome) extraFacts.renda_familiar = data.familyIncome;
+    if (data.householdExpenses) extraFacts.despesas_essenciais = data.householdExpenses;
+    if (data.relationship) extraFacts.relacao_falecido = data.relationship;
+    if (data.dependencyProof) extraFacts.provas_dependencia = data.dependencyProof;
+    if (data.missingDocuments) extraFacts.documentos_que_inss_apontou_como_ausentes = data.missingDocuments;
+    if (data.inssIgnoredDetails) extraFacts.pontos_ignorados_pelo_inss = data.inssIgnoredDetails;
+
+    const appeal = await db.appeal.create({
+      data: {
+        userId,
+        benefitType: data.benefitType,
+        denialReason: data.denialReason,
+        denialDate: data.denialDate ? new Date(data.denialDate) : null,
+        beneficioNumero: data.beneficioNumero ?? null,
+        inssProtocolo: data.inssProtocolo ?? null,
+        caseSummary: data.caseSummary,
+        extraFactsJson: Object.keys(extraFacts).length
+          ? JSON.stringify(extraFacts)
+          : null,
+        status: "AWAITING_PAYMENT",
+      },
+    });
+
+    // Cria pagamento via Stripe (se configurado). Caso contrário, modo dev → marca como pago.
+    let checkoutUrl: string | null = null;
+    if (isStripeConfigured()) {
+      const sessionStripe = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "brl",
+              product_data: {
+                name: "Recurso Administrativo INSS",
+                description: "Geração automatizada de recurso com fundamentação jurídica",
+              },
+              unit_amount: PRICE_RECURSO_CENTS,
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: { appealId: appeal.id },
+        success_url: `${process.env.APP_URL}/dashboard/recursos/${appeal.id}?paid=1`,
+        cancel_url: `${process.env.APP_URL}/novo-recurso?canceled=1`,
+        customer_email: data.email,
+      });
+      await db.payment.create({
+        data: {
+          userId,
+          appealId: appeal.id,
+          amountCents: PRICE_RECURSO_CENTS,
+          stripeSessionId: sessionStripe.id,
+          status: "PENDING",
+        },
+      });
+      checkoutUrl = sessionStripe.url;
+    } else {
+      // Modo dev: marca como pago imediatamente e dispara geração.
+      await db.payment.create({
+        data: {
+          userId,
+          appealId: appeal.id,
+          amountCents: PRICE_RECURSO_CENTS,
+          status: "PAID",
+          paidAt: new Date(),
+        },
+      });
+      await db.appeal.update({
+        where: { id: appeal.id },
+        data: { status: "PAID" },
+      });
+      // dispara async sem await — em produção mandar para uma fila (BullMQ / SQS).
+      triggerGeneration(appeal.id);
+    }
+
+    return NextResponse.json({ appealId: appeal.id, checkoutUrl });
+  } catch (err) {
+    const { logger } = await import("@/lib/logger");
+    logger.error("recursos.POST falhou", err);
+    return NextResponse.json(
+      { error: "Não foi possível criar o recurso. Tente novamente." },
+      { status: 400 },
+    );
+  }
+}
+
+function triggerGeneration(appealId: string) {
+  // fire-and-forget — import dinâmico para não impedir a resposta.
+  import("@/lib/appeal-service").then(({ processAppealGeneration }) =>
+    import("@/lib/logger").then(({ logger }) =>
+      processAppealGeneration(appealId).catch((e) =>
+        logger.error("gen.async falhou", e, { appealId }),
+      ),
+    ),
+  );
+}

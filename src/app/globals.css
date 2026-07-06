@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.75rem;
+  --color-bg: #faf9f7;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  @apply bg-ink-50 text-ink-900 antialiased;
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  background-image:
+    radial-gradient(1100px 500px at 85% -20%, rgba(45, 67, 224, 0.08), transparent 60%),
+    radial-gradient(900px 420px at -10% 10%, rgba(212, 164, 61, 0.07), transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Display serif com ajuste de optical size */
+.font-display {
+  font-family: var(--font-display), "Fraunces", "Lora", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 96, "SOFT" 30;
+}
+
+/* Seleção com tom de marca */
+::selection {
+  @apply bg-brand-200 text-brand-950;
+}
+
+@layer components {
+  /* ====== Botões ====== */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold tracking-tight transition-all duration-200
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 focus-visible:ring-offset-ink-50
+           disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn text-white shadow-lift;
+    background-image: linear-gradient(180deg, #3a53ea 0%, #2232bd 100%);
+  }
+  .btn-primary:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 0 0 1px rgb(45 67 224 / 0.25), 0 24px 60px -20px rgb(45 67 224 / 0.55);
+  }
+  .btn-secondary {
+    @apply btn bg-white text-ink-900 ring-1 ring-ink-200 shadow-ring hover:-translate-y-0.5 hover:ring-ink-300;
+  }
+  .btn-ghost {
+    @apply btn text-ink-700 hover:bg-ink-100/70;
+  }
+  .btn-gold {
+    @apply btn text-ink-950 shadow-lift;
+    background-image: linear-gradient(180deg, #e6c05b 0%, #bc8a28 100%);
+  }
+  .btn-gold:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 0 0 1px rgb(188 138 40 / 0.3), 0 24px 60px -20px rgb(188 138 40 / 0.5);
+  }
+
+  /* ====== Inputs ====== */
+  .input {
+    @apply block w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900
+           shadow-ring outline-none transition
+           placeholder:text-ink-400
+           focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium tracking-tight text-ink-800;
+  }
+
+  /* ====== Cards ====== */
+  .card {
+    @apply relative rounded-2xl border border-ink-200/70 bg-white/80 p-6 shadow-ring backdrop-blur-sm;
+  }
+  .card-lift {
+    @apply card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift;
+  }
+  .card-glass {
+    @apply relative rounded-2xl border border-white/40 bg-white/70 p-6 backdrop-blur-md;
+    box-shadow:
+      0 1px 0 0 rgb(255 255 255 / 0.7) inset,
+      0 30px 80px -30px rgb(14 13 11 / 0.25);
+  }
+
+  /* ====== Chip / eyebrow ====== */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-ink-200/70 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink-700 backdrop-blur-sm;
+  }
+  .chip-brand {
+    @apply chip border-brand-200/60 bg-brand-50/80 text-brand-700;
+  }
+  .chip-gold {
+    @apply chip border-gold-200/70 bg-gold-50/90 text-gold-800;
+  }
+  .chip-dark {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur-sm;
+  }
+
+  /* ====== Badge com estrela dourada ====== */
+  .stars {
+    @apply inline-flex items-center gap-0.5 text-gold-500;
+  }
+
+  /* ====== Eyebrow com linha ornamental ====== */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink-500;
+  }
+  .eyebrow::before,
+  .eyebrow::after {
+    content: "";
+    @apply h-px w-8 bg-ink-300;
+  }
+
+  /* ====== Link refinado ====== */
+  .link-underline {
+    @apply relative font-medium text-ink-900 transition-colors;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-current transition-transform duration-300;
+  }
+  .link-underline:hover::after {
+    @apply scale-x-100;
+  }
+
+  /* ====== Divider ornamental ====== */
+  .divider-ornament {
+    @apply mx-auto flex items-center justify-center gap-3 text-ink-300;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: "";
+    @apply h-px w-16 bg-ink-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Fundo com grid sutil */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(14, 13, 11, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(14, 13, 11, 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  /* Fade mask pra bordas do grid */
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  }
+  /* Texto com gradiente dourado */
+  .text-gradient-gold {
+    background: linear-gradient(100deg, #d4a43d 0%, #bc8a28 40%, #7f561b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Texto com gradiente de marca */
+  .text-gradient-brand {
+    background: linear-gradient(100deg, #2d43e0 0%, #4862f3 60%, #6e8afc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Brilho animado em botões (opcional) */
+  .shine {
+    background-image: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    @apply animate-shine;
+  }
+}
