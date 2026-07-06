@@ -106,11 +106,11 @@ export function AppealForm() {
 
   function next() {
     if (!validateStep(step)) return;
-    setStep((s) => Math.min(4, (s + 1) as Step));
+    setStep((s) => Math.min(4, s + 1) as Step);
   }
 
   function back() {
-    setStep((s) => Math.max(1, (s - 1) as Step));
+    setStep((s) => Math.max(1, s - 1) as Step);
   }
 
   async function submit() {
