@@ -11,6 +11,8 @@ export const metadata = {
     "Artigos, guias e orientações sobre benefícios do INSS, direitos do segurado, novidades legislativas e boas práticas para recursos administrativos.",
 };
 
+export const dynamic = "force-dynamic";
+
 function readingTime(content: string) {
   const words = content.trim().split(/\s+/).length;
   return Math.max(2, Math.round(words / 220));
