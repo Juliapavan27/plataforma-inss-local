@@ -10,7 +10,7 @@ export async function GET(
     // Exige autenticação para ler qualquer arquivo.
     await requireUser();
     const buf = await readBuffer(decodeURIComponent(params.key));
-    return new NextResponse(buf, {
+    return new NextResponse(new Uint8Array(buf), {
       status: 200,
       headers: { "Content-Type": "application/octet-stream" },
     });
