@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         data: {
           cpf: data.cpf,
           phone: data.phone,
-          name: data.name ?? session.user.name,
+          name: data.fullName ?? session.user.name,
         } as any,
       });
     } else {
