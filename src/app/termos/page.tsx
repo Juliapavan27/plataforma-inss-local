@@ -43,6 +43,23 @@ export default function TermosPage() {
           É proibido utilizar a plataforma para fraudes, falsidades ideológicas
           ou qualquer uso ilícito.
         </p>
+        <h2>6. Propriedade intelectual</h2>
+        <p>
+          O código-fonte, os fluxos de geração, os modelos de prompt, a base de
+          conhecimento jurídico, a marca "Plataforma INSS" e todo o conteúdo do
+          site são de propriedade exclusiva da plataforma e protegidos por
+          direito autoral e demais normas de propriedade intelectual aplicáveis.
+          É expressamente proibido, sem autorização prévia por escrito:
+        </p>
+        <ul>
+          <li>copiar, reproduzir, distribuir ou criar obras derivadas do site, do software ou do conteúdo gerado;</li>
+          <li>realizar engenharia reversa, descompilar ou tentar extrair o código-fonte, os prompts, os modelos de IA ou a base de conhecimento;</li>
+          <li>coletar dados do site de forma automatizada (scraping, crawling, bots) fora do permitido pelo arquivo <code>robots.txt</code>;</li>
+          <li>utilizar o conteúdo, os fluxos ou a metodologia da plataforma para desenvolver ou treinar produto concorrente.</li>
+        </ul>
+        <p>
+          O uso indevido sujeita o infrator às medidas cíveis e criminais cabíveis.
+        </p>
       </main>
       <Footer />
     </>

@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -77,6 +78,10 @@ function fallbackReply(userMessage: string): string {
 
 export async function POST(req: Request) {
   try {
+    const ip = getClientIp(req);
+    const rl = rateLimit(`chat:${ip}`, { max: 20, windowMs: 5 * 60_000, blockMs: 15 * 60_000 });
+    if (!rl.ok) return tooManyRequests(rl);
+
     const body = BodySchema.parse(await req.json());
     const apiKey = process.env.ANTHROPIC_API_KEY;
 

@@ -16,4 +16,4 @@ coverage/
 /uploads/
 prisma/dev.db
 prisma/*.db
-.claude/settings.local.json
+.claude/
