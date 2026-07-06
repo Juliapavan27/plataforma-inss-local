@@ -29,7 +29,7 @@ export async function GET(
       format === "docx"
         ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         : "application/pdf";
-    return new NextResponse(buf, {
+    return new NextResponse(new Uint8Array(buf), {
       status: 200,
       headers: {
         "Content-Type": contentType,
