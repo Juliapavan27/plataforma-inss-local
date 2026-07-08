@@ -47,8 +47,8 @@ export function Navbar() {
           <Link href="/quem-somos" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Quem somos
           </Link>
-          <Link href="/blog" className="text-sm font-medium text-ink-700 hover:text-ink-950">
-            Blog
+          <Link href="/calculadora" className="text-sm font-medium text-ink-700 hover:text-ink-950">
+            Calculadora
           </Link>
           <Link href="/faq" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             FAQ
@@ -83,8 +83,8 @@ export function Navbar() {
             <Link href="/quem-somos" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Quem somos
             </Link>
-            <Link href="/blog" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
-              Blog
+            <Link href="/calculadora" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
+              Calculadora
             </Link>
             <Link href="/faq" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               FAQ

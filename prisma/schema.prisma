@@ -147,21 +147,6 @@ model KnowledgeChunk {
   @@index([entryId])
 }
 
-// ========= BLOG =========
-
-model BlogPost {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  title       String
-  excerpt     String
-  content     String
-  coverImage  String?
-  published   Boolean   @default(false)
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-}
-
 // ========= LOGS =========
 
 model GenerationLog {
