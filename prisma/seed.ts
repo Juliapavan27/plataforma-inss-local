@@ -10,7 +10,7 @@ import bcrypt from "bcryptjs";
 const db = new PrismaClient();
 
 async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@plataformainss.com.br";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@recursofacil.com.br";
   const adminPassword = process.env.ADMIN_PASSWORD ?? "troque-esta-senha-123";
 
   const existing = await db.user.findUnique({ where: { email: adminEmail } });

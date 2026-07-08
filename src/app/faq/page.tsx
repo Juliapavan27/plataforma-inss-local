@@ -9,6 +9,10 @@ export const metadata = {
 
 const FAQ: { q: string; a: string }[] = [
   {
+    q: "A Recurso Fácil é um site oficial do INSS ou do governo?",
+    a: "Não. Somos uma plataforma privada e independente, sem qualquer vínculo com o INSS ou com o Governo Federal. O nome indica apenas a finalidade do serviço — gerar recursos administrativos contra decisões do INSS.",
+  },
+  {
     q: "Qual o prazo para recorrer de uma decisão do INSS?",
     a: "O prazo legal é de 30 dias corridos a contar da ciência da decisão, conforme art. 126 da Lei 8.213/91. É possível pedir restituição de prazo em casos de justificativa plausível.",
   },

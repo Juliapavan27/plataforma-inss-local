@@ -23,7 +23,7 @@ export function Footer() {
             </span>
             <div className="leading-none">
               <p className="font-display text-lg font-semibold tracking-tight text-white">
-                Plataforma INSS
+                Recurso Fácil
               </p>
               <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink-400">
                 Recursos jurídicos · IA
@@ -83,9 +83,12 @@ export function Footer() {
 
       <div className="relative border-t border-white/10">
         <div className="container flex flex-col items-start justify-between gap-3 py-6 text-xs text-ink-400 md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Plataforma INSS. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} Recurso Fácil. Todos os direitos reservados.</p>
           <p className="max-w-2xl text-right text-ink-500">
-            Este serviço não substitui consultoria jurídica personalizada. O material gerado deve ser revisado pelo usuário antes do protocolo e não representa promessa de deferimento pelo INSS.
+            Não temos qualquer vínculo com o INSS ou o Governo Federal — somos uma plataforma
+            privada e independente. Este serviço não substitui consultoria jurídica
+            personalizada. O material gerado deve ser revisado pelo usuário antes do protocolo e
+            não representa promessa de deferimento pelo INSS.
           </p>
         </div>
       </div>

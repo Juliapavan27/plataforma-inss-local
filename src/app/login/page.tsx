@@ -19,7 +19,7 @@ export default function LoginPage() {
               <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">
                 <Scale className="h-5 w-5" />
               </span>
-              Plataforma INSS
+              Recurso Fácil
             </Link>
             <div className="card">
               <h1 className="font-display text-2xl font-bold text-ink-950">Bem-vindo de volta</h1>

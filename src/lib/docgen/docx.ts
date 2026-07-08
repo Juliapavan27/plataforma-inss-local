@@ -91,7 +91,7 @@ export async function buildAppealDocx(opts: {
   }
 
   const doc = new Document({
-    creator: "Plataforma INSS",
+    creator: "Recurso Fácil",
     title: opts.title,
     sections: [
       {
@@ -112,7 +112,7 @@ export async function buildAppealDocx(opts: {
                 spacing: { after: 120 },
                 children: [
                   new TextRun({
-                    text: "PLATAFORMA INSS",
+                    text: "RECURSO FÁCIL",
                     bold: true,
                     size: 20,
                     color: "273870",

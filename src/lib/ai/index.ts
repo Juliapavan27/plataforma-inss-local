@@ -160,7 +160,7 @@ function buildFallbackAppeal(input: Omit<BuildPromptInput, "knowledgeContext">) 
   const finalRequests = getFinalRequests(input, benefit);
 
   return `
-PLATAFORMA INSS
+RECURSO FÁCIL
 RECURSO ADMINISTRATIVO PREVIDENCIÁRIO
 
 ILUSTRÍSSIMOS(AS) SENHORES(AS) CONSELHEIROS(AS) DA JUNTA DE RECURSOS DO CONSELHO DE RECURSOS DA PREVIDÊNCIA SOCIAL

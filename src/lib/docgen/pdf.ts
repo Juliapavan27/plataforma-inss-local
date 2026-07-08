@@ -9,7 +9,7 @@ export async function buildAppealPdf(opts: {
 }): Promise<Buffer> {
   const pdf = await PDFDocument.create();
   pdf.setTitle(opts.title);
-  pdf.setCreator("Plataforma INSS");
+  pdf.setCreator("Recurso Fácil");
 
   const font = await pdf.embedFont(StandardFonts.TimesRoman);
   const bold = await pdf.embedFont(StandardFonts.TimesRomanBold);
@@ -28,7 +28,7 @@ export async function buildAppealPdf(opts: {
   let cursorY = pageHeight - margin - 34;
 
   function drawHeader() {
-    page.drawText("PLATAFORMA INSS", {
+    page.drawText("RECURSO FÁCIL", {
       x: margin,
       y: headerTop,
       font: bold,

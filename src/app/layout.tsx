@@ -20,8 +20,8 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: {
     default:
-      "Plataforma INSS — Recursos administrativos automáticos com qualidade técnica",
-    template: "%s | Plataforma INSS",
+      "Recurso Fácil — Recursos administrativos automáticos com qualidade técnica",
+    template: "%s | Recurso Fácil",
   },
   description:
     "Gere recursos administrativos contra decisões do INSS em minutos. Tecnologia jurídica de ponta, sem custos abusivos.",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    siteName: "Plataforma INSS",
+    siteName: "Recurso Fácil",
   },
 };
 

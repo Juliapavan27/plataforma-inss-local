@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { existsSync } from "fs";
+import path from "path";
 import {
   ArrowRight,
   CheckCircle2,
@@ -23,7 +24,7 @@ import { formatCurrencyBRL } from "@/lib/utils";
 const PRICE = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
 const WALKTHROUGH_VIDEO_SRC = "/videos/tutorial-plataforma-area-cliente.mp4";
 const HAS_WALKTHROUGH_VIDEO = existsSync(
-  "/Users/julialaudi/Desktop/plataforma inss/public/videos/tutorial-plataforma-area-cliente.mp4",
+  path.join(process.cwd(), "public", "videos", "tutorial-plataforma-area-cliente.mp4"),
 );
 
 export default function HomePage() {
@@ -433,7 +434,7 @@ function Comparison() {
         <span className="eyebrow">Comparativo</span>
         <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
           Fazer sozinho <span className="text-ink-400">vs.</span>{" "}
-          <span className="italic text-gradient-brand">Plataforma INSS</span>
+          <span className="italic text-gradient-brand">Recurso Fácil</span>
         </h2>
       </div>
       <div className="mt-12 overflow-hidden rounded-3xl border border-ink-200/70 bg-white/80 shadow-ring backdrop-blur">
@@ -451,7 +452,7 @@ function Comparison() {
                   <span className="grid h-5 w-5 place-items-center rounded-md bg-brand-600 text-white">
                     <Scale className="h-3 w-3" />
                   </span>
-                  Plataforma INSS
+                  Recurso Fácil
                 </span>
               </th>
             </tr>
@@ -876,7 +877,7 @@ function Mission() {
               A cofundadora atua há mais de 3 anos na gestão de escritório de
               advocacia e foi justamente dessa vivência que surgiu a convicção
               de que era preciso criar um caminho mais acessível para quem
-              precisa recorrer. A Plataforma INSS nasceu para{" "}
+              precisa recorrer. A Recurso Fácil nasceu para{" "}
               <strong className="text-ink-900">
                 tornar o recurso jurídico acessível a todos os brasileiros
               </strong>

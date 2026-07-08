@@ -5,12 +5,12 @@ import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const STORAGE_KEY = "plataforma-inss:chat:v1";
+const STORAGE_KEY = "recurso-facil:chat:v1";
 
 const INITIAL_MESSAGE: Msg = {
   role: "assistant",
   content:
-    "Olá! 👋 Sou a **Sofia**, assistente da Plataforma INSS. Posso tirar suas dúvidas sobre recursos, preço, prazos ou como funciona. Como posso ajudar?",
+    "Olá! 👋 Sou a **Sofia**, assistente da Recurso Fácil. Posso tirar suas dúvidas sobre recursos, preço, prazos ou como funciona. Como posso ajudar?",
 };
 
 const QUICK_QUESTIONS = [

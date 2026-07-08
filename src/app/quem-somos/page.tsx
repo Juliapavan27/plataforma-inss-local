@@ -16,7 +16,7 @@ import { Footer } from "@/components/landing/footer";
 export const metadata = {
   title: "Quem somos — Nossa história e propósito",
   description:
-    "Conheça os fundadores da Plataforma INSS: profissionais do direito que uniram experiência prática, gestão e tecnologia para ampliar o acesso à defesa previdenciária no Brasil.",
+    "Conheça os fundadores da Recurso Fácil: profissionais do direito que uniram experiência prática, gestão e tecnologia para ampliar o acesso à defesa previdenciária no Brasil.",
 };
 
 export default function QuemSomosPage() {
@@ -108,13 +108,17 @@ function Manifesto() {
               motivo, ainda não encontrou um caminho para se defender.
             </p>
             <p>
-              A Plataforma INSS nasceu desse encontro entre experiência
+              A Recurso Fácil nasceu desse encontro entre experiência
               técnica, gestão jurídica e desejo de ampliar acesso. É isso:{" "}
               <strong>
                 um instrumento a serviço do acesso à justiça
               </strong>
               , construído por quem vive o direito por dentro e acredita no
               poder transformador dele.
+            </p>
+            <p className="text-sm text-ink-500">
+              Somos uma plataforma privada e independente — sem qualquer vínculo com
+              o INSS ou com o Governo Federal.
             </p>
           </div>
 
@@ -126,7 +130,7 @@ function Manifesto() {
               que mais pessoas possam percorrê-lo.&rdquo;
             </p>
             <p className="mt-3 text-sm font-semibold text-ink-600">
-              — Fundadores da Plataforma INSS
+              — Fundadores da Recurso Fácil
             </p>
           </div>
         </div>
@@ -181,7 +185,7 @@ function Founders() {
             <span className="italic text-gradient-gold">com o mesmo propósito.</span>
           </h2>
           <p className="mt-5 text-white/70 text-pretty">
-            A Plataforma INSS nasceu da união entre experiência técnica,
+            A Recurso Fácil nasceu da união entre experiência técnica,
             vivência de gestão e uso responsável da tecnologia para ampliar o
             acesso à defesa previdenciária.
           </p>
@@ -226,7 +230,7 @@ function Founders() {
         </div>
 
         <p className="mx-auto mt-10 max-w-2xl text-center text-xs leading-relaxed text-white/50">
-          A Plataforma INSS é uma empresa de tecnologia jurídica. Não é
+          A Recurso Fácil é uma empresa de tecnologia jurídica. Não é
           escritório de advocacia. Nossos fundadores atuam na direção técnica
           e estratégica da plataforma, com foco em clareza, responsabilidade
           e acesso.

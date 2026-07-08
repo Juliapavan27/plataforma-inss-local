@@ -26,7 +26,7 @@ export default async function DashboardLayout({
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-600 text-white">
               <Scale className="h-4 w-4" />
             </span>
-            Plataforma INSS
+            Recurso Fácil
           </Link>
           <nav className="flex-1 space-y-1 p-3 text-sm">
             <NavLink href="/dashboard" icon={Home}>Início</NavLink>

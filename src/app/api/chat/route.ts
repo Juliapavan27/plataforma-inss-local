@@ -21,7 +21,7 @@ const PRICE_BRL = (PRICE_CENTS / 100).toLocaleString("pt-BR", {
   currency: "BRL",
 });
 
-const SYSTEM_PROMPT = `Você é a "Sofia", assistente virtual da **Plataforma INSS** — um SaaS brasileiro que gera recursos administrativos contra decisões do INSS usando inteligência artificial e base jurídica validada (Lei 8.213/91, Decreto 3.048/99, súmulas do CRPS, jurisprudência do TNU/STJ).
+const SYSTEM_PROMPT = `Você é a "Sofia", assistente virtual da **Recurso Fácil** — um SaaS brasileiro que gera recursos administrativos contra decisões do INSS usando inteligência artificial e base jurídica validada (Lei 8.213/91, Decreto 3.048/99, súmulas do CRPS, jurisprudência do TNU/STJ).
 
 # Sua missão
 Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão (gerar recurso em /novo-recurso), e responder perguntas gerais sobre recursos do INSS — sem substituir consultoria jurídica personalizada.
@@ -73,7 +73,7 @@ function fallbackReply(userMessage: string): string {
   if (/(seguro|lgpd|dados)/.test(q)) {
     return `Seguimos práticas de proteção de dados alinhadas à **LGPD**. Seus dados são usados apenas para gerar e disponibilizar seu recurso. Veja nossa [Política de Privacidade](/privacidade).`;
   }
-  return `Olá! 👋 Sou a Sofia, assistente da Plataforma INSS.\n\nPosso te ajudar com dúvidas sobre:\n- Como funciona a geração de recursos\n- Preço e prazo de entrega\n- Tipos de negativa que atendemos\n\nOu vá direto para [gerar seu recurso](/novo-recurso).`;
+  return `Olá! 👋 Sou a Sofia, assistente da Recurso Fácil.\n\nPosso te ajudar com dúvidas sobre:\n- Como funciona a geração de recursos\n- Preço e prazo de entrega\n- Tipos de negativa que atendemos\n\nOu vá direto para [gerar seu recurso](/novo-recurso).`;
 }
 
 export async function POST(req: Request) {

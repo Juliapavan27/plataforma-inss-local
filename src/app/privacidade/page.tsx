@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         <h2>5. Direitos do titular</h2>
         <p>
           Você pode solicitar, a qualquer momento, confirmação, acesso, correção,
-          portabilidade e exclusão dos seus dados, pelo canal privacidade@plataformainss.com.br.
+          portabilidade e exclusão dos seus dados, pelo canal privacidade@recursofacil.com.br.
         </p>
         <h2>6. Retenção</h2>
         <p>

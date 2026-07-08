@@ -32,7 +32,7 @@ export function Navbar() {
           </span>
           <span className="flex flex-col leading-none">
             <span className="font-display text-[17px] font-semibold tracking-tight text-ink-950">
-              Plataforma INSS
+              Recurso Fácil
             </span>
             <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-ink-500">
               Recursos jurídicos · IA

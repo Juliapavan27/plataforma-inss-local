@@ -11,7 +11,7 @@ export default function LgpdPage() {
         <h1>LGPD — Seus direitos como titular</h1>
         <p>
           A Lei Geral de Proteção de Dados (Lei 13.709/2018) garante a você
-          direitos sobre seus dados pessoais. A Plataforma INSS os respeita
+          direitos sobre seus dados pessoais. A Recurso Fácil os respeita
           integralmente.
         </p>
         <ul>
@@ -24,7 +24,7 @@ export default function LgpdPage() {
         </ul>
         <p>
           Para exercer qualquer um desses direitos, envie um e-mail para{" "}
-          <strong>privacidade@plataformainss.com.br</strong> indicando o direito
+          <strong>privacidade@recursofacil.com.br</strong> indicando o direito
           que deseja exercer. Responderemos em até 15 dias.
         </p>
       </main>

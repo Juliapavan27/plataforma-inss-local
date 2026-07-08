@@ -1,4 +1,4 @@
-# Plataforma INSS
+# Recurso Fácil
 
 SaaS para geração automatizada de recursos administrativos contra decisões do INSS.
 Stack: **Next.js 14 (App Router) · TypeScript · Tailwind · Prisma · PostgreSQL · NextAuth · Stripe · Anthropic Claude**.
@@ -78,7 +78,7 @@ npm run db:seed
 npm run dev
 ```
 
-Acesse `http://localhost:3000`. Admin padrão: `admin@plataformainss.com.br` / `troque-esta-senha-123`.
+Acesse `http://localhost:3000`. Admin padrão: `admin@recursofacil.com.br` / `troque-esta-senha-123`.
 
 ### Variáveis obrigatórias (.env)
 
