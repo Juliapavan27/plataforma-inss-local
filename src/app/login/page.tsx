@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Scale } from "lucide-react";
 import { LoginForm } from "@/components/auth/auth-forms";
@@ -24,7 +25,9 @@ export default function LoginPage() {
               <h1 className="font-display text-2xl font-bold text-ink-950">Bem-vindo de volta</h1>
               <p className="mt-1 text-sm text-ink-600">Acesse sua área do cliente</p>
               <div className="mt-6">
-                <LoginForm />
+                <Suspense fallback={null}>
+                  <LoginForm />
+                </Suspense>
               </div>
             </div>
           </div>
