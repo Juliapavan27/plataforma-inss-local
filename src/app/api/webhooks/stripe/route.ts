@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { db } from "@/lib/db";
-import { processAppealGeneration } from "@/lib/appeal-service";
+import { markPaidAndNotifyAdmin } from "@/lib/appeal-service";
 
 export const runtime = "nodejs";
 
@@ -39,14 +39,10 @@ export async function POST(req: Request) {
           paidAt: new Date(),
         },
       });
-      await db.appeal.update({
-        where: { id: appealId },
-        data: { status: "PAID" },
-      });
-      // Dispara geração async
-      processAppealGeneration(appealId).catch(async (e) => {
+      // Marca como pago, define prazo de entrega e avisa o admin — geração é manual.
+      await markPaidAndNotifyAdmin(appealId).catch(async (e) => {
         const { logger } = await import("@/lib/logger");
-        logger.error("gen.webhook falhou", e, { appealId });
+        logger.error("markPaidAndNotifyAdmin falhou", e, { appealId });
       });
       break;
     }

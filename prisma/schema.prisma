@@ -61,6 +61,11 @@ model Appeal {
   caseSummary     String
   extraFactsJson  String?  // JSON-encoded Record<string, unknown>
 
+  // CDC art. 49 — direito de arrependimento (7 dias corridos, compra fora do estabelecimento).
+  // true = cliente abriu mão do prazo e recebe em até 24h; false = mantém o direito, recebe em até 8 dias.
+  withdrawalWaived Boolean  @default(false)
+  dueAt            DateTime?
+
   generatedText   String?
   pdfUrl          String?
   docxUrl         String?
@@ -110,6 +115,7 @@ model Payment {
   stripeSessionId     String?   @unique
   stripePaymentIntent String?
   paidAt              DateTime?
+  abandonedEmailSentAt DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 

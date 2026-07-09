@@ -54,7 +54,7 @@ export default function CalculadoraPage() {
           <p className="text-xs text-ink-400">
             As estimativas desta página têm caráter meramente informativo e não substituem a
             simulação oficial do INSS nem orientação jurídica. Se seu pedido foi negado, você
-            pode <a href="/novo-recurso" className="font-semibold text-brand-700">gerar um recurso administrativo</a> em minutos.
+            pode <a href="/novo-recurso" className="font-semibold text-brand-700">gerar um recurso administrativo</a> com entrega em até 24h.
           </p>
         </div>
       </main>

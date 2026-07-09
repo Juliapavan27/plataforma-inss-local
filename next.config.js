@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -14,7 +15,9 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
-  "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://*.facebook.com https://*.facebook.net",
+  // *.ingest.sentry.io / *.ingest.us.sentry.io cobrem os hosts de ingestão mais comuns do
+  // Sentry — se o DSN do projeto usar outra região, ajuste aqui.
+  "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
   "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
@@ -50,6 +53,9 @@ const nextConfig = {
   },
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
+    // Necessário no Next 14.2 para o instrumentation.ts (Sentry) ser carregado —
+    // vira padrão (sem flag) a partir do Next 15.
+    instrumentationHook: true,
   },
   async headers() {
     return [
@@ -61,4 +67,12 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// withSentryConfig é no-op sensato mesmo sem SENTRY_AUTH_TOKEN: só pula o
+// upload de source maps (build/app continuam funcionando normalmente).
+module.exports = withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: true,
+  disableLogger: true,
+});

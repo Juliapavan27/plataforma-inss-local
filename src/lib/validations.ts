@@ -78,6 +78,10 @@ export const appealCreateSchema = z.object({
     .string()
     .min(50, "Descreva seu caso em pelo menos 50 caracteres"),
 
+  // CDC art. 49 — direito de arrependimento (7 dias) em compra fora do estabelecimento.
+  // true = abre mão do prazo de 7 dias e recebe em até 24h; false = mantém o direito e recebe em até 8 dias.
+  withdrawalWaived: z.boolean(),
+
   // campos condicionais
   hasMedicalReport: z.boolean().optional(),
   medicalCondition: z.string().optional(),

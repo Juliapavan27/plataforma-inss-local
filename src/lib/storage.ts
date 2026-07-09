@@ -1,20 +1,45 @@
 /**
- * Abstração de armazenamento. Por padrão salva em disco local (./uploads).
- * Em produção, trocar por S3/R2 (stub abaixo comentado) — mantém a mesma API.
+ * Abstração de armazenamento. Usa S3 (ou compatível: R2, Backblaze etc.)
+ * quando S3_BUCKET + credenciais estão configurados; caso contrário, cai
+ * para disco local (./uploads) — útil em dev, mas não deve ser usado em
+ * produção (containers como Railway têm filesystem efêmero: os arquivos
+ * somem a cada redeploy/restart).
  */
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 
 const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
+
+const s3Bucket = process.env.S3_BUCKET;
+const s3 =
+  s3Bucket && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY
+    ? new S3Client({
+        region: process.env.S3_REGION ?? "us-east-1",
+        endpoint: process.env.S3_ENDPOINT,
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID,
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+        },
+      })
+    : null;
+
+export function isS3Configured() {
+  return s3 !== null;
+}
 
 async function ensureDir() {
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
 }
 
 /**
- * Resolve `storageKey` dentro de UPLOAD_DIR e rejeita qualquer tentativa de
- * escapar do diretório (path traversal via `..`, separadores ou caminhos absolutos).
+ * Valida `storageKey` (contra path traversal, separadores, caminhos
+ * absolutos) e, no modo disco local, resolve o caminho dentro de UPLOAD_DIR.
  */
 function safeResolve(storageKey: string): string {
   if (typeof storageKey !== "string" || storageKey.length === 0) {
@@ -40,11 +65,23 @@ export async function saveBuffer(
   buf: Buffer,
   opts: { filename: string; mimeType?: string },
 ): Promise<{ url: string; storageKey: string; sizeBytes: number }> {
-  await ensureDir();
   const sanitized = opts.filename.replace(/[^\w.\-]+/g, "_").replace(/^\.+/, "_");
   const storageKey = `${randomUUID()}-${sanitized}`;
-  const fullPath = safeResolve(storageKey);
-  await fs.writeFile(fullPath, buf);
+
+  if (s3) {
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: s3Bucket,
+        Key: storageKey,
+        Body: buf,
+        ContentType: opts.mimeType,
+      }),
+    );
+  } else {
+    await ensureDir();
+    await fs.writeFile(safeResolve(storageKey), buf);
+  }
+
   return {
     storageKey,
     url: `/api/files/${encodeURIComponent(storageKey)}`,
@@ -53,25 +90,16 @@ export async function saveBuffer(
 }
 
 export async function readBuffer(storageKey: string): Promise<Buffer> {
+  if (s3) {
+    if (storageKey.includes("\0") || path.isAbsolute(storageKey)) {
+      throw new Error("storageKey inválido");
+    }
+    const res = await s3.send(
+      new GetObjectCommand({ Bucket: s3Bucket, Key: storageKey }),
+    );
+    const bytes = await res.Body?.transformToByteArray();
+    if (!bytes) throw new Error("arquivo vazio");
+    return Buffer.from(bytes);
+  }
   return fs.readFile(safeResolve(storageKey));
 }
-
-export function resolveStoragePath(storageKey: string) {
-  return safeResolve(storageKey);
-}
-
-/* ============================================================
- * Versão S3 (trocar quando tiver credenciais):
- *
- * import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
- * import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
- *
- * const s3 = new S3Client({
- *   region: process.env.S3_REGION,
- *   endpoint: process.env.S3_ENDPOINT,
- *   credentials: {
- *     accessKeyId: process.env.S3_ACCESS_KEY_ID!,
- *     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
- *   },
- * });
- * ============================================================ */

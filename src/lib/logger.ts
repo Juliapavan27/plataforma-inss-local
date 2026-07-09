@@ -1,9 +1,10 @@
 /**
  * Logger estruturado mínimo, com redact de PII por padrão.
- * Sem deps externas. Quando você tiver SENTRY_DSN, adicione @sentry/nextjs
- * e troque os hooks abaixo — a API pública não muda.
+ * Reporta warn/error ao Sentry quando NEXT_PUBLIC_SENTRY_DSN estiver configurado
+ * (ver sentry.server.config.ts / sentry.edge.config.ts) — sem DSN, é no-op.
  */
 
+import * as Sentry from "@sentry/nextjs";
 import { redactPii } from "./pii";
 
 type Level = "debug" | "info" | "warn" | "error";
@@ -46,11 +47,18 @@ function emit(entry: LogEntry) {
   else if (entry.level === "warn") console.warn(out);
   else console.log(out);
 
-  // Hook Sentry — ativa automaticamente quando o pacote estiver instalado
-  // e SENTRY_DSN configurado. Por enquanto é no-op.
-  // if (entry.level === "error" && globalThis.Sentry) {
-  //   globalThis.Sentry.captureException(entry);
-  // }
+  if (entry.level === "error" || entry.level === "warn") {
+    Sentry.withScope((scope) => {
+      scope.setLevel(entry.level === "error" ? "error" : "warning");
+      if (entry.ctx) scope.setContext("log_ctx", entry.ctx);
+      if (entry.err) {
+        scope.setContext("original_error", entry.err);
+        Sentry.captureException(new Error(entry.err.message), undefined);
+      } else {
+        Sentry.captureMessage(entry.msg);
+      }
+    });
+  }
 }
 
 export const logger = {

@@ -84,6 +84,7 @@ export async function POST(req: Request) {
         extraFactsJson: Object.keys(extraFacts).length
           ? JSON.stringify(extraFacts)
           : null,
+        withdrawalWaived: data.withdrawalWaived,
         status: "AWAITING_PAYMENT",
       },
     });
@@ -123,7 +124,7 @@ export async function POST(req: Request) {
       });
       checkoutUrl = sessionStripe.url;
     } else {
-      // Modo dev: marca como pago imediatamente e dispara geração.
+      // Modo dev: marca como pago imediatamente (geração continua manual).
       await db.payment.create({
         data: {
           userId,
@@ -133,12 +134,8 @@ export async function POST(req: Request) {
           paidAt: new Date(),
         },
       });
-      await db.appeal.update({
-        where: { id: appeal.id },
-        data: { status: "PAID" },
-      });
-      // dispara async sem await — em produção mandar para uma fila (BullMQ / SQS).
-      triggerGeneration(appeal.id);
+      const { markPaidAndNotifyAdmin } = await import("@/lib/appeal-service");
+      await markPaidAndNotifyAdmin(appeal.id);
     }
 
     return NextResponse.json({ appealId: appeal.id, checkoutUrl });
@@ -150,15 +147,4 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-}
-
-function triggerGeneration(appealId: string) {
-  // fire-and-forget — import dinâmico para não impedir a resposta.
-  import("@/lib/appeal-service").then(({ processAppealGeneration }) =>
-    import("@/lib/logger").then(({ logger }) =>
-      processAppealGeneration(appealId).catch((e) =>
-        logger.error("gen.async falhou", e, { appealId }),
-      ),
-    ),
-  );
 }

@@ -13,7 +13,7 @@ src/
 │   ├── login/ · cadastro/             → autenticação
 │   ├── dashboard/                     → área do cliente (histórico, download e acompanhamento)
 │   ├── admin/                         → painel admin (usuários, pedidos, financeiro, KB, config IA)
-│   ├── blog/ · faq/                   → topo de funil, SEO
+│   ├── calculadora/ · faq/             → topo de funil, SEO
 │   ├── termos/ · privacidade/ · lgpd/ → compliance
 │   └── api/                           → rotas de backend
 │       ├── auth/[...nextauth]/        → NextAuth credentials
@@ -41,7 +41,7 @@ src/
 ├── types/next-auth.d.ts               → augment da sessão com role
 prisma/
 ├── schema.prisma                      → modelo de dados
-└── seed.ts                            → admin + base de conhecimento + blog
+└── seed.ts                            → admin + base de conhecimento
 ```
 
 ## Fluxo principal
@@ -71,7 +71,7 @@ cp .env.example .env
 npx prisma generate
 npx prisma db push
 
-# 4. Popular admin, KB e blog
+# 4. Popular admin e KB
 npm run db:seed
 
 # 5. Rodar
@@ -92,9 +92,11 @@ Acesse `http://localhost:3000`. Admin padrão: `admin@recursofacil.com.br` / `tr
 | `STRIPE_WEBHOOK_SECRET` | Validação webhook |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Frontend |
 | `PRICE_RECURSO_CENTS` | Preço unitário em centavos (default 29900 = R$299) |
+| `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_ENDPOINT` | Storage persistente (obrigatório em produção — sem isso os arquivos gerados somem a cada redeploy) |
 
 Se `STRIPE_SECRET_KEY` estiver vazio, a aplicação roda em **modo dev**: o pagamento
-é marcado como pago automaticamente (apenas para testes locais).
+é marcado como pago automaticamente (apenas para testes locais). Se as variáveis `S3_*`
+estiverem vazias, o storage cai para disco local (`./uploads`) — ok em dev, **não usar em produção**.
 
 ## Deploy simples na Railway
 
@@ -167,13 +169,14 @@ Você pode rodar isso no shell da Railway antes do primeiro uso da aplicação.
 
 ## Decisões de arquitetura
 
-- **Next.js App Router**: SSR para SEO (blog, landing), RSC para páginas autenticadas.
+- **Next.js App Router**: SSR para SEO (calculadora, landing), RSC para páginas autenticadas.
 - **Prisma + PostgreSQL**: migrations declarativas, relações fortes. Enum + índices no modelo.
 - **Geração síncrona em dev / assíncrona em produção**: a função `processAppealGeneration`
   é invocada por fire-and-forget. Para produção, plugar BullMQ ou SQS (trocar a chamada
   em `src/app/api/webhooks/stripe/route.ts` e em `recursos/route.ts` para enfileirar).
-- **Storage abstraído**: `src/lib/storage.ts` tem backend local (`./uploads`) e
-  plug-and-play para S3/R2 (código comentado).
+- **Storage abstraído**: `src/lib/storage.ts` usa S3 (ou compatível: R2, Backblaze) quando
+  `S3_BUCKET` + credenciais estão nas env vars; sem elas, cai para disco local (`./uploads`,
+  só para dev — não persiste em containers efêmeros como Railway).
 - **RAG simples**: por tags hoje. A coluna `KnowledgeChunk.embedding` está pronta para
   pgvector — basta trocar `Float[]` por `Unsupported("vector(1536)")` e habilitar o
   caminho em `src/lib/ai/rag.ts#safeEmbed`.
@@ -185,7 +188,8 @@ Você pode rodar isso no shell da Railway antes do primeiro uso da aplicação.
 
 - [ ] Fila de processamento (BullMQ/Redis ou SQS+Lambda) para isolar a geração do request.
 - [ ] Embeddings reais (Voyage/OpenAI/Cohere) + pgvector + índice ivfflat.
-- [ ] S3/R2 + URLs pré-assinadas para downloads (substituir `storage.ts`).
+- [x] S3/R2 como storage (`storage.ts` já troca para S3 quando as env vars estão setadas).
+- [ ] URLs pré-assinadas para downloads direto do S3 (hoje o arquivo ainda passa pelo servidor Next — ok no volume atual, mas vale otimizar depois).
 - [ ] Observabilidade: Sentry + logs estruturados.
 - [ ] Rate limiting (Upstash) nos endpoints de IA e auth.
 - [ ] CSRF em endpoints sensíveis + headers de segurança (helmet equivalente).

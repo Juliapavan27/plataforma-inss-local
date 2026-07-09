@@ -35,7 +35,7 @@ export function Navbar() {
               Recurso Fácil
             </span>
             <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-ink-500">
-              Recursos jurídicos · IA
+              Recursos jurídicos previdenciários
             </span>
           </span>
         </Link>
@@ -49,6 +49,9 @@ export function Navbar() {
           </Link>
           <Link href="/calculadora" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Calculadora
+          </Link>
+          <Link href="/tutorial" className="text-sm font-medium text-ink-700 hover:text-ink-950">
+            Tutorial
           </Link>
           <Link href="/faq" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             FAQ
@@ -85,6 +88,9 @@ export function Navbar() {
             </Link>
             <Link href="/calculadora" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Calculadora
+            </Link>
+            <Link href="/tutorial" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
+              Tutorial
             </Link>
             <Link href="/faq" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               FAQ

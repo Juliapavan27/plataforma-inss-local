@@ -1,6 +1,7 @@
 /**
- * Orquestrador de geração do recurso.
- * Chamado após confirmação de pagamento (webhook Stripe) ou via job de fila.
+ * Orquestrador do recurso. Geração é MANUAL por enquanto (a fundadora escreve/gera
+ * fora da plataforma e anexa o PDF/DOCX pronto via /admin/pedidos/[id]) — a IA
+ * (generateAppeal/scoreAppeal) fica reservada para uso futuro/opcional pelo admin.
  */
 
 import { db } from "./db";
@@ -10,10 +11,114 @@ import { buildAppealDocx } from "./docgen/docx";
 import { saveBuffer } from "./storage";
 import { redactPii } from "./pii";
 import { logger } from "./logger";
+import { sendAdminNewOrderEmail, sendAbandonedCartEmail } from "./email";
+import { stripe, isStripeConfigured, getOrCreateAbandonedCartCoupon } from "./stripe";
 import type { BenefitType, DenialReason } from "./types";
 
 const MAX_ATTEMPTS = 3;
 const STUCK_AFTER_MS = 10 * 60_000; // 10 min
+
+const WAIVED_DELIVERY_MS = 24 * 60 * 60_000; // 24h
+const STANDARD_DELIVERY_MS = 8 * 24 * 60 * 60_000; // 8 dias (mantém arrependimento CDC art. 49)
+
+export function computeDueAt(withdrawalWaived: boolean, from: Date = new Date()): Date {
+  return new Date(from.getTime() + (withdrawalWaived ? WAIVED_DELIVERY_MS : STANDARD_DELIVERY_MS));
+}
+
+/**
+ * Marca o appeal como pago, define o prazo de entrega e avisa o admin por e-mail —
+ * substitui o antigo disparo automático de IA (processAppealGeneration).
+ */
+export async function markPaidAndNotifyAdmin(appealId: string) {
+  const appeal = await db.appeal.findUnique({
+    where: { id: appealId },
+    include: { user: true },
+  });
+  if (!appeal) return;
+
+  const dueAt = computeDueAt(appeal.withdrawalWaived);
+  await db.appeal.update({
+    where: { id: appealId },
+    data: { status: "PAID", dueAt },
+  });
+
+  await sendAdminNewOrderEmail({
+    id: appeal.id,
+    userName: appeal.user.name,
+    dueAt,
+  });
+}
+
+const ABANDONED_AFTER_MS = 60 * 60_000; // 1h sem concluir o pagamento
+
+/**
+ * Encontra checkouts abandonados (Payment PENDING há mais de 1h) e envia e-mail
+ * com cupom de 10% e um novo link de checkout. Chamado por /api/cron/abandoned-cart.
+ */
+export async function sweepAbandonedCarts(): Promise<{
+  scanned: number;
+  emailed: string[];
+}> {
+  if (!isStripeConfigured()) return { scanned: 0, emailed: [] };
+
+  const olderThan = new Date(Date.now() - ABANDONED_AFTER_MS);
+  const payments = await db.payment.findMany({
+    where: {
+      status: "PENDING",
+      stripeSessionId: { not: null },
+      abandonedEmailSentAt: null,
+      createdAt: { lt: olderThan },
+    },
+    include: { appeal: true, user: true },
+    take: 50,
+  });
+
+  const emailed: string[] = [];
+  const couponId = await getOrCreateAbandonedCartCoupon();
+
+  for (const p of payments) {
+    try {
+      const discountedCents = Math.round(p.amountCents * 0.9);
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "brl",
+              product_data: { name: "Recurso Administrativo INSS" },
+              unit_amount: p.amountCents,
+            },
+            quantity: 1,
+          },
+        ],
+        discounts: [{ coupon: couponId }],
+        metadata: { appealId: p.appealId },
+        success_url: `${process.env.APP_URL}/dashboard/recursos/${p.appealId}?paid=1`,
+        cancel_url: `${process.env.APP_URL}/novo-recurso?canceled=1`,
+        customer_email: p.user.email,
+      });
+      if (!session.url) continue;
+
+      await sendAbandonedCartEmail({
+        to: p.user.email,
+        name: p.user.name,
+        checkoutUrl: session.url,
+        amountCents: p.amountCents,
+        discountedCents,
+      });
+      await db.payment.update({
+        where: { id: p.id },
+        data: { abandonedEmailSentAt: new Date() },
+      });
+      emailed.push(p.id);
+    } catch (e) {
+      logger.error("abandonedCart.email falhou", e, { paymentId: p.id });
+    }
+  }
+
+  return { scanned: payments.length, emailed };
+}
 
 async function withRetry<T>(
   fn: () => Promise<T>,
@@ -148,15 +253,11 @@ async function logPhase(
   });
 }
 
-export function estimateReadyInMinutes() {
-  // MVP: estimativa fixa — refinar com média dos últimos N processamentos.
-  return 3;
-}
-
 /**
- * Sweeper: encontra e reprocessa appeals travados (PAID sem gerar, GENERATING
- * parado há > STUCK_AFTER_MS, ou FAILED com chance de retry).
- * Chamado por /api/cron/retry-stuck.
+ * Sweeper: reprocessa appeals travados no uso opcional de IA pelo admin
+ * (GENERATING parado há > STUCK_AFTER_MS, ou FAILED). Appeals "PAID" não entram
+ * mais aqui — geração é manual, então "PAID" só significa "aguardando o admin",
+ * não "travado". Chamado por /api/cron/retry-stuck.
  */
 export async function sweepStuckAppeals(): Promise<{
   scanned: number;
@@ -166,7 +267,6 @@ export async function sweepStuckAppeals(): Promise<{
   const candidates = await db.appeal.findMany({
     where: {
       OR: [
-        { status: "PAID" },
         { status: "GENERATING", updatedAt: { lt: stuckBefore } },
         { status: "FAILED", updatedAt: { lt: stuckBefore } },
       ],

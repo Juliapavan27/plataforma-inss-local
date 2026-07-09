@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { existsSync } from "fs";
-import path from "path";
 import {
   ArrowRight,
   CheckCircle2,
@@ -22,10 +20,6 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { formatCurrencyBRL } from "@/lib/utils";
 
 const PRICE = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
-const WALKTHROUGH_VIDEO_SRC = "/videos/tutorial-plataforma-area-cliente.mp4";
-const HAS_WALKTHROUGH_VIDEO = existsSync(
-  path.join(process.cwd(), "public", "videos", "tutorial-plataforma-area-cliente.mp4"),
-);
 
 export default function HomePage() {
   return (
@@ -36,7 +30,6 @@ export default function HomePage() {
         <TrustBar />
         <Stats />
         <HowItWorks />
-        <PlatformWalkthrough />
         <Mission />
         <SamplePreview />
         <Benefits />
@@ -156,7 +149,7 @@ function HeroMock() {
 
         <div className="mt-8 flex items-center justify-center gap-2 border-t border-ink-200/60 pt-6 text-xs text-ink-500">
           <Zap className="h-3.5 w-3.5 text-gold-500" />
-          <span className="font-medium">Gerado em 3 minutos</span>
+          <span className="font-medium">Entrega em até 24h</span>
         </div>
       </div>
 
@@ -247,7 +240,7 @@ function HowItWorks() {
     {
       icon: Sparkles,
       title: "Receba e protocole",
-      text: "Em até 3 minutos seu recurso chega pronto em PDF e Word. É só imprimir ou enviar pelo Meu INSS. Simples assim.",
+      text: "Em até 24h (ou 8 dias, se preferir manter seu prazo de arrependimento) seu recurso chega pronto em PDF e Word. É só imprimir ou enviar pelo Meu INSS.",
     },
   ];
   return (
@@ -421,7 +414,7 @@ function Benefits() {
    ====================================================================== */
 function Comparison() {
   const rows = [
-    { feat: "Tempo para montar o recurso", adv: "Horas ou dias pesquisando", us: "~3 minutos" },
+    { feat: "Tempo para montar o recurso", adv: "Horas ou dias pesquisando", us: "Em até 24h" },
     { feat: "Entender o motivo da negativa", adv: "Você interpreta sozinho a carta", us: "Fluxo guiado com linguagem simples" },
     { feat: "Base legal e jurisprudência", adv: "Pesquisa manual e dispersa", us: "Organizada automaticamente" },
     { feat: "Documento final", adv: "Modelo genérico ou rascunho", us: "Personalizado ao seu caso" },
@@ -675,7 +668,7 @@ function FAQTeaser() {
     },
     {
       q: "Como funciona a garantia de 7 dias?",
-      a: "Se você não quiser seguir com o material gerado dentro desse prazo, pode solicitar o reembolso conforme as regras descritas nos termos de uso e na política comercial da plataforma.",
+      a: "É o seu direito de arrependimento (art. 49 do CDC), válido em qualquer compra online. Na hora da compra você escolhe: manter esse prazo de 7 dias e receber o recurso em até 8 dias, ou abrir mão dele para receber em até 24h.",
     },
     {
       q: "Meus dados e documentos ficam protegidos?",
@@ -716,129 +709,6 @@ function FAQTeaser() {
               <p className="mt-3 text-sm leading-relaxed text-ink-600">{it.a}</p>
             </details>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ======================================================================
-   PLATFORM WALKTHROUGH — demonstração de uso e área do cliente
-   ====================================================================== */
-function PlatformWalkthrough() {
-  return (
-    <section className="relative overflow-hidden py-24">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-10 top-20 h-[360px] w-[360px] rounded-full bg-brand-100/60 blur-3xl" />
-        <div className="absolute right-0 top-10 h-[300px] w-[300px] rounded-full bg-gold-200/40 blur-3xl" />
-      </div>
-
-      <div className="container grid items-center gap-14 md:grid-cols-2">
-        <div>
-          <span className="eyebrow">Como usar</span>
-          <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
-            Veja o fluxo da plataforma{" "}
-            <span className="italic text-gradient-brand">e a área do cliente em ação.</span>
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-ink-600 text-pretty">
-            Esta é a parte que reduz ansiedade e aumenta conversão: mostrar que o
-            caminho é simples, guiado e que o cliente consegue acompanhar tudo sem
-            se perder.
-          </p>
-
-          <ul className="mt-8 space-y-3 text-[15px] text-ink-700">
-            {[
-              "Formulário guiado para entender a negativa",
-              "Envio de documentos e geração do recurso",
-              "Área do cliente com histórico e arquivos prontos",
-            ].map((t) => (
-              <li key={t} className="flex items-start gap-3">
-                <span className="mt-1 grid h-5 w-5 flex-none place-items-center rounded-full bg-success-50 text-success-600">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/novo-recurso" className="btn-primary px-7 py-4 text-base">
-              Ver fluxo de geração
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href="/dashboard" className="btn-secondary px-7 py-4 text-base">
-              Conhecer a área do cliente
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative">
-          <div className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-to-tr from-brand-200/40 via-transparent to-gold-200/40 blur-2xl" />
-
-          {HAS_WALKTHROUGH_VIDEO ? (
-            <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-ink-200/70 bg-ink-950 shadow-lift">
-              <video
-                className="h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                controls
-                preload="metadata"
-                playsInline
-              >
-                <source src={WALKTHROUGH_VIDEO_SRC} type="video/mp4" />
-                Seu navegador não conseguiu reproduzir este vídeo.
-              </video>
-
-              <div className="pointer-events-none absolute left-4 top-4 rounded-full bg-ink-950/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur">
-                Demonstração da plataforma
-              </div>
-            </div>
-          ) : (
-            <div className="relative overflow-hidden rounded-3xl border border-ink-200/70 bg-white/90 shadow-lift backdrop-blur-sm">
-              <div className="border-b border-ink-200/70 bg-white/80 px-5 py-3">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-500">
-                  Vídeo de onboarding
-                </span>
-              </div>
-
-              <div className="grid gap-4 p-6">
-                <div className="rounded-2xl border border-brand-200/60 bg-gradient-to-br from-brand-50 to-white p-5">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-ink-900">1. Novo recurso</p>
-                    <span className="rounded-full bg-brand-600 px-2.5 py-1 text-[11px] font-semibold text-white">
-                      guiado
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-600">
-                    Explicação simples do motivo da negativa, anexos e revisão do caso.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-gold-200/70 bg-gradient-to-br from-gold-50 to-white p-5">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-ink-900">2. Área do cliente</p>
-                    <span className="rounded-full bg-gold-500 px-2.5 py-1 text-[11px] font-semibold text-ink-950">
-                      arquivos
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-600">
-                    Histórico de pedidos, PDF e Word disponíveis, status e próximos passos.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-ink-200/70 bg-ink-950 p-5 text-white">
-                  <p className="text-sm font-semibold">Pronto para receber o vídeo real</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/70">
-                    Assim que o arquivo for adicionado em
-                    {" "}
-                    <span className="font-mono text-white">/public/videos/tutorial-plataforma-area-cliente.mp4</span>,
-                    este bloco vira um player automático.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>
@@ -901,7 +771,7 @@ function Mission() {
               {[
                 { icon: Scale, title: "Acesso igualitário", text: "Mesmo padrão técnico, independente de renda ou região." },
                 { icon: ShieldCheck, title: "Preço justo", text: "Pagamento único, sem mensalidade e sem cobrança recorrente." },
-                { icon: Sparkles, title: "Tecnologia a serviço", text: "IA pra baratear, nunca pra cortar qualidade." },
+                { icon: Sparkles, title: "Tecnologia a serviço", text: "Tecnologia pra baratear, nunca pra cortar qualidade." },
               ].map((v) => (
                 <div key={v.title} className="flex items-start gap-4 rounded-2xl border border-ink-200/70 bg-white/80 p-5 shadow-ring">
                   <div className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 ring-1 ring-brand-200/60">
@@ -970,8 +840,8 @@ function FinalCTA() {
           </h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/80 text-pretty">
             Quanto antes você protocola, mais cedo o INSS reanalisa seu pedido.
-            Em poucos minutos você sai com um recurso estruturado, editável e com
-            garantia de 7 dias para testar com tranquilidade.
+            Você sai com um recurso estruturado e editável, com entrega em até 24h
+            ou, se preferir manter sua garantia de 7 dias, em até 8 dias.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Link

@@ -6,8 +6,9 @@ import { benefitLabels, denialLabels } from "@/lib/validations";
 import { formatDateBR, formatDateTimeBR } from "@/lib/utils";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { AppealDetailClient } from "@/components/dashboard/appeal-detail-client";
+import { AdminFinalizeForm } from "@/components/admin/finalize-form";
 import type { AppealStatus, BenefitType, DenialReason } from "@/lib/types";
-import { Download, FileText, RefreshCw } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 
 export default async function AppealDetailPage({
   params,
@@ -84,8 +85,21 @@ export default async function AppealDetailPage({
               id={appeal.id}
               status={appeal.status as AppealStatus}
               generatedText={appeal.generatedText}
+              dueAt={appeal.dueAt}
             />
           </section>
+
+          {user.role === "ADMIN" && appeal.status !== "READY" && (
+            <section className="card">
+              <h2 className="font-display text-lg font-semibold text-ink-950">
+                Finalizar recurso (admin)
+              </h2>
+              <p className="mt-1 text-sm text-ink-600">
+                Anexe o PDF e o Word finais para liberar o download ao cliente e marcar como pronto.
+              </p>
+              <AdminFinalizeForm appealId={appeal.id} />
+            </section>
+          )}
         </div>
 
         <aside className="space-y-6">

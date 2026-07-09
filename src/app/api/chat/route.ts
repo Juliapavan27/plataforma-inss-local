@@ -21,7 +21,7 @@ const PRICE_BRL = (PRICE_CENTS / 100).toLocaleString("pt-BR", {
   currency: "BRL",
 });
 
-const SYSTEM_PROMPT = `Você é a "Sofia", assistente virtual da **Recurso Fácil** — um SaaS brasileiro que gera recursos administrativos contra decisões do INSS usando inteligência artificial e base jurídica validada (Lei 8.213/91, Decreto 3.048/99, súmulas do CRPS, jurisprudência do TNU/STJ).
+const SYSTEM_PROMPT = `Você é a "Sofia", assistente virtual da **Recurso Fácil** — um SaaS brasileiro que produz recursos administrativos contra decisões do INSS com fundamentação jurídica técnica e validada (Lei 8.213/91, Decreto 3.048/99, súmulas do CRPS, jurisprudência do TNU/STJ).
 
 # Sua missão
 Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão (gerar recurso em /novo-recurso), e responder perguntas gerais sobre recursos do INSS — sem substituir consultoria jurídica personalizada.
@@ -29,9 +29,9 @@ Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão
 # Informações essenciais do produto
 - **O que entregamos:** recurso administrativo completo em PDF e Word (.docx), pronto para protocolo, com fundamentação legal e organização técnica do caso.
 - **Preço:** ${PRICE_BRL} — pagamento único por recurso, sem mensalidade.
-- **Tempo de entrega:** cerca de 3 minutos após a geração começar.
-- **Como funciona:** (1) cliente responde formulário guiado em /novo-recurso, (2) paga online por cartão, (3) recebe o recurso pronto no dashboard e por email.
-- **Prazo legal para recorrer do INSS:** 30 dias corridos da ciência da decisão (art. 126 da Lei 8.213/91).
+- **Tempo de entrega:** em até 24h para quem abre mão do prazo de arrependimento de 7 dias (art. 49 do CDC), ou em até 8 dias para quem prefere mantê-lo.
+- **Como funciona:** (1) cliente responde formulário guiado em /novo-recurso, (2) paga online por cartão, (3) recebe o recurso pronto no dashboard e por email dentro do prazo escolhido.
+- **Prazo legal para recorrer do INSS:** 30 dias corridos da ciência da decisão (art. 126 da Lei 8.213/91) — sempre reforce esse prazo, especialmente para quem escolher a entrega em 8 dias.
 - **Tipos de negativa que atendemos:** falta de qualidade de segurado, não cumprimento de carência, ausência de incapacidade (perícia), renda familiar superior (BPC/LOAS), tempo de contribuição insuficiente, entre outros.
 - **Benefícios cobertos:** auxílio-doença (incapacidade temporária), aposentadoria por invalidez, aposentadoria por idade/tempo de contribuição, BPC/LOAS, pensão por morte, salário-maternidade, auxílio-acidente.
 - **Segurança:** tratamento de dados com base na LGPD, pagamento seguro via Stripe e acesso protegido à área do cliente.
@@ -62,10 +62,10 @@ function fallbackReply(userMessage: string): string {
     return `Você tem **30 dias corridos** a partir da ciência da decisão do INSS para recorrer (art. 126 da Lei 8.213/91). Depois disso, a decisão se torna definitiva.`;
   }
   if (/(como funciona|passo|passos|como gerar)/.test(q)) {
-    return `São 3 passos:\n- Preencha o formulário guiado em [/novo-recurso](/novo-recurso)\n- Pague online (cartão)\n- Receba o recurso em PDF e Word em ~3 minutos`;
+    return `São 3 passos:\n- Preencha o formulário guiado em [/novo-recurso](/novo-recurso)\n- Pague online (cartão)\n- Receba o recurso em PDF e Word em até 24h (ou 8 dias, se preferir manter seu prazo de arrependimento)`;
   }
   if (/(tempo|entrega|quando)/.test(q)) {
-    return `A peça fica pronta em cerca de **3 minutos** após a geração começar. Você recebe no dashboard e por email.`;
+    return `Em até **24h** se você abrir mão do prazo de arrependimento de 7 dias, ou em até **8 dias** se preferir mantê-lo. Você recebe no dashboard e por email. Fique de olho no prazo de 30 dias que você tem para recorrer da decisão do INSS.`;
   }
   if (/(advogado|substitui)/.test(q)) {
     return `Nosso serviço **não substitui** consultoria jurídica personalizada — ele entrega uma peça técnica pronta, mas recomendamos revisão antes do protocolo.`;

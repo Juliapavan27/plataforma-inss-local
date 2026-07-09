@@ -38,6 +38,7 @@ interface FormState {
   dependencyProof: string;
   missingDocuments: string;
   inssIgnoredDetails: string;
+  withdrawalWaived: boolean | null;
   acceptTerms: boolean;
 }
 
@@ -64,6 +65,7 @@ const initialState: FormState = {
   dependencyProof: "",
   missingDocuments: "",
   inssIgnoredDetails: "",
+  withdrawalWaived: null,
   acceptTerms: false,
 };
 
@@ -97,6 +99,8 @@ export function AppealForm() {
         e.caseSummary = "Descreva com mais detalhes (mín. 50 caracteres)";
     }
     if (s === 4) {
+      if (state.withdrawalWaived === null)
+        e.withdrawalWaived = "Escolha um dos prazos de entrega";
       if (!state.acceptTerms)
         e.acceptTerms = "Você precisa aceitar os termos para prosseguir";
     }
@@ -329,6 +333,60 @@ export function AppealForm() {
               </p>
             </div>
             <Review state={state} />
+
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              <strong>Atenção ao prazo do INSS:</strong> você tem 30 dias corridos a partir
+              da ciência da decisão para apresentar o recurso administrativo. Escolha abaixo
+              o prazo de entrega considerando essa janela.
+            </div>
+
+            <div>
+              <Label>Prazo de entrega do recurso</Label>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                <label
+                  className={`cursor-pointer rounded-xl border p-4 text-sm transition ${
+                    state.withdrawalWaived === true
+                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
+                      : "border-ink-200 bg-white"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="withdrawalWaived"
+                    className="sr-only"
+                    checked={state.withdrawalWaived === true}
+                    onChange={() => set("withdrawalWaived", true)}
+                  />
+                  <p className="font-semibold text-ink-900">Receber em até 24h</p>
+                  <p className="mt-1 text-ink-600">
+                    Abro mão do prazo de arrependimento de 7 dias (art. 49 do CDC) e quero
+                    receber o recurso o quanto antes.
+                  </p>
+                </label>
+                <label
+                  className={`cursor-pointer rounded-xl border p-4 text-sm transition ${
+                    state.withdrawalWaived === false
+                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
+                      : "border-ink-200 bg-white"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="withdrawalWaived"
+                    className="sr-only"
+                    checked={state.withdrawalWaived === false}
+                    onChange={() => set("withdrawalWaived", false)}
+                  />
+                  <p className="font-semibold text-ink-900">Receber em até 8 dias</p>
+                  <p className="mt-1 text-ink-600">
+                    Mantenho meu prazo de arrependimento de 7 dias (art. 49 do CDC) antes de
+                    receber o recurso.
+                  </p>
+                </label>
+              </div>
+              <FieldError>{errors.withdrawalWaived}</FieldError>
+            </div>
+
             <label className="flex items-start gap-3 rounded-xl bg-ink-50 p-4 text-sm">
               <input
                 type="checkbox"

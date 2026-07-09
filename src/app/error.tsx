@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 
 export default function ErrorPage({
   error,
@@ -11,8 +12,8 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log no console (em produção o logger estruturado captura via Sentry).
     console.error("[app.error]", error.digest ?? "unknown");
+    Sentry.captureException(error);
   }, [error]);
 
   return (

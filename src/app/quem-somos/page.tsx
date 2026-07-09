@@ -265,12 +265,12 @@ function Values() {
     {
       icon: BookOpen,
       title: "Educação jurídica",
-      text: "Acreditamos que conhecimento liberta. Nosso blog e materiais existem pra explicar direitos em linguagem acessível.",
+      text: "Acreditamos que conhecimento liberta. Nossos materiais existem pra explicar direitos em linguagem acessível.",
     },
     {
       icon: Sparkles,
-      title: "IA responsável",
-      text: "Usamos IA pra baratear, nunca pra cortar qualidade. Todo conteúdo é revisado e validado tecnicamente.",
+      title: "Tecnologia responsável",
+      text: "Usamos tecnologia pra baratear, nunca pra cortar qualidade. Todo recurso é escrito e validado tecnicamente por quem entende do assunto.",
     },
   ];
 

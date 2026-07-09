@@ -26,7 +26,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Em quanto tempo recebo o recurso?",
-    a: "Em média 3 minutos após a confirmação do pagamento. Em horários de pico pode levar até 10 minutos.",
+    a: "Depende da opção escolhida na hora da compra: em até 24h se você abrir mão do prazo de arrependimento de 7 dias (art. 49 do CDC), ou em até 8 dias se preferir mantê-lo. De qualquer forma, fique atento ao prazo de 30 dias corridos que você tem para recorrer da decisão do INSS.",
   },
   {
     q: "Como é feito o pagamento?",
