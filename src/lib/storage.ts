@@ -1,9 +1,12 @@
 /**
- * Abstração de armazenamento. Usa S3 (ou compatível: R2, Backblaze etc.)
- * quando S3_BUCKET + credenciais estão configurados; caso contrário, cai
- * para disco local (./uploads) — útil em dev, mas não deve ser usado em
- * produção (containers como Railway têm filesystem efêmero: os arquivos
- * somem a cada redeploy/restart).
+ * Abstração de armazenamento, com dois modos:
+ *
+ * 1. S3 (ou compatível: R2, Backblaze) quando S3_BUCKET + credenciais existem.
+ * 2. Disco, no caminho de UPLOAD_DIR (padrão: ./uploads).
+ *
+ * IMPORTANTE sobre o modo disco: o filesystem de um container é efêmero — os
+ * arquivos somem a cada redeploy. Em produção, ele só é seguro se UPLOAD_DIR
+ * apontar para um volume persistente montado (ex.: volume da Railway em /data).
  */
 import { promises as fs } from "fs";
 import path from "path";
@@ -14,7 +17,9 @@ import {
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 
-const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
+const UPLOAD_DIR = path.resolve(
+  process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads"),
+);
 
 const s3Bucket = process.env.S3_BUCKET;
 const s3 =
