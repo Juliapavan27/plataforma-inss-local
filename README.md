@@ -201,9 +201,9 @@ secrets no repositório GitHub (Settings → Secrets and variables → Actions):
 - [ ] Embeddings reais (Voyage/OpenAI/Cohere) + pgvector + índice ivfflat.
 - [x] S3/R2 como storage (`storage.ts` já troca para S3 quando as env vars estão setadas).
 - [ ] URLs pré-assinadas para downloads direto do S3 (hoje o arquivo ainda passa pelo servidor Next — ok no volume atual, mas vale otimizar depois).
-- [ ] Observabilidade: Sentry + logs estruturados.
-- [ ] Rate limiting (Upstash) nos endpoints de IA e auth.
-- [ ] CSRF em endpoints sensíveis + headers de segurança (helmet equivalente).
+- [x] Observabilidade: Sentry (`sentry.*.config.ts` + `instrumentation.ts`) e logger estruturado com redact de PII.
+- [x] Rate limiting nos endpoints de auth, registro, chat e geração (`src/lib/rate-limit.ts`, in-memory — trocar por Upstash quando escalar para várias instâncias).
+- [x] CSRF nos endpoints mutativos (`src/middleware.ts`) + headers de segurança/CSP (`next.config.js`).
 - [ ] i18n (atualmente só pt-BR hard-coded).
 - [ ] Testes: vitest para lib, playwright para o fluxo ponta-a-ponta.
 - [ ] Checagem jurídica humana dos prompts + biblioteca inicial de modelos/doutrina validados.
