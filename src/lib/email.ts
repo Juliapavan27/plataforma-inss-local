@@ -16,7 +16,17 @@ export function isEmailConfigured() {
   return resend !== null;
 }
 
-async function send(opts: { to: string; subject: string; html: string }) {
+interface Attachment {
+  filename: string;
+  content: Buffer;
+}
+
+async function send(opts: {
+  to: string;
+  subject: string;
+  html: string;
+  attachments?: Attachment[];
+}) {
   if (!resend) {
     logger.warn("email.skip (RESEND_API_KEY não configurado)", {
       to: opts.to,
@@ -25,7 +35,22 @@ async function send(opts: { to: string; subject: string; html: string }) {
     return;
   }
   try {
-    await resend.emails.send({ from: FROM, to: opts.to, subject: opts.subject, html: opts.html });
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: opts.to,
+      subject: opts.subject,
+      html: opts.html,
+      attachments: opts.attachments,
+    });
+    // O SDK do Resend não lança exceção em erro de API — vem como { error } no retorno.
+    // error é um objeto plano (não Error), então passa como ctx pra não virar "[object Object]" no log.
+    if (error) {
+      logger.error("email.send falhou", undefined, {
+        to: opts.to,
+        subject: opts.subject,
+        resendError: { name: error.name, message: error.message },
+      });
+    }
   } catch (err) {
     logger.error("email.send falhou", err, { to: opts.to, subject: opts.subject });
   }
@@ -61,15 +86,70 @@ export async function sendAdminNewOrderEmail(appeal: {
   });
 }
 
-/** Avisa o cliente que o recurso ficou pronto para download. */
-export async function sendAppealReadyEmail(opts: { to: string; appealId: string }) {
+/** Avisa o cliente que o recurso ficou pronto, anexando o PDF e o DOCX. */
+export async function sendAppealReadyEmail(opts: {
+  to: string;
+  appealId: string;
+  pdfBuffer: Buffer;
+  docxBuffer: Buffer;
+}) {
   await send({
     to: opts.to,
     subject: "Seu recurso está pronto",
     html: layout(
       "Seu recurso está pronto!",
-      `<p>Seu recurso administrativo já está disponível para download na sua área do cliente.</p>
-       <p><a href="${APP_URL}/dashboard/recursos/${opts.appealId}" style="color:#2d43e0">Baixar meu recurso</a></p>`,
+      `<p>Seu recurso administrativo está em anexo, em PDF e Word — e também disponível na sua área do cliente.</p>
+       <p><a href="${APP_URL}/dashboard/recursos/${opts.appealId}" style="color:#2d43e0">Abrir minha área do cliente</a></p>`,
+    ),
+    attachments: [
+      { filename: "recurso.pdf", content: opts.pdfBuffer },
+      { filename: "recurso.docx", content: opts.docxBuffer },
+    ],
+  });
+}
+
+/** Avisa o admin que um cliente pediu reembolso. */
+export async function sendAdminRefundRequestEmail(opts: {
+  appealId: string;
+  userName: string;
+  reason: string;
+  amountCents: number;
+}) {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) return;
+  await send({
+    to: adminEmail,
+    subject: `Pedido de reembolso — ${opts.userName}`,
+    html: layout(
+      "Novo pedido de reembolso",
+      `<p><strong>${opts.userName}</strong> solicitou reembolso de ${formatCurrencyBRL(opts.amountCents)}.</p>
+       <p><strong>Motivo informado:</strong><br>${opts.reason}</p>
+       <p><a href="${APP_URL}/dashboard/recursos/${opts.appealId}" style="color:#2d43e0">Analisar solicitação</a></p>`,
+    ),
+  });
+}
+
+/** Comunica ao cliente a decisão sobre o reembolso. */
+export async function sendRefundDecisionEmail(opts: {
+  to: string;
+  name: string;
+  approved: boolean;
+  note: string | null;
+}) {
+  await send({
+    to: opts.to,
+    subject: opts.approved
+      ? "Seu reembolso foi aprovado"
+      : "Sobre sua solicitação de reembolso",
+    html: layout(
+      opts.approved ? "Reembolso aprovado" : "Sobre sua solicitação",
+      opts.approved
+        ? `<p>Olá, ${opts.name}. Seu pedido de reembolso foi aprovado e o pedido foi cancelado.</p>
+           <p>O estorno será processado pelo meio de pagamento usado na compra. O prazo até o valor aparecer na sua fatura ou conta varia conforme o banco/operadora (normalmente até 2 faturas, no caso de cartão de crédito).</p>
+           ${opts.note ? `<p><strong>Observação:</strong> ${opts.note}</p>` : ""}`
+        : `<p>Olá, ${opts.name}. Analisamos sua solicitação de reembolso e, desta vez, não foi possível aprová-la.</p>
+           ${opts.note ? `<p><strong>Motivo:</strong> ${opts.note}</p>` : ""}
+           <p>Se você discorda dessa análise ou quer conversar sobre o caso, é só responder este e-mail ou falar com a gente pelo WhatsApp.</p>`,
     ),
   });
 }

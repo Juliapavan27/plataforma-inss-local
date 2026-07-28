@@ -36,10 +36,29 @@ export default function TermosPage() {
           O serviço é cobrado por recurso, em pagamento único processado pelo
           Stripe. A geração é iniciada após a confirmação do pagamento.
         </p>
-        <h2>3. Reembolso</h2>
+        <h2>3. Cancelamento e reembolso</h2>
         <p>
-          Em caso de falha técnica não sanada em até 72 horas, o usuário pode
-          solicitar reembolso integral.
+          <strong>Antes da entrega:</strong> enquanto o recurso não for entregue, o
+          usuário pode cancelar o pedido a qualquer momento e receber reembolso
+          integral. Se o pagamento ainda não tiver sido confirmado, o cancelamento é
+          imediato e sem custo.
+        </p>
+        <p>
+          <strong>Depois da entrega — garantia de 7 dias:</strong> o usuário pode
+          solicitar reembolso integral em até 7 dias corridos contados do pagamento,
+          conforme a garantia anunciada e o direito de arrependimento do art. 49 do
+          Código de Defesa do Consumidor. A solicitação é feita pela área do cliente e
+          respondida por e-mail.
+        </p>
+        <p>
+          Ao optar pela entrega em até 24 horas, o usuário concorda com o início
+          imediato da execução do serviço. Ainda assim, a garantia comercial de 7 dias
+          descrita acima permanece válida.
+        </p>
+        <p>
+          O estorno é processado pelo mesmo meio de pagamento usado na compra. O prazo
+          até o valor aparecer na fatura ou conta depende do banco ou operadora de
+          cartão.
         </p>
         <h2>4. Limitação de responsabilidade</h2>
         <p>

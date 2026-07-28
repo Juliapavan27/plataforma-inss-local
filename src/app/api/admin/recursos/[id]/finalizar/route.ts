@@ -7,7 +7,8 @@ import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
-const MAX_SIZE = 15 * 1024 * 1024; // 15 MB
+// Resend limita o e-mail (com anexos em base64) a 40MB — 10MB por arquivo dá margem segura.
+const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
 /** Admin anexa o PDF/DOCX finais (escritos manualmente) e marca o recurso como pronto. */
 export async function POST(
@@ -33,7 +34,7 @@ export async function POST(
       );
     }
     if (pdfFile.size > MAX_SIZE || docxFile.size > MAX_SIZE) {
-      return NextResponse.json({ error: "Arquivo acima de 15MB" }, { status: 413 });
+      return NextResponse.json({ error: "Arquivo acima de 10MB" }, { status: 413 });
     }
 
     const pdfBuf = Buffer.from(await pdfFile.arrayBuffer());
@@ -58,7 +59,12 @@ export async function POST(
       },
     });
 
-    await sendAppealReadyEmail({ to: appeal.user.email, appealId: appeal.id });
+    await sendAppealReadyEmail({
+      to: appeal.user.email,
+      appealId: appeal.id,
+      pdfBuffer: pdfBuf,
+      docxBuffer: docxBuf,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (err) {

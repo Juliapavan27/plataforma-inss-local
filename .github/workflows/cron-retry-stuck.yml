@@ -1,0 +1,15 @@
+name: Cron - Retry Stuck Appeals
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # a cada 5 minutos
+  workflow_dispatch: {}
+
+jobs:
+  call:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar /api/cron/retry-stuck
+        run: |
+          curl -sf -X POST "${{ secrets.APP_URL }}/api/cron/retry-stuck" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}"

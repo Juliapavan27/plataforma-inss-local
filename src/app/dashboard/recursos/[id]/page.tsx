@@ -7,6 +7,9 @@ import { formatDateBR, formatDateTimeBR } from "@/lib/utils";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { AppealDetailClient } from "@/components/dashboard/appeal-detail-client";
 import { AdminFinalizeForm } from "@/components/admin/finalize-form";
+import { CancelRefundPanel } from "@/components/dashboard/cancel-refund";
+import { AdminRefundDecision } from "@/components/admin/refund-decision";
+import { computeRefundEligibility } from "@/lib/refund-policy";
 import type { AppealStatus, BenefitType, DenialReason } from "@/lib/types";
 import { Download, FileText } from "lucide-react";
 
@@ -18,10 +21,16 @@ export default async function AppealDetailPage({
   const user = await requireUser();
   const appeal = await db.appeal.findUnique({
     where: { id: params.id },
-    include: { documents: true, payment: true },
+    include: { documents: true, payment: true, refundRequest: true },
   });
   if (!appeal) notFound();
   if (appeal.userId !== user.id && user.role !== "ADMIN") notFound();
+
+  const eligibility = computeRefundEligibility({
+    status: appeal.status,
+    paidAt: appeal.payment?.paidAt ?? null,
+    hasRefundRequest: Boolean(appeal.refundRequest),
+  });
 
   return (
     <div className="p-8">
@@ -100,9 +109,30 @@ export default async function AppealDetailPage({
               <AdminFinalizeForm appealId={appeal.id} />
             </section>
           )}
+
+          {user.role === "ADMIN" && appeal.refundRequest?.status === "REQUESTED" && (
+            <section className="card border-amber-200 bg-amber-50/40">
+              <h2 className="font-display text-lg font-semibold text-ink-950">
+                Solicitação de reembolso (admin)
+              </h2>
+              <AdminRefundDecision
+                appealId={appeal.id}
+                reason={appeal.refundRequest.reason}
+              />
+            </section>
+          )}
         </div>
 
         <aside className="space-y-6">
+          <section className="card">
+            <p className="mb-3 font-semibold text-ink-900">Cancelamento e reembolso</p>
+            <CancelRefundPanel
+              appealId={appeal.id}
+              eligibility={eligibility}
+              refundStatus={appeal.refundRequest?.status ?? null}
+            />
+          </section>
+
           <section className="card">
             <p className="font-semibold text-ink-900">Documentos anexados</p>
             {appeal.documents.length === 0 ? (

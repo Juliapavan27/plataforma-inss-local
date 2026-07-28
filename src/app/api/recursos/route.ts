@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { appealCreateSchema } from "@/lib/validations";
 import { auth, hashPassword } from "@/lib/auth";
 import { stripe, isStripeConfigured, PRICE_RECURSO_CENTS } from "@/lib/stripe";
+import { isInfinitePayConfigured, createCheckoutLink } from "@/lib/infinitepay";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
@@ -89,9 +90,30 @@ export async function POST(req: Request) {
       },
     });
 
-    // Cria pagamento via Stripe (se configurado). Caso contrário, modo dev → marca como pago.
+    // Ordem de preferência: InfinitePay > Stripe > modo dev (marca como pago direto).
     let checkoutUrl: string | null = null;
-    if (isStripeConfigured()) {
+    if (isInfinitePayConfigured()) {
+      const { url } = await createCheckoutLink({
+        orderNsu: appeal.id,
+        amountCents: PRICE_RECURSO_CENTS,
+        description: "Recurso Administrativo INSS",
+        redirectUrl: `${process.env.APP_URL}/dashboard/recursos/${appeal.id}?paid=1`,
+        webhookUrl: `${process.env.APP_URL}/api/webhooks/infinitepay`,
+        customerName: data.fullName,
+        customerEmail: data.email,
+        customerPhone: data.phone,
+      });
+      await db.payment.create({
+        data: {
+          userId,
+          appealId: appeal.id,
+          amountCents: PRICE_RECURSO_CENTS,
+          provider: "infinitepay",
+          status: "PENDING",
+        },
+      });
+      checkoutUrl = url;
+    } else if (isStripeConfigured()) {
       const sessionStripe = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
@@ -118,6 +140,7 @@ export async function POST(req: Request) {
           userId,
           appealId: appeal.id,
           amountCents: PRICE_RECURSO_CENTS,
+          provider: "stripe",
           stripeSessionId: sessionStripe.id,
           status: "PENDING",
         },

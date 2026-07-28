@@ -64,6 +64,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li><Link href="/quem-somos" className="text-ink-200 hover:text-white">Quem somos</Link></li>
               <li><Link href="/calculadora" className="text-ink-200 hover:text-white">Calculadora</Link></li>
+              <li><Link href="/guias" className="text-ink-200 hover:text-white">Guias</Link></li>
               <li><Link href="/tutorial" className="text-ink-200 hover:text-white">Tutorial</Link></li>
               <li><Link href="/faq" className="text-ink-200 hover:text-white">FAQ</Link></li>
             </ul>

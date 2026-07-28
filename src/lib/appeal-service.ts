@@ -13,6 +13,7 @@ import { redactPii } from "./pii";
 import { logger } from "./logger";
 import { sendAdminNewOrderEmail, sendAbandonedCartEmail } from "./email";
 import { stripe, isStripeConfigured, getOrCreateAbandonedCartCoupon } from "./stripe";
+import { isInfinitePayConfigured, createCheckoutLink } from "./infinitepay";
 import type { BenefitType, DenialReason } from "./types";
 
 const MAX_ATTEMPTS = 3;
@@ -59,13 +60,14 @@ export async function sweepAbandonedCarts(): Promise<{
   scanned: number;
   emailed: string[];
 }> {
-  if (!isStripeConfigured()) return { scanned: 0, emailed: [] };
+  if (!isStripeConfigured() && !isInfinitePayConfigured()) {
+    return { scanned: 0, emailed: [] };
+  }
 
   const olderThan = new Date(Date.now() - ABANDONED_AFTER_MS);
   const payments = await db.payment.findMany({
     where: {
       status: "PENDING",
-      stripeSessionId: { not: null },
       abandonedEmailSentAt: null,
       createdAt: { lt: olderThan },
     },
@@ -74,36 +76,56 @@ export async function sweepAbandonedCarts(): Promise<{
   });
 
   const emailed: string[] = [];
-  const couponId = await getOrCreateAbandonedCartCoupon();
+  const couponId = isStripeConfigured() ? await getOrCreateAbandonedCartCoupon() : null;
 
   for (const p of payments) {
     try {
       const discountedCents = Math.round(p.amountCents * 0.9);
-      const session = await stripe.checkout.sessions.create({
-        mode: "payment",
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "brl",
-              product_data: { name: "Recurso Administrativo INSS" },
-              unit_amount: p.amountCents,
+      let checkoutUrl: string | null = null;
+
+      if (p.provider === "infinitepay" && isInfinitePayConfigured()) {
+        // InfinitePay não tem conceito de cupom — o desconto é só um preço menor no novo link.
+        const { url } = await createCheckoutLink({
+          orderNsu: p.appealId,
+          amountCents: discountedCents,
+          description: "Recurso Administrativo INSS (10% de desconto)",
+          redirectUrl: `${process.env.APP_URL}/dashboard/recursos/${p.appealId}?paid=1`,
+          webhookUrl: `${process.env.APP_URL}/api/webhooks/infinitepay`,
+          customerName: p.user.name,
+          customerEmail: p.user.email,
+          customerPhone: p.user.phone ?? undefined,
+        });
+        checkoutUrl = url;
+      } else if (p.provider === "stripe" && isStripeConfigured() && couponId) {
+        const session = await stripe.checkout.sessions.create({
+          mode: "payment",
+          payment_method_types: ["card"],
+          line_items: [
+            {
+              price_data: {
+                currency: "brl",
+                product_data: { name: "Recurso Administrativo INSS" },
+                unit_amount: p.amountCents,
+              },
+              quantity: 1,
             },
-            quantity: 1,
-          },
-        ],
-        discounts: [{ coupon: couponId }],
-        metadata: { appealId: p.appealId },
-        success_url: `${process.env.APP_URL}/dashboard/recursos/${p.appealId}?paid=1`,
-        cancel_url: `${process.env.APP_URL}/novo-recurso?canceled=1`,
-        customer_email: p.user.email,
-      });
-      if (!session.url) continue;
+          ],
+          discounts: [{ coupon: couponId }],
+          metadata: { appealId: p.appealId },
+          success_url: `${process.env.APP_URL}/dashboard/recursos/${p.appealId}?paid=1`,
+          cancel_url: `${process.env.APP_URL}/novo-recurso?canceled=1`,
+          customer_email: p.user.email,
+        });
+        checkoutUrl = session.url;
+      } else {
+        continue;
+      }
+      if (!checkoutUrl) continue;
 
       await sendAbandonedCartEmail({
         to: p.user.email,
         name: p.user.name,
-        checkoutUrl: session.url,
+        checkoutUrl,
         amountCents: p.amountCents,
         discountedCents,
       });

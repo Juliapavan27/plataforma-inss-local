@@ -10,15 +10,15 @@ const csp = [
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
-  "form-action 'self' https://checkout.stripe.com https://*.stripe.com",
+  "form-action 'self' https://checkout.stripe.com https://*.stripe.com https://checkout.infinitepay.io",
   `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   // *.ingest.sentry.io / *.ingest.us.sentry.io cobrem os hosts de ingestão mais comuns do
   // Sentry — se o DSN do projeto usar outra região, ajuste aqui.
-  "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
-  "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
+  "connect-src 'self' https://api.stripe.com https://api.checkout.infinitepay.io https://www.google-analytics.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
+  "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://checkout.infinitepay.io",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   "upgrade-insecure-requests",

@@ -50,6 +50,9 @@ export function Navbar() {
           <Link href="/calculadora" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Calculadora
           </Link>
+          <Link href="/guias" className="text-sm font-medium text-ink-700 hover:text-ink-950">
+            Guias
+          </Link>
           <Link href="/tutorial" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Tutorial
           </Link>
@@ -88,6 +91,9 @@ export function Navbar() {
             </Link>
             <Link href="/calculadora" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Calculadora
+            </Link>
+            <Link href="/guias" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
+              Guias
             </Link>
             <Link href="/tutorial" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Tutorial

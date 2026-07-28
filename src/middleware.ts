@@ -3,12 +3,13 @@ import { withAuth } from "next-auth/middleware";
 
 /**
  * CSRF: para métodos mutativos em /api/*, exige que `Origin` (ou `Referer`)
- * combine com o host da requisição. Webhooks externos (Stripe) são isentos
- * porque validam por assinatura HMAC própria.
+ * combine com o host da requisição. Webhooks externos são isentos — Stripe
+ * valida por assinatura HMAC própria; InfinitePay não tem assinatura, então
+ * o handler reconfirma cada pagamento via payment_check antes de confiar.
  */
 const MUTATING = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const CSRF_EXEMPT_PREFIXES = [
-  "/api/webhooks/", // Stripe valida assinatura
+  "/api/webhooks/",
   "/api/cron/", // protegido por CRON_SECRET próprio
 ];
 

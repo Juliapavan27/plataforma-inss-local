@@ -167,6 +167,17 @@ Você pode rodar isso no shell da Railway antes do primeiro uso da aplicação.
 - Cadastre o webhook do Stripe apontando para `/api/webhooks/stripe`
 - Revise o seed antes de usar em produção, se não quiser conteúdo padrão
 
+### 7. Agendar os crons (GitHub Actions)
+
+Os workflows `.github/workflows/cron-retry-stuck.yml` e `cron-abandoned-cart.yml` já
+chamam os endpoints automaticamente (a cada 5 e 30 minutos). Só falta cadastrar 2
+secrets no repositório GitHub (Settings → Secrets and variables → Actions):
+
+| Secret | Valor |
+|--------|-------|
+| `APP_URL` | URL pública de produção: `https://recursofacil.com` |
+| `CRON_SECRET` | O mesmo valor configurado na env var `CRON_SECRET` da Railway |
+
 ## Decisões de arquitetura
 
 - **Next.js App Router**: SSR para SEO (calculadora, landing), RSC para páginas autenticadas.

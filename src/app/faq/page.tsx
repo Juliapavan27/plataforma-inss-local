@@ -29,6 +29,10 @@ const FAQ: { q: string; a: string }[] = [
     a: "Depende da opção escolhida na hora da compra: em até 24h se você abrir mão do prazo de arrependimento de 7 dias (art. 49 do CDC), ou em até 8 dias se preferir mantê-lo. De qualquer forma, fique atento ao prazo de 30 dias corridos que você tem para recorrer da decisão do INSS.",
   },
   {
+    q: "Posso cancelar o pedido ou pedir reembolso?",
+    a: "Pode. Enquanto o recurso não for entregue, você cancela e recebe o valor integral de volta. Depois de entregue, você tem a garantia de 7 dias corridos (contados do pagamento) para solicitar o reembolso integral. É tudo feito pela sua área do cliente, em 'Cancelamento e reembolso'.",
+  },
+  {
     q: "Como é feito o pagamento?",
     a: "O pagamento é único, por cartão de crédito, processado de forma segura pelo Stripe. Não há mensalidade nem cobrança recorrente.",
   },
