@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-ink-900 text-white">
               <Scale className="h-4 w-4" />
             </span>
-            Admin · INSS
+            Admin · Recurso Fácil
           </Link>
           <nav className="flex-1 space-y-1 p-3 text-sm">
             <NavItem href="/admin" icon={Home}>Visão geral</NavItem>
