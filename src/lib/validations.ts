@@ -68,6 +68,15 @@ export const appealCreateSchema = z.object({
   phone: z.string().min(10),
   email: z.string().email(),
 
+  // endereço — entra na qualificação do recorrente e vai preenchido ao checkout
+  cep: z.string().regex(/^\d{8}$/, "CEP deve ter 8 dígitos"),
+  street: z.string().min(2, "Informe a rua"),
+  number: z.string().min(1, "Informe o número"),
+  complement: z.string().optional(),
+  neighborhood: z.string().min(2, "Informe o bairro"),
+  city: z.string().min(2, "Informe a cidade"),
+  state: z.string().length(2, "UF deve ter 2 letras"),
+
   // caso
   benefitType: z.enum(benefitTypes),
   denialReason: z.enum(denialReasons),

@@ -11,6 +11,7 @@ import {
   denialLabels,
 } from "@/lib/validations";
 import { maskCPF, maskPhone, onlyDigits } from "@/lib/utils";
+import { buscarCep, maskCep } from "@/lib/cep";
 import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 
 type Step = 1 | 2 | 3 | 4;
@@ -20,6 +21,13 @@ interface FormState {
   cpf: string;
   phone: string;
   email: string;
+  cep: string;
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
   benefitType: (typeof benefitTypes)[number] | "";
   denialReason: (typeof denialReasons)[number] | "";
   denialDate: string;
@@ -47,6 +55,13 @@ const initialState: FormState = {
   cpf: "",
   phone: "",
   email: "",
+  cep: "",
+  street: "",
+  number: "",
+  complement: "",
+  neighborhood: "",
+  city: "",
+  state: "",
   benefitType: "",
   denialReason: "",
   denialDate: "",
@@ -75,11 +90,36 @@ export function AppealForm() {
   const [state, setState] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [buscandoCep, setBuscandoCep] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const scenarioHint = getScenarioHint(state);
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setState((s) => ({ ...s, [key]: value }));
+  }
+
+  /**
+   * Ao completar 8 dígitos, busca o endereço e preenche os campos.
+   * Se o CEP não for encontrado, deixa a pessoa digitar manualmente em vez de
+   * bloquear — CEPs novos às vezes não estão na base.
+   */
+  async function onCepChange(value: string) {
+    const digits = onlyDigits(value).slice(0, 8);
+    set("cep", digits);
+    if (digits.length !== 8) return;
+
+    setBuscandoCep(true);
+    const endereco = await buscarCep(digits);
+    setBuscandoCep(false);
+    if (!endereco) return;
+
+    setState((s) => ({
+      ...s,
+      street: endereco.street || s.street,
+      neighborhood: endereco.neighborhood || s.neighborhood,
+      city: endereco.city || s.city,
+      state: endereco.state || s.state,
+    }));
   }
 
   function validateStep(s: Step) {
@@ -89,6 +129,12 @@ export function AppealForm() {
       if (onlyDigits(state.cpf).length !== 11) e.cpf = "CPF inválido";
       if (onlyDigits(state.phone).length < 10) e.phone = "Telefone inválido";
       if (!/^[^@]+@[^@]+\.[^@]+$/.test(state.email)) e.email = "E-mail inválido";
+      if (onlyDigits(state.cep).length !== 8) e.cep = "CEP deve ter 8 dígitos";
+      if (state.street.trim().length < 2) e.street = "Informe a rua";
+      if (state.number.trim().length < 1) e.number = "Informe o número";
+      if (state.neighborhood.trim().length < 2) e.neighborhood = "Informe o bairro";
+      if (state.city.trim().length < 2) e.city = "Informe a cidade";
+      if (state.state.trim().length !== 2) e.state = "UF";
     }
     if (s === 2) {
       if (!state.benefitType) e.benefitType = "Selecione o benefício";
@@ -129,6 +175,7 @@ export function AppealForm() {
           ...state,
           cpf: onlyDigits(state.cpf),
           phone: onlyDigits(state.phone),
+          cep: onlyDigits(state.cep),
         }),
       });
       if (!res.ok) {
@@ -210,6 +257,98 @@ export function AppealForm() {
                 placeholder="voce@email.com"
               />
               <FieldError>{errors.email}</FieldError>
+            </div>
+
+            <div className="mt-8 border-t border-ink-100 pt-6">
+              <h3 className="font-display text-lg font-semibold text-ink-950">Endereço</h3>
+              <p className="mt-1 text-sm text-ink-600">
+                Entra na qualificação do recorrente dentro da peça, como exige o recurso —
+                e agiliza seu pagamento depois.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-[200px_1fr]">
+              <div>
+                <Label>CEP</Label>
+                <div className="relative">
+                  <Input
+                    value={maskCep(state.cep)}
+                    onChange={(e) => onCepChange(e.target.value)}
+                    placeholder="00000-000"
+                    inputMode="numeric"
+                  />
+                  {buscandoCep && (
+                    <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-ink-400" />
+                  )}
+                </div>
+                <FieldError>{errors.cep}</FieldError>
+              </div>
+              <div className="flex items-end pb-1">
+                <p className="text-xs text-ink-500">
+                  Digite o CEP que o resto do endereço é preenchido sozinho.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-[1fr_140px]">
+              <div>
+                <Label>Rua</Label>
+                <Input
+                  value={state.street}
+                  onChange={(e) => set("street", e.target.value)}
+                  placeholder="Nome da rua"
+                />
+                <FieldError>{errors.street}</FieldError>
+              </div>
+              <div>
+                <Label>Número</Label>
+                <Input
+                  value={state.number}
+                  onChange={(e) => set("number", e.target.value)}
+                  placeholder="123"
+                />
+                <FieldError>{errors.number}</FieldError>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label>Complemento (opcional)</Label>
+                <Input
+                  value={state.complement}
+                  onChange={(e) => set("complement", e.target.value)}
+                  placeholder="Apto, bloco, fundos…"
+                />
+              </div>
+              <div>
+                <Label>Bairro</Label>
+                <Input
+                  value={state.neighborhood}
+                  onChange={(e) => set("neighborhood", e.target.value)}
+                />
+                <FieldError>{errors.neighborhood}</FieldError>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-[1fr_120px]">
+              <div>
+                <Label>Cidade</Label>
+                <Input
+                  value={state.city}
+                  onChange={(e) => set("city", e.target.value)}
+                />
+                <FieldError>{errors.city}</FieldError>
+              </div>
+              <div>
+                <Label>UF</Label>
+                <Input
+                  value={state.state}
+                  onChange={(e) => set("state", e.target.value.toUpperCase().slice(0, 2))}
+                  placeholder="SP"
+                  maxLength={2}
+                />
+                <FieldError>{errors.state}</FieldError>
+              </div>
             </div>
           </div>
         )}

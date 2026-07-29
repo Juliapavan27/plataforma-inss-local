@@ -47,7 +47,12 @@ export async function POST(req: Request) {
           where: { id: existing.id },
           // Não sobrescreve o e-mail de uma conta existente: ele é o login, e
           // trocá-lo por aqui deixaria a pessoa sem acesso ao histórico dela.
-          data: { cpf: data.cpf, phone: data.phone, name: data.fullName },
+          data: {
+            cpf: data.cpf, phone: data.phone, name: data.fullName,
+            cep: data.cep, street: data.street, number: data.number,
+            complement: data.complement ?? null, neighborhood: data.neighborhood,
+            city: data.city, state: data.state,
+          },
         });
       } else {
         // Cria usuário "lead" — senha temporária (o usuário define depois via reset).
@@ -58,6 +63,13 @@ export async function POST(req: Request) {
             name: data.fullName,
             cpf: data.cpf,
             phone: data.phone,
+            cep: data.cep,
+            street: data.street,
+            number: data.number,
+            complement: data.complement ?? null,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state,
             passwordHash: await hashPassword(tempPwd),
           },
         });
@@ -109,6 +121,16 @@ export async function POST(req: Request) {
         customerName: data.fullName,
         customerEmail: data.email,
         customerPhone: data.phone,
+        // Enviar o endereço faz o checkout da InfinitePay pular a etapa de
+        // entrega e ir direto ao pagamento — é atrito que não faz sentido para
+        // um produto digital.
+        address: {
+          cep: data.cep,
+          street: data.street,
+          neighborhood: data.neighborhood,
+          number: data.number,
+          complement: data.complement ?? "",
+        },
       });
       await db.payment.create({
         data: {

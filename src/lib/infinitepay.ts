@@ -24,6 +24,13 @@ interface CreateLinkInput {
   customerName?: string;
   customerEmail?: string;
   customerPhone?: string;
+  address?: {
+    cep: string;
+    street: string;
+    neighborhood: string;
+    number: string;
+    complement?: string;
+  };
 }
 
 export async function createCheckoutLink(input: CreateLinkInput): Promise<{ url: string }> {
@@ -45,6 +52,7 @@ export async function createCheckoutLink(input: CreateLinkInput): Promise<{ url:
             phone_number: input.customerPhone,
           }
         : undefined,
+      address: input.address,
     }),
   });
 
