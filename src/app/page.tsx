@@ -197,7 +197,7 @@ function TrustBar() {
    ====================================================================== */
 function Stats() {
   const items = [
-    { kpi: "3 min", label: "para sair da negativa com um recurso já estruturado" },
+    { kpi: "3 min", label: "para fazer sua solicitação pelo formulário guiado" },
     { kpi: "PDF + Word", label: "para revisar, editar e protocolar do seu jeito" },
     { kpi: "1 pagamento", label: "sem mensalidade e sem cobrança recorrente" },
     { kpi: "Fluxo guiado", label: "para quem não quer começar do zero nem se perder no processo" },

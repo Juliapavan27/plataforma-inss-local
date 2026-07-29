@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Scale, ShieldCheck, Lock } from "lucide-react";
+import { Scale, ShieldCheck, Lock, Clock, Mail } from "lucide-react";
+import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "@/lib/support";
 
 export function Footer() {
   return (
@@ -42,7 +43,17 @@ export function Footer() {
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-ink-200">
               <Lock className="h-3.5 w-3.5 text-gold-400" /> Pagamento seguro e transparente
             </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-success-500/25 bg-success-500/10 px-3 py-1.5 text-[11px] font-medium text-success-500">
+              <Clock className="h-3.5 w-3.5" /> Resposta em até {SUPPORT_SLA_HOURS}h úteis
+            </span>
           </div>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="mt-5 inline-flex items-center gap-2 text-sm text-ink-300 transition hover:text-white"
+          >
+            <Mail className="h-4 w-4" />
+            {SUPPORT_EMAIL}
+          </a>
         </div>
 
         <div className="md:col-span-7 grid grid-cols-2 gap-8 sm:grid-cols-3">
@@ -67,6 +78,7 @@ export function Footer() {
               <li><Link href="/guias" className="text-ink-200 hover:text-white">Guias</Link></li>
               <li><Link href="/tutorial" className="text-ink-200 hover:text-white">Tutorial</Link></li>
               <li><Link href="/faq" className="text-ink-200 hover:text-white">FAQ</Link></li>
+              <li><Link href="/contato" className="text-ink-200 hover:text-white">Contato</Link></li>
             </ul>
           </div>
 

@@ -45,6 +45,10 @@ const FAQ: { q: string; a: string }[] = [
     a: "Cobrimos os principais: aposentadoria (idade, tempo de contribuição, invalidez, especial), auxílio-doença, auxílio-acidente, BPC/LOAS, pensão por morte e salário-maternidade.",
   },
   {
+    q: "Como falo com uma pessoa da equipe?",
+    a: "Pelo e-mail contato@recursofacil.com — respondemos em até 24 horas úteis. A página de Contato tem mais detalhes e o que informar para agilizar seu atendimento.",
+  },
+  {
     q: "O recurso tem garantia de êxito?",
     a: "Nenhum recurso (humano ou automatizado) pode garantir êxito — a decisão depende do INSS e do CRPS. O que garantimos é a qualidade técnica da peça, com fundamentação legal pertinente.",
   },

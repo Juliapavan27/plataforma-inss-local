@@ -59,6 +59,9 @@ export function Navbar() {
           <Link href="/faq" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             FAQ
           </Link>
+          <Link href="/contato" className="text-sm font-medium text-ink-700 hover:text-ink-950">
+            Contato
+          </Link>
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -100,6 +103,9 @@ export function Navbar() {
             </Link>
             <Link href="/faq" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               FAQ
+            </Link>
+            <Link href="/contato" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
+              Contato
             </Link>
             <div className="mt-2 flex flex-col gap-2 border-t border-ink-200/60 pt-3">
               <Link href="/login" onClick={() => setOpen(false)} className="btn-secondary w-full">
