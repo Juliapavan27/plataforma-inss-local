@@ -90,7 +90,7 @@ export function computeRefundEligibility(input: EligibilityInput): RefundEligibi
     return {
       canCancel: false,
       canRequestRefund: false,
-      message: `O prazo de garantia de ${REFUND_WINDOW_DAYS} dias já passou. Se houve algum problema com seu recurso, fale com a gente pelo WhatsApp — analisamos caso a caso.`,
+      message: `O prazo de garantia de ${REFUND_WINDOW_DAYS} dias já passou. Se houve algum problema com seu recurso, escreva para contato@recursofacil.com — analisamos caso a caso.`,
       deadline,
     };
   }
@@ -98,7 +98,7 @@ export function computeRefundEligibility(input: EligibilityInput): RefundEligibi
   return {
     canCancel: false,
     canRequestRefund: false,
-    message: "Este pedido não está elegível para cancelamento automático. Fale com a gente pelo WhatsApp.",
+    message: "Este pedido não está elegível para cancelamento automático. Escreva para contato@recursofacil.com.",
     deadline: null,
   };
 }

@@ -46,7 +46,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Como falo com uma pessoa da equipe?",
-    a: "Pelo e-mail contato@recursofacil.com — respondemos em até 24 horas úteis. A página de Contato tem mais detalhes e o que informar para agilizar seu atendimento.",
+    a: "Pelo e-mail contato@recursofacil.com. Respondemos dúvidas enviadas por e-mail em até 48 horas úteis — esse prazo é do atendimento e não se confunde com o prazo de entrega do seu recurso, que é o que você escolheu na compra (24 horas ou 8 dias).",
   },
   {
     q: "O recurso tem garantia de êxito?",

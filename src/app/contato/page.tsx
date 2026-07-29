@@ -7,10 +7,8 @@ import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "@/lib/support";
 export const metadata = {
   title: "Contato e suporte",
   description:
-    "Fale com a equipe do Recurso Fácil. Respondemos todas as dúvidas por e-mail em até 24 horas úteis.",
+    "Fale com a equipe do Recurso Fácil por e-mail. Respondemos dúvidas em até 48 horas úteis.",
 };
-
-const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_PHONE;
 
 export default function ContatoPage() {
   return (
@@ -32,16 +30,17 @@ export default function ContatoPage() {
 
         {/* Selo de garantia de resposta */}
         <div className="mt-10 flex justify-center">
-          <div className="inline-flex items-center gap-3 rounded-2xl border border-success-100 bg-success-50 px-5 py-3">
+          <div className="inline-flex max-w-lg items-center gap-3 rounded-2xl border border-success-100 bg-success-50 px-5 py-3">
             <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-white text-success-600 ring-1 ring-success-100">
               <Clock className="h-4 w-4" />
             </span>
             <div className="text-left">
               <p className="text-sm font-semibold text-success-700">
-                Resposta em até {SUPPORT_SLA_HOURS} horas úteis
+                Dúvidas por e-mail: resposta em até {SUPPORT_SLA_HOURS} horas úteis
               </p>
               <p className="text-xs text-ink-600">
-                É o nosso compromisso com quem escreve pra gente.
+                Este prazo é do nosso atendimento. A entrega do recurso segue o prazo que
+                você escolheu na compra (24 horas ou 8 dias).
               </p>
             </div>
           </div>
@@ -69,44 +68,22 @@ export default function ContatoPage() {
             </span>
           </a>
 
-          {whatsapp ? (
-            <a
-              href={`https://wa.me/${whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group card-lift flex flex-col"
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-success-50 text-success-600 ring-1 ring-success-100">
-                <MessageCircle className="h-5 w-5" />
-              </span>
-              <h2 className="mt-4 font-display text-lg font-semibold text-ink-950">
-                WhatsApp
-              </h2>
-              <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-600">
-                Para dúvidas rápidas durante o horário comercial.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-success-700">
-                Abrir conversa
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </a>
-          ) : (
-            <Link href="/guias" className="group card-lift flex flex-col">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold-50 text-gold-800 ring-1 ring-gold-200/70">
-                <BookOpen className="h-5 w-5" />
-              </span>
-              <h2 className="mt-4 font-display text-lg font-semibold text-ink-950">
-                Guias
-              </h2>
-              <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-600">
-                Boa parte das dúvidas já está respondida ali, em linguagem simples.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
-                Ver guias
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          )}
+          <Link href="/guias" className="group card-lift flex flex-col">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-gold-50 text-gold-800 ring-1 ring-gold-200/70">
+              <BookOpen className="h-5 w-5" />
+            </span>
+            <h2 className="mt-4 font-display text-lg font-semibold text-ink-950">
+              Guias
+            </h2>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-600">
+              Boa parte das dúvidas já está respondida ali, em linguagem simples — e a
+              resposta é imediata.
+            </p>
+            <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
+              Ver guias
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </Link>
         </div>
 
         {/* Antes de escrever */}

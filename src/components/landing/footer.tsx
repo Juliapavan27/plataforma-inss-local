@@ -44,7 +44,7 @@ export function Footer() {
               <Lock className="h-3.5 w-3.5 text-gold-400" /> Pagamento seguro e transparente
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-success-500/25 bg-success-500/10 px-3 py-1.5 text-[11px] font-medium text-success-500">
-              <Clock className="h-3.5 w-3.5" /> Resposta em até {SUPPORT_SLA_HOURS}h úteis
+              <Clock className="h-3.5 w-3.5" /> Dúvidas por e-mail em até {SUPPORT_SLA_HOURS}h úteis
             </span>
           </div>
           <a

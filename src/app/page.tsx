@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
-import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { formatCurrencyBRL } from "@/lib/utils";
 
 const PRICE = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
@@ -42,7 +41,6 @@ export default function HomePage() {
       </main>
       <Footer />
       <StickyMobileCTA />
-      <WhatsAppFloat />
     </>
   );
 }

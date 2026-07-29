@@ -149,7 +149,7 @@ export async function sendRefundDecisionEmail(opts: {
            ${opts.note ? `<p><strong>Observação:</strong> ${opts.note}</p>` : ""}`
         : `<p>Olá, ${opts.name}. Analisamos sua solicitação de reembolso e, desta vez, não foi possível aprová-la.</p>
            ${opts.note ? `<p><strong>Motivo:</strong> ${opts.note}</p>` : ""}
-           <p>Se você discorda dessa análise ou quer conversar sobre o caso, é só responder este e-mail ou falar com a gente pelo WhatsApp.</p>`,
+           <p>Se você discorda dessa análise ou quer conversar sobre o caso, é só responder este e-mail — respondemos em até 48 horas úteis.</p>`,
     ),
   });
 }

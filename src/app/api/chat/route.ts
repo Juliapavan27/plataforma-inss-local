@@ -37,7 +37,7 @@ Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão
 - **Benefícios cobertos:** auxílio-doença (incapacidade temporária), aposentadoria por invalidez, aposentadoria por idade/tempo de contribuição, BPC/LOAS, pensão por morte, salário-maternidade, auxílio-acidente.
 - **Segurança:** tratamento de dados com base na LGPD, pagamento seguro e acesso protegido à área do cliente.
 - **Cancelamento e reembolso:** garantia de 7 dias. Antes da entrega, cancelamento com reembolso integral; depois de entregue, reembolso em até 7 dias corridos do pagamento. Tudo pela área do cliente.
-- **Suporte humano:** ${SUPPORT_EMAIL}, com resposta em até 24 horas úteis. Sempre ofereça esse canal quando você não souber responder.
+- **Suporte humano:** ${SUPPORT_EMAIL}, com resposta a dúvidas em até 48 horas úteis. ATENÇÃO: esse prazo é do atendimento por e-mail e NÃO se confunde com o prazo de entrega do recurso (24h ou 8 dias, conforme a escolha do cliente) — deixe a diferença clara se o assunto surgir. Sempre ofereça esse canal quando você não souber responder.
 - **Páginas úteis:** /novo-recurso (gerar), /login, /cadastro, /dashboard (área do cliente), /calculadora, /guias, /tutorial, /contato, /faq, /termos, /privacidade, /lgpd.
 
 # Guias disponíveis (use os links quando forem úteis à dúvida)
@@ -80,7 +80,7 @@ Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão
  * Fallback quando não há API key configurada (ou quando a chamada à IA falha).
  *
  * Cobre as dúvidas mais frequentes por palavra-chave. Quando não souber, admite
- * que não sabe e encaminha para os guias, o e-mail de suporte ou o WhatsApp —
+ * que não sabe e encaminha para os guias ou para o e-mail de suporte —
  * nunca inventa resposta jurídica.
  */
 function fallbackReply(userMessage: string): string {
@@ -139,10 +139,10 @@ function fallbackReply(userMessage: string): string {
     return `Não somos o INSS nem temos vínculo com o Governo Federal — somos uma **plataforma privada e independente**. O nome indica apenas a finalidade do serviço.`;
   }
   if (/(contato|fal(ar|o|amos|e)\s+com|atendimento|suporte|humano|voces|equipe|telefone|e-?mail de voc)/.test(q)) {
-    return `Claro! Você pode falar com a nossa equipe pelo e-mail **${SUPPORT_EMAIL}** — respondemos em até 24 horas úteis. Veja também a página de [Contato](/contato).`;
+    return `Claro! Você pode falar com a nossa equipe pelo e-mail **${SUPPORT_EMAIL}** — respondemos dúvidas em até 48 horas úteis (esse prazo é do atendimento, não da entrega do seu recurso). Veja também a página de [Contato](/contato).`;
   }
 
-  return `Não consegui entender bem sua dúvida — e prefiro não arriscar uma resposta errada sobre um assunto que afeta seus direitos.\n\nAlgumas opções:\n- Consultar nossos [guias sobre o INSS](/guias), que cobrem as dúvidas mais comuns\n- Ver as [perguntas frequentes](/faq)\n- Falar com nossa equipe: **${SUPPORT_EMAIL}** (respondemos em até 24 horas úteis)\n\nSe preferir, reformule a pergunta que eu tento de novo.`;
+  return `Não consegui entender bem sua dúvida — e prefiro não arriscar uma resposta errada sobre um assunto que afeta seus direitos.\n\nAlgumas opções:\n- Consultar nossos [guias sobre o INSS](/guias), que cobrem as dúvidas mais comuns\n- Ver as [perguntas frequentes](/faq)\n- Falar com nossa equipe: **${SUPPORT_EMAIL}** (respondemos dúvidas em até 48 horas úteis)\n\nSe preferir, reformule a pergunta que eu tento de novo.`;
 }
 
 export async function POST(req: Request) {
