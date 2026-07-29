@@ -13,14 +13,44 @@ const CSRF_EXEMPT_PREFIXES = [
   "/api/cron/", // protegido por CRON_SECRET próprio
 ];
 
+/**
+ * Hosts aceitos como origem de requisições mutativas.
+ *
+ * Não dá para comparar apenas com o header `Host`: em produção o site é servido
+ * por um Worker do Cloudflare que troca o Host para o endereço interno da Railway
+ * (necessário porque a Railway nunca validou o domínio customizado). Sem esta
+ * lista, toda submissão de formulário no domínio público seria barrada por CSRF.
+ */
+function allowedHosts(req: NextRequest): Set<string> {
+  const hosts = new Set<string>();
+
+  // O host da própria requisição (acesso direto pelo endereço da Railway, e dev local).
+  const host = req.headers.get("host");
+  if (host) hosts.add(host);
+
+  // O domínio público configurado, com e sem "www".
+  const appUrl = process.env.APP_URL;
+  if (appUrl) {
+    try {
+      const h = new URL(appUrl).host;
+      hosts.add(h);
+      hosts.add(h.startsWith("www.") ? h.slice(4) : `www.${h}`);
+    } catch {
+      // APP_URL malformada — ignora e segue com os demais hosts.
+    }
+  }
+
+  return hosts;
+}
+
 function isSameOrigin(req: NextRequest): boolean {
   const origin = req.headers.get("origin");
   const referer = req.headers.get("referer");
-  const host = req.headers.get("host");
-  if (!host) return false;
+  const permitidos = allowedHosts(req);
+  if (permitidos.size === 0) return false;
   try {
-    if (origin) return new URL(origin).host === host;
-    if (referer) return new URL(referer).host === host;
+    if (origin) return permitidos.has(new URL(origin).host);
+    if (referer) return permitidos.has(new URL(referer).host);
   } catch {
     return false;
   }
