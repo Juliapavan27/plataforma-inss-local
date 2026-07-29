@@ -33,13 +33,20 @@ export async function POST(req: Request) {
         } as any,
       });
     } else {
-      const existing = await db.user.findUnique({
-        where: { email: data.email.toLowerCase() },
-      });
+      // Procura por e-mail E por CPF: os dois são únicos no banco. Quem já pediu
+      // antes e volta usando outro e-mail (ou corrigindo um e-mail digitado
+      // errado) cairia em erro de constraint no create, sem conseguir comprar.
+      const email = data.email.toLowerCase();
+      const existing =
+        (await db.user.findUnique({ where: { email } })) ??
+        (await db.user.findUnique({ where: { cpf: data.cpf } }));
+
       if (existing) {
         userId = existing.id;
         await db.user.update({
           where: { id: existing.id },
+          // Não sobrescreve o e-mail de uma conta existente: ele é o login, e
+          // trocá-lo por aqui deixaria a pessoa sem acesso ao histórico dela.
           data: { cpf: data.cpf, phone: data.phone, name: data.fullName },
         });
       } else {
@@ -47,7 +54,7 @@ export async function POST(req: Request) {
         const tempPwd = crypto.randomUUID();
         const user = await db.user.create({
           data: {
-            email: data.email.toLowerCase(),
+            email,
             name: data.fullName,
             cpf: data.cpf,
             phone: data.phone,
