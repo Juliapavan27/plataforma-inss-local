@@ -23,6 +23,48 @@ export interface Guia {
   category: string;
   readingMinutes: number;
   blocks: Block[];
+  /**
+   * Fontes oficiais citadas. Conteúdo previdenciário é YMYL: o Google pesa
+   * muito de onde veio a informação, e o leitor também. Só entram links de
+   * legislação e de órgãos públicos — nunca sites de terceiros.
+   */
+  fontes?: FonteKey[];
+  /** Guias relacionados, por slug. Sem isso o rodapé mostra os 3 primeiros. */
+  relacionados?: string[];
+}
+
+/** Catálogo de fontes oficiais, para não repetir URL solta pelo arquivo. */
+export const FONTES = {
+  lei8213: {
+    titulo: "Lei 8.213/91 — Planos de Benefícios da Previdência Social",
+    url: "https://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm",
+  },
+  decreto3048: {
+    titulo: "Decreto 3.048/99 — Regulamento da Previdência Social",
+    url: "https://www.planalto.gov.br/ccivil_03/decreto/d3048.htm",
+  },
+  lei8742: {
+    titulo: "Lei 8.742/93 — Lei Orgânica da Assistência Social (LOAS)",
+    url: "https://www.planalto.gov.br/ccivil_03/leis/l8742.htm",
+  },
+  inss: {
+    titulo: "INSS — portal oficial no gov.br",
+    url: "https://www.gov.br/inss/pt-br",
+  },
+  crps: {
+    titulo: "Conselho de Recursos da Previdência Social (CRPS)",
+    url: "https://www.gov.br/previdencia/pt-br/assuntos/crps",
+  },
+  meuInss: {
+    titulo: "Meu INSS — canal oficial de atendimento",
+    url: "https://meu.inss.gov.br",
+  },
+} as const;
+
+export type FonteKey = keyof typeof FONTES;
+
+export function fontesDoGuia(guia: Guia) {
+  return (guia.fontes ?? []).map((k) => FONTES[k]);
 }
 
 export const guias: Guia[] = [
@@ -33,6 +75,12 @@ export const guias: Guia[] = [
       "Receber a carta de indeferimento não é o fim do processo. Entenda seus direitos, o prazo que você tem e quais caminhos existem.",
     category: "Primeiros passos",
     readingMinutes: 6,
+    fontes: ["lei8213", "inss", "crps"],
+    relacionados: [
+      "prazo-de-30-dias-para-recorrer",
+      "como-protocolar-recurso-no-meu-inss",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -98,6 +146,12 @@ export const guias: Guia[] = [
       "O motivo mais comum de negativa em auxílio-doença e aposentadoria por invalidez. Entenda como a perícia funciona e o que fortalece sua contestação.",
     category: "Benefícios por incapacidade",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "como-se-preparar-para-a-pericia",
+      "auxilio-doenca-negado",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -153,6 +207,12 @@ export const guias: Guia[] = [
       "Nem todo papel ajuda, e faltar o documento certo é uma das causas mais frequentes de negativa. Veja o que reunir para cada situação.",
     category: "Prática",
     readingMinutes: 5,
+    fontes: ["lei8213", "inss"],
+    relacionados: [
+      "inss-negou-meu-beneficio-o-que-fazer",
+      "cnis-como-ler-e-corrigir",
+      "como-protocolar-recurso-no-meu-inss",
+    ],
     blocks: [
       {
         type: "p",
@@ -222,6 +282,12 @@ export const guias: Guia[] = [
       "O critério de renda é o motivo mais frequente de negativa do BPC. Saiba como a conta é feita e o que pode ser questionado.",
     category: "BPC/LOAS",
     readingMinutes: 5,
+    fontes: ["lei8742", "decreto3048"],
+    relacionados: [
+      "inss-negou-meu-beneficio-o-que-fazer",
+      "documentos-que-fortalecem-seu-recurso",
+      "prazo-de-30-dias-para-recorrer",
+    ],
     blocks: [
       {
         type: "p",
@@ -277,6 +343,12 @@ export const guias: Guia[] = [
       "O prazo é curto e conta em dias corridos. Entenda quando ele começa, como não perder, e quais saídas existem se já passou.",
     category: "Primeiros passos",
     readingMinutes: 4,
+    fontes: ["lei8213", "decreto3048", "crps"],
+    relacionados: [
+      "como-protocolar-recurso-no-meu-inss",
+      "crps-junta-de-recursos-como-funciona",
+      "inss-negou-meu-beneficio-o-que-fazer",
+    ],
     blocks: [
       {
         type: "p",
@@ -327,6 +399,12 @@ export const guias: Guia[] = [
       "Perícia, carência e qualidade de segurado. Entenda qual dos três derrubou seu pedido e o que cada um exige para ser revertido.",
     category: "Benefícios por incapacidade",
     readingMinutes: 6,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "pericia-do-inss-negou-incapacidade",
+      "qualidade-de-segurado-e-periodo-de-graca",
+      "como-se-preparar-para-a-pericia",
+    ],
     blocks: [
       {
         type: "p",
@@ -368,6 +446,12 @@ export const guias: Guia[] = [
       "Parar de contribuir não significa perder a proteção imediatamente. Saiba por quanto tempo você continua coberto — e como isso pode reverter sua negativa.",
     category: "Conceitos essenciais",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "carencia-do-inss-o-que-e",
+      "cnis-como-ler-e-corrigir",
+      "auxilio-doenca-negado",
+    ],
     blocks: [
       {
         type: "p",
@@ -411,6 +495,12 @@ export const guias: Guia[] = [
       "O número mínimo de contribuições exigido varia conforme o benefício — e há situações em que a lei dispensa completamente.",
     category: "Conceitos essenciais",
     readingMinutes: 4,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "qualidade-de-segurado-e-periodo-de-graca",
+      "cnis-como-ler-e-corrigir",
+      "auxilio-doenca-negado",
+    ],
     blocks: [
       {
         type: "p",
@@ -452,6 +542,12 @@ export const guias: Guia[] = [
       "O CNIS é a base de quase toda decisão do INSS. Se ele estiver incompleto, sua negativa pode ser só um erro de registro.",
     category: "Prática",
     readingMinutes: 5,
+    fontes: ["inss", "meuInss"],
+    relacionados: [
+      "qualidade-de-segurado-e-periodo-de-graca",
+      "carencia-do-inss-o-que-e",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -497,6 +593,12 @@ export const guias: Guia[] = [
       "Com o recurso pronto em mãos, o envio leva poucos minutos. Veja o caminho exato dentro do aplicativo.",
     category: "Prática",
     readingMinutes: 4,
+    fontes: ["meuInss", "inss", "crps"],
+    relacionados: [
+      "prazo-de-30-dias-para-recorrer",
+      "crps-junta-de-recursos-como-funciona",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -542,6 +644,12 @@ export const guias: Guia[] = [
       "Seu recurso não é analisado por quem negou. Entenda as duas instâncias do Conselho de Recursos e o que acontece em cada uma.",
     category: "Conceitos essenciais",
     readingMinutes: 4,
+    fontes: ["crps", "decreto3048"],
+    relacionados: [
+      "recurso-negado-e-agora",
+      "prazo-de-30-dias-para-recorrer",
+      "como-protocolar-recurso-no-meu-inss",
+    ],
     blocks: [
       {
         type: "p",
@@ -577,6 +685,12 @@ export const guias: Guia[] = [
       "A incapacidade permanente exige mais do que doença grave. Entenda o que o INSS avalia e como estruturar sua contestação.",
     category: "Benefícios por incapacidade",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "pericia-do-inss-negou-incapacidade",
+      "auxilio-doenca-negado",
+      "como-se-preparar-para-a-pericia",
+    ],
     blocks: [
       {
         type: "p",
@@ -618,6 +732,12 @@ export const guias: Guia[] = [
       "Os dois pontos que derrubam a maioria dos pedidos, e como comprovar cada um deles.",
     category: "Pensão por morte",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "documentos-que-fortalecem-seu-recurso",
+      "qualidade-de-segurado-e-periodo-de-graca",
+      "prazo-de-30-dias-para-recorrer",
+    ],
     blocks: [
       {
         type: "p",
@@ -664,6 +784,12 @@ export const guias: Guia[] = [
       "As regras mudam bastante conforme sua categoria de segurada. Veja o que se aplica a você e o que costuma ser contestável.",
     category: "Salário-maternidade",
     readingMinutes: 4,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "carencia-do-inss-o-que-e",
+      "qualidade-de-segurado-e-periodo-de-graca",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -704,6 +830,12 @@ export const guias: Guia[] = [
       "Idade mínima e contribuições são requisitos objetivos. Quando um pedido é negado, quase sempre há período faltando no sistema.",
     category: "Aposentadoria",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "carencia-do-inss-o-que-e",
+      "cnis-como-ler-e-corrigir",
+      "trabalhador-rural-como-comprovar",
+    ],
     blocks: [
       {
         type: "p",
@@ -746,6 +878,12 @@ export const guias: Guia[] = [
       "A maioria de quem trabalhou na roça nunca teve registro formal. Veja quais documentos a lei aceita como prova.",
     category: "Trabalho rural",
     readingMinutes: 5,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "aposentadoria-por-idade-negada",
+      "documentos-que-fortalecem-seu-recurso",
+      "carencia-do-inss-o-que-e",
+    ],
     blocks: [
       {
         type: "p",
@@ -790,6 +928,12 @@ export const guias: Guia[] = [
       "Um benefício pouco conhecido e frequentemente negado. Entenda quando ele é devido e por que não impede você de trabalhar.",
     category: "Benefícios por incapacidade",
     readingMinutes: 4,
+    fontes: ["lei8213", "decreto3048"],
+    relacionados: [
+      "pericia-do-inss-negou-incapacidade",
+      "auxilio-doenca-negado",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -830,6 +974,12 @@ export const guias: Guia[] = [
       "A perícia dura poucos minutos e define seu benefício. Veja o que levar e como apresentar seu caso com clareza.",
     category: "Benefícios por incapacidade",
     readingMinutes: 4,
+    fontes: ["lei8213", "inss"],
+    relacionados: [
+      "pericia-do-inss-negou-incapacidade",
+      "auxilio-doenca-negado",
+      "documentos-que-fortalecem-seu-recurso",
+    ],
     blocks: [
       {
         type: "p",
@@ -877,6 +1027,12 @@ export const guias: Guia[] = [
       "A negativa em primeira instância não encerra o processo. Conheça os caminhos que continuam disponíveis.",
     category: "Primeiros passos",
     readingMinutes: 4,
+    fontes: ["crps", "lei8213"],
+    relacionados: [
+      "crps-junta-de-recursos-como-funciona",
+      "prazo-de-30-dias-para-recorrer",
+      "inss-negou-meu-beneficio-o-que-fazer",
+    ],
     blocks: [
       {
         type: "p",

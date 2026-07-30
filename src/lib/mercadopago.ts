@@ -134,6 +134,24 @@ export async function createPixOrder(input: {
   /** Minutos até o Pix expirar. */
   expiresInMinutes?: number;
 }): Promise<MpOrderResult> {
+  try {
+    return await postPixOrder(input);
+  } catch (err: any) {
+    const detalhe =
+      typeof err?.mpBody === "object" ? JSON.stringify(err.mpBody) : String(err?.message ?? "");
+    const conhecido = MOTIVOS_PIX.find((m) => m.padrao.test(detalhe));
+    if (conhecido) throw new PixUnavailableError(detalhe, conhecido.mensagem);
+    throw err;
+  }
+}
+
+async function postPixOrder(input: {
+  appealId: string;
+  amountCents: number;
+  description: string;
+  payer: OrderPayer;
+  expiresInMinutes?: number;
+}): Promise<MpOrderResult> {
   const data = await mpFetch("/v1/orders", {
     method: "POST",
     idempotencyKey: `pix-${input.appealId}-${randomUUID()}`,
@@ -186,6 +204,44 @@ const MOTIVOS_RECUSA: Record<string, string> = {
   processing_error:
     "Houve um problema ao processar. Aguarde um minuto e tente de novo, ou pague no Pix.",
 };
+
+/**
+ * Causas de falha do Pix que dependem de configuração da conta, não do código.
+ * Sem traduzir isso, o erro chega como "não foi possível gerar o Pix" e não há
+ * como saber, de fora do servidor, o que precisa ser ajustado.
+ */
+const MOTIVOS_PIX: { padrao: RegExp; mensagem: string }[] = [
+  {
+    padrao: /key enabled for qr|without key|pix key|chave pix/i,
+    mensagem:
+      "A conta do Mercado Pago ainda não tem uma chave Pix cadastrada. Cadastre a chave no app do Mercado Pago para liberar o pagamento por Pix.",
+  },
+  {
+    padrao: /policy returned unauthorized|invalid access token|unauthorized/i,
+    mensagem:
+      "As credenciais do Mercado Pago não foram aceitas. Confira o MERCADOPAGO_ACCESS_TOKEN de produção.",
+  },
+  {
+    padrao: /invalid_email_for_sandbox/i,
+    mensagem:
+      "Credenciais de teste em uso: no ambiente de testes o e-mail do comprador precisa terminar em @testuser.com.",
+  },
+  {
+    padrao: /payment_method_not_available|not available|pix.*not enabled/i,
+    mensagem:
+      "O Pix não está habilitado nesta conta do Mercado Pago. Ative o Pix no app antes de vender.",
+  },
+];
+
+export class PixUnavailableError extends Error {
+  constructor(
+    readonly detalheOriginal: string,
+    message: string,
+  ) {
+    super(message);
+    this.name = "PixUnavailableError";
+  }
+}
 
 export class CardDeclinedError extends Error {
   constructor(

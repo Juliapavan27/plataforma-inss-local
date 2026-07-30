@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
+import { JsonLd } from "@/components/seo/json-ld";
+import { organizationSchema, webSiteSchema } from "@/lib/schema";
 import { Chatbot } from "@/components/chatbot";
 import { Analytics, AnalyticsNoScript } from "@/components/analytics";
 
@@ -40,6 +42,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${fraunces.variable} antialiased`}
     >
       <body>
+        {/* Organization + WebSite valem para o site inteiro, então ficam aqui. */}
+        <JsonLd data={[organizationSchema(), webSiteSchema()]} />
         <Analytics />
         <AnalyticsNoScript />
         {children}

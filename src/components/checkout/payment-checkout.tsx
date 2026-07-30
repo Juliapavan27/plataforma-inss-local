@@ -150,7 +150,7 @@ function MethodPicker({
         <span className="flex-1">
           <span className="block font-semibold text-ink-950">Cartão de crédito</span>
           <span className="block text-sm text-ink-600">
-            À vista ou parcelado, com juros da operadora
+            À vista ou em até 12x — as parcelas aparecem depois que você digita o cartão
           </span>
         </span>
         <span className="font-display text-xl font-bold text-ink-900">
@@ -190,11 +190,15 @@ function PixPanel({
           method: "POST",
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "falha");
+        if (!res.ok) throw new Error(data.error || "");
         if (data.paid || data.alreadyPaid) return onPaid();
         setQr({ code: data.qrCode, base64: data.qrCodeBase64 });
-      } catch {
-        setError("Não foi possível gerar o Pix. Recarregue a página e tente de novo.");
+      } catch (e) {
+        // Mostra o motivo quando o servidor sabe qual é; genérico só como último caso.
+        const motivo = e instanceof Error ? e.message : "";
+        setError(
+          motivo || "Não foi possível gerar o Pix. Recarregue a página e tente de novo.",
+        );
       }
     })();
   }, [appealId, token, onPaid]);
@@ -221,7 +225,14 @@ function PixPanel({
   }, [qr, appealId, token, onPaid]);
 
   if (error) {
-    return <p className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{error}</p>;
+    return (
+      <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+        <p>{error}</p>
+        <p className="mt-2 text-red-900">
+          Enquanto isso, você pode concluir pelo cartão em “Trocar forma de pagamento”.
+        </p>
+      </div>
+    );
   }
 
   if (!qr) {

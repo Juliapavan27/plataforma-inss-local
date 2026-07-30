@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { createPixOrder, isMercadoPagoConfigured } from "@/lib/mercadopago";
+import { createPixOrder, isMercadoPagoConfigured, PixUnavailableError } from "@/lib/mercadopago";
 import { loadPaymentForCheckout, amountToCharge } from "@/lib/payment-access";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
@@ -77,6 +77,15 @@ export async function POST(
       amountCents,
     });
   } catch (err) {
+    // Falha de configuração da conta vai com o motivo: sem isso não há como
+    // descobrir, de fora do servidor, o que precisa ser ajustado no Mercado Pago.
+    if (err instanceof PixUnavailableError) {
+      logger.error("pagamento.pix indisponivel", err, {
+        appealId: params.appealId,
+        detalhe: err.detalheOriginal.slice(0, 400),
+      });
+      return NextResponse.json({ error: err.message, configuracao: true }, { status: 503 });
+    }
     logger.error("pagamento.pix falhou", err, { appealId: params.appealId });
     return NextResponse.json(
       { error: "Não foi possível gerar o Pix. Tente novamente." },
