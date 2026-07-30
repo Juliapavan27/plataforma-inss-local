@@ -28,3 +28,10 @@ export const PRICE_CARD_CENTS = Number(process.env.PRICE_CARD_CENTS ?? 29900);
 export const PIX_DISCOUNT_PERCENT = Math.round(
   ((PRICE_CARD_CENTS - PRICE_PIX_CENTS) / PRICE_CARD_CENTS) * 100,
 );
+
+/**
+ * Só anunciamos o desconto do Pix quando ele existe de fato. Se as duas envs
+ * ficarem com o mesmo valor (o que acontece enquanto a variável não é
+ * atualizada no servidor), o selo diria "0% de desconto".
+ */
+export const HAS_PIX_DISCOUNT = PIX_DISCOUNT_PERCENT > 0;

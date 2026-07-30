@@ -17,7 +17,12 @@ import {
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { formatCurrencyBRL } from "@/lib/utils";
-import { PRICE_PIX_CENTS, PRICE_CARD_CENTS, PIX_DISCOUNT_PERCENT } from "@/lib/pricing";
+import {
+  PRICE_PIX_CENTS,
+  PRICE_CARD_CENTS,
+  PIX_DISCOUNT_PERCENT,
+  HAS_PIX_DISCOUNT,
+} from "@/lib/pricing";
 
 export default function HomePage() {
   return (
@@ -559,7 +564,7 @@ function Pricing() {
                 {formatCurrencyBRL(PRICE_PIX_CENTS)}
               </span>
               <span className="rounded-full bg-gold-400/20 px-3 py-1 text-xs font-semibold text-gold-300 ring-1 ring-gold-400/30">
-                no Pix · {PIX_DISCOUNT_PERCENT}% de desconto
+                no Pix{HAS_PIX_DISCOUNT && ` · ${PIX_DISCOUNT_PERCENT}% de desconto`}
               </span>
             </div>
             <p className="mt-3 text-sm text-white/60">
