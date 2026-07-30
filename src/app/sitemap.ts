@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/faq", priority: 0.7 },
     { path: "/contato", priority: 0.6 },
     { path: "/quem-somos", priority: 0.5 },
+    { path: "/politica-editorial", priority: 0.4 },
     { path: "/termos", priority: 0.3 },
     { path: "/privacidade", priority: 0.3 },
     { path: "/lgpd", priority: 0.3 },

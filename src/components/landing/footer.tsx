@@ -87,6 +87,7 @@ export function Footer() {
               Legal
             </p>
             <ul className="space-y-3 text-sm">
+              <li><Link href="/politica-editorial" className="text-ink-200 hover:text-white">Política editorial</Link></li>
               <li><Link href="/termos" className="text-ink-200 hover:text-white">Termos de uso</Link></li>
               <li><Link href="/privacidade" className="text-ink-200 hover:text-white">Privacidade</Link></li>
               <li><Link href="/lgpd" className="text-ink-200 hover:text-white">LGPD</Link></li>
