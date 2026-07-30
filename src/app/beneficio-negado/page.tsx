@@ -85,11 +85,11 @@ export default function BeneficioNegadoPage() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/novo-recurso" className="btn-primary px-7 py-3.5">
-                Gerar meu recurso <ArrowRight className="h-4 w-4" />
+              <Link href="/posso-recorrer" className="btn-primary px-7 py-3.5">
+                Descobrir se posso recorrer <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/calculadora" className="btn-secondary px-7 py-3.5">
-                Simular meu benefício
+              <Link href="/posso-recorrer" className="btn-secondary px-7 py-3.5">
+                Descobrir se posso recorrer
               </Link>
             </div>
           </div>

@@ -86,12 +86,21 @@ function Hero() {
             Descreva o que aconteceu, anexe seus documentos e receba um recurso administrativo estruturado para revisar e protocolar no Meu INSS.
           </p>
 
-          <div className="mt-9 animate-fade-up [animation-delay:240ms]">
-            <Link href="/novo-recurso" className="btn-primary px-8 py-4 text-base">
-              Quero gerar meu recurso agora
+          {/* O caminho gratuito vem primeiro: quem acabou de tomar a negativa
+              ainda não está pronto para comprar, mas está pronto para saber se
+              o prazo dele está de pé. */}
+          <div className="mt-9 flex flex-wrap gap-3 animate-fade-up [animation-delay:240ms]">
+            <Link href="/posso-recorrer" className="btn-primary px-8 py-4 text-base">
+              Descubra se você pode recorrer
               <ArrowRight className="h-4 w-4" />
             </Link>
+            <Link href="/novo-recurso" className="btn-secondary px-7 py-4 text-base">
+              Já sei, quero gerar meu recurso
+            </Link>
           </div>
+          <p className="mt-3 text-sm text-ink-500 animate-fade-up [animation-delay:280ms]">
+            Análise gratuita em 1 minuto, sem cadastro.
+          </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-600 animate-fade-up [animation-delay:320ms]">
             <span className="flex items-center gap-2 font-medium text-success-600">

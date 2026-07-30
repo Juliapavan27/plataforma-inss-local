@@ -212,6 +212,9 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
           {/* Caminhos de maior intenção. Ficam depois do CTA principal para não
               competir com ele, mas antes do rodapé, onde ainda são vistos. */}
           <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            <Link href="/posso-recorrer" className="font-medium text-brand-700 hover:underline">
+              Posso recorrer? (grátis)
+            </Link>
             <Link href="/calculadora" className="font-medium text-brand-700 hover:underline">
               Simular meu benefício
             </Link>

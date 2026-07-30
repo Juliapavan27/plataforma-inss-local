@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Página-pilar do cluster: prioridade alta de propósito, é a porta de
     // entrada da busca "benefício negado".
     { path: "/beneficio-negado", priority: 0.9 },
+    { path: "/posso-recorrer", priority: 0.9 },
     { path: "/calculadora", priority: 0.8 },
     { path: "/guias", priority: 0.8 },
     { path: "/tutorial", priority: 0.7 },
