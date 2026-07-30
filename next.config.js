@@ -3,7 +3,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const isProd = process.env.NODE_ENV === "production";
 
-// CSP: liberal o suficiente para Next.js + Stripe + GTM/GA4/Meta Pixel
+// CSP: liberal o suficiente para Next.js + Mercado Pago + Stripe + GTM/GA4/Meta Pixel
 // (analytics em layout.tsx). Em dev permite 'unsafe-eval' para hot reload.
 const csp = [
   "default-src 'self'",
@@ -11,14 +11,14 @@ const csp = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self' https://checkout.stripe.com https://*.stripe.com https://checkout.infinitepay.io",
-  `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"} https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' data: https://fonts.gstatic.com",
+  `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"} https://js.stripe.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.mlstatic.com",
+  "font-src 'self' data: https://fonts.gstatic.com https://*.mlstatic.com",
   "img-src 'self' data: blob: https:",
   // *.ingest.sentry.io / *.ingest.us.sentry.io cobrem os hosts de ingestão mais comuns do
   // Sentry — se o DSN do projeto usar outra região, ajuste aqui.
-  "connect-src 'self' https://api.stripe.com https://api.checkout.infinitepay.io https://viacep.com.br https://www.google-analytics.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
-  "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://checkout.infinitepay.io",
+  "connect-src 'self' https://api.stripe.com https://api.mercadopago.com https://api.mercadolibre.com https://*.mercadopago.com https://*.mlstatic.com https://api.checkout.infinitepay.io https://viacep.com.br https://www.google-analytics.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
+  "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://checkout.infinitepay.io https://*.mercadopago.com https://*.mercadolibre.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   "upgrade-insecure-requests",

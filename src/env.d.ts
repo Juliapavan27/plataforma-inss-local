@@ -11,6 +11,12 @@ declare namespace NodeJS {
     PRICE_RECURSO_CENTS?: string;
     /** Valor anunciado para cartão à vista, já com o repasse da taxa. */
     PRICE_CARD_CENTS?: string;
+    /** Chave secreta do Mercado Pago (servidor). Nunca expor no navegador. */
+    MERCADOPAGO_ACCESS_TOKEN?: string;
+    /** Chave pública do Mercado Pago — vai pro navegador, usada pelo Brick. */
+    NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY?: string;
+    /** Segredo do webhook, do painel do Mercado Pago. Valida o x-signature. */
+    MERCADOPAGO_WEBHOOK_SECRET?: string;
     APP_URL?: string;
     ADMIN_EMAIL?: string;
     ADMIN_PASSWORD?: string;

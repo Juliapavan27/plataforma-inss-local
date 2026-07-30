@@ -148,6 +148,12 @@ model Payment {
   stripePaymentIntent String?
   infinitepayTransactionNsu String?
   infinitepaySlug           String?
+  mercadopagoOrderId        String?
+  mercadopagoPaymentId      String?
+  /// "pix" ou "credit_card" — escolhido pelo cliente na nossa página de pagamento.
+  paymentMethod             String?
+  /// Desconto de recuperação de carrinho, em centavos. 0 = sem desconto.
+  discountCents             Int      @default(0)
   paidAt              DateTime?
   abandonedEmailSentAt DateTime?
   createdAt           DateTime  @default(now())
@@ -155,6 +161,11 @@ model Payment {
 
   user   User   @relation(fields: [userId], references: [id])
   appeal Appeal @relation(fields: [appealId], references: [id], onDelete: Cascade)
+
+  // Índice em vez de @unique: adicionar constraint única numa tabela que já tem
+  // linhas faz o `prisma db push` do pre-deploy exigir --accept-data-loss, e essa
+  // trava existe de propósito. Só precisamos achar o pedido pelo id da order.
+  @@index([mercadopagoOrderId])
 }
 
 // ========= BASE DE CONHECIMENTO (RAG) =========

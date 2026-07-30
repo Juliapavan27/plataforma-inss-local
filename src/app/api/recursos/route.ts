@@ -3,7 +3,10 @@ import { db } from "@/lib/db";
 import { appealCreateSchema } from "@/lib/validations";
 import { auth, hashPassword } from "@/lib/auth";
 import { stripe, isStripeConfigured, PRICE_RECURSO_CENTS } from "@/lib/stripe";
+import { PRICE_CARD_CENTS } from "@/lib/pricing";
 import { isInfinitePayConfigured, createCheckoutLink } from "@/lib/infinitepay";
+import { isMercadoPagoConfigured } from "@/lib/mercadopago";
+import { createPaymentToken } from "@/lib/payment-token";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
@@ -109,9 +112,25 @@ export async function POST(req: Request) {
       },
     });
 
-    // Ordem de preferência: InfinitePay > Stripe > modo dev (marca como pago direto).
+    // Ordem de preferência: Mercado Pago > InfinitePay > Stripe > modo dev
+    // (marca como pago direto). O Mercado Pago vem primeiro porque é o único
+    // que paga dentro do nosso site; enquanto as chaves dele não estiverem
+    // configuradas, a InfinitePay segue atendendo normalmente.
     let checkoutUrl: string | null = null;
-    if (isInfinitePayConfigured()) {
+    if (isMercadoPagoConfigured()) {
+      await db.payment.create({
+        data: {
+          userId,
+          appealId: appeal.id,
+          // Placeholder: o valor definitivo depende do meio de pagamento
+          // escolhido e é gravado quando a cobrança é criada.
+          amountCents: PRICE_CARD_CENTS,
+          provider: "mercadopago",
+          status: "PENDING",
+        },
+      });
+      checkoutUrl = `/pagamento/${appeal.id}?t=${encodeURIComponent(createPaymentToken(appeal.id))}`;
+    } else if (isInfinitePayConfigured()) {
       const { url } = await createCheckoutLink({
         orderNsu: appeal.id,
         amountCents: PRICE_RECURSO_CENTS,

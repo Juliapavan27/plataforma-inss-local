@@ -14,6 +14,9 @@ import { logger } from "./logger";
 import { sendAdminNewOrderEmail, sendAbandonedCartEmail } from "./email";
 import { stripe, isStripeConfigured, getOrCreateAbandonedCartCoupon } from "./stripe";
 import { isInfinitePayConfigured, createCheckoutLink } from "./infinitepay";
+import { isMercadoPagoConfigured } from "./mercadopago";
+import { createPaymentToken } from "./payment-token";
+import { PRICE_CARD_CENTS } from "./pricing";
 import type { BenefitType, DenialReason } from "./types";
 
 const MAX_ATTEMPTS = 3;
@@ -60,7 +63,7 @@ export async function sweepAbandonedCarts(): Promise<{
   scanned: number;
   emailed: string[];
 }> {
-  if (!isStripeConfigured() && !isInfinitePayConfigured()) {
+  if (!isStripeConfigured() && !isInfinitePayConfigured() && !isMercadoPagoConfigured()) {
     return { scanned: 0, emailed: [] };
   }
 
@@ -80,10 +83,28 @@ export async function sweepAbandonedCarts(): Promise<{
 
   for (const p of payments) {
     try {
-      const discountedCents = Math.round(p.amountCents * 0.9);
+      // No Mercado Pago o `amountCents` gravado é só um placeholder até o
+      // cliente escolher o meio de pagamento — o e-mail compara com o preço
+      // anunciado do cartão, que é o que ele viu no site.
+      const fullCents =
+        p.provider === "mercadopago" ? PRICE_CARD_CENTS : p.amountCents;
+      const discountedCents = Math.round(fullCents * 0.9);
       let checkoutUrl: string | null = null;
 
-      if (p.provider === "infinitepay" && isInfinitePayConfigured()) {
+      if (p.provider === "mercadopago" && isMercadoPagoConfigured()) {
+        // Aqui o desconto é gravado no pedido, não num link novo: a nossa
+        // página de pagamento recalcula o valor dos dois meios a partir dele.
+        // Assim o cliente escolhe Pix ou cartão e o desconto vale igual.
+        await db.payment.update({
+          where: { id: p.id },
+          data: { discountCents: Math.round(PRICE_CARD_CENTS * 0.1) },
+        });
+        checkoutUrl = `${process.env.APP_URL}/pagamento/${p.appealId}?t=${encodeURIComponent(
+          // 7 dias: o e-mail de recuperação precisa continuar válido por mais
+          // tempo que o link normal do checkout.
+          createPaymentToken(p.appealId, 7 * 24 * 60 * 60_000),
+        )}`;
+      } else if (p.provider === "infinitepay" && isInfinitePayConfigured()) {
         // InfinitePay não tem conceito de cupom — o desconto é só um preço menor no novo link.
         const { url } = await createCheckoutLink({
           orderNsu: p.appealId,
@@ -126,7 +147,7 @@ export async function sweepAbandonedCarts(): Promise<{
         to: p.user.email,
         name: p.user.name,
         checkoutUrl,
-        amountCents: p.amountCents,
+        amountCents: fullCents,
         discountedCents,
       });
       await db.payment.update({
