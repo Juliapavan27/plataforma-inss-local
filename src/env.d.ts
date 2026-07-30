@@ -7,7 +7,10 @@ declare namespace NodeJS {
     STRIPE_SECRET_KEY?: string;
     STRIPE_WEBHOOK_SECRET?: string;
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;
+    /** Valor cobrado (base). É o preço no Pix — ver src/lib/pricing.ts. */
     PRICE_RECURSO_CENTS?: string;
+    /** Valor anunciado para cartão à vista, já com o repasse da taxa. */
+    PRICE_CARD_CENTS?: string;
     APP_URL?: string;
     ADMIN_EMAIL?: string;
     ADMIN_PASSWORD?: string;

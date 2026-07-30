@@ -9,9 +9,9 @@ export const stripe = key
     })
   : (null as any as Stripe);
 
-export const PRICE_RECURSO_CENTS = Number(
-  process.env.PRICE_RECURSO_CENTS ?? 29900,
-);
+// Mantido como reexport para não quebrar quem já importa daqui. A definição
+// (e a explicação dos dois preços) mora em src/lib/pricing.ts.
+export { PRICE_PIX_CENTS as PRICE_RECURSO_CENTS } from "./pricing";
 
 export function isStripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY);

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 import { SUPPORT_EMAIL } from "@/lib/support";
+import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,11 +17,10 @@ const BodySchema = z.object({
   messages: z.array(MessageSchema).min(1).max(30),
 });
 
-const PRICE_CENTS = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
-const PRICE_BRL = (PRICE_CENTS / 100).toLocaleString("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+const brl = (cents: number) =>
+  (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const PRICE_PIX_BRL = brl(PRICE_PIX_CENTS);
+const PRICE_CARD_BRL = brl(PRICE_CARD_CENTS);
 
 const SYSTEM_PROMPT = `Você é a "Sofia", assistente virtual da **Recurso Fácil** — um SaaS brasileiro que produz recursos administrativos contra decisões do INSS com fundamentação jurídica técnica e validada (Lei 8.213/91, Decreto 3.048/99, súmulas do CRPS, jurisprudência do TNU/STJ).
 
@@ -29,7 +29,7 @@ Tirar dúvidas de visitantes e clientes sobre o produto, guiar para a conversão
 
 # Informações essenciais do produto
 - **O que entregamos:** recurso administrativo completo em PDF e Word (.docx), pronto para protocolo, com fundamentação legal e organização técnica do caso.
-- **Preço:** ${PRICE_BRL} — pagamento único por recurso, sem mensalidade.
+- **Preço:** ${PRICE_PIX_BRL} no Pix ou ${PRICE_CARD_BRL} no cartão à vista (o cartão tem parcelamento) — pagamento único por recurso, sem mensalidade. Se perguntarem por que o Pix é mais barato: é desconto por meio de pagamento, permitido pela Lei 13.455/2017.
 - **Tempo de entrega:** em até 24h para quem abre mão do prazo de arrependimento de 7 dias (art. 49 do CDC), ou em até 8 dias para quem prefere mantê-lo.
 - **Como funciona:** (1) cliente responde formulário guiado em /novo-recurso, (2) paga online por cartão, (3) recebe o recurso pronto no dashboard e por email dentro do prazo escolhido.
 - **Prazo legal para recorrer do INSS:** 30 dias corridos da ciência da decisão (art. 126 da Lei 8.213/91) — sempre reforce esse prazo, especialmente para quem escolher a entrega em 8 dias.
@@ -92,7 +92,7 @@ function fallbackReply(userMessage: string): string {
     .replace(/[̀-ͯ]/g, "");
 
   if (/(preco|valor|quanto custa|quanto e|caro)/.test(q)) {
-    return `O recurso custa **${PRICE_BRL}** em pagamento único, sem mensalidade nem cobrança recorrente. [Gerar meu recurso](/novo-recurso)`;
+    return `O recurso custa **${PRICE_PIX_BRL} no Pix** ou **${PRICE_CARD_BRL} no cartão à vista** (com opção de parcelar). É pagamento único, sem mensalidade nem cobrança recorrente. [Gerar meu recurso](/novo-recurso)`;
   }
   if (/(recurso.*(negad|indeferid)|neg(ou|aram).*recurso|segunda inst|outro recurso|recorrer de novo|nova negativa)/.test(q)) {
     return `Sim, na maioria dos casos cabe novo recurso. Se a negativa veio da **Junta de Recursos** (primeira instância), ainda é possível recorrer às **Câmaras de Julgamento** (segunda instância), respeitando o prazo contado da ciência da decisão.\n\nEsgotada a via administrativa, resta o caminho judicial — que exige advogado, mas inclui perícia feita por profissional nomeado pelo juiz, independente do INSS.\n\nExpliquei isso em detalhe aqui: [Meu recurso também foi negado. E agora?](/guias/recurso-negado-e-agora)`;

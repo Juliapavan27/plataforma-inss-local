@@ -10,7 +10,7 @@ import {
   benefitLabels,
   denialLabels,
 } from "@/lib/validations";
-import { maskCPF, maskPhone, onlyDigits } from "@/lib/utils";
+import { maskCPF, maskPhone, onlyDigits, formatCurrencyBRL } from "@/lib/utils";
 import { buscarCep, maskCep } from "@/lib/cep";
 import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 
@@ -84,7 +84,18 @@ const initialState: FormState = {
   acceptTerms: false,
 };
 
-export function AppealForm() {
+/**
+ * Os preços chegam por prop, e não de `process.env`, porque este é um client
+ * component: variáveis sem NEXT_PUBLIC_ viram `undefined` no bundle do
+ * navegador, e a página cairia silenciosamente nos valores padrão.
+ */
+export function AppealForm({
+  pricePixCents,
+  priceCardCents,
+}: {
+  pricePixCents: number;
+  priceCardCents: number;
+}) {
   const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const [state, setState] = useState<FormState>(initialState);
@@ -524,6 +535,29 @@ export function AppealForm() {
                 </label>
               </div>
               <FieldError>{errors.withdrawalWaived}</FieldError>
+            </div>
+
+            <div className="rounded-xl border border-ink-200 bg-white p-4 text-sm">
+              <p className="font-semibold text-ink-900">Valor do recurso</p>
+              <div className="mt-3 space-y-1.5">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-ink-700">Pix</span>
+                  <span className="font-display text-lg font-bold text-brand-700">
+                    {formatCurrencyBRL(pricePixCents)}
+                  </span>
+                </div>
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-ink-700">Cartão à vista</span>
+                  <span className="font-semibold text-ink-900">
+                    {formatCurrencyBRL(priceCardCents)}
+                  </span>
+                </div>
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-ink-500">
+                O valor no cartão já inclui a taxa da operadora e aparece na próxima tela.
+                O parcelamento também está disponível, com juros da operadora. Pagamento
+                único — não existe mensalidade.
+              </p>
             </div>
 
             <label className="flex items-start gap-3 rounded-xl bg-ink-50 p-4 text-sm">

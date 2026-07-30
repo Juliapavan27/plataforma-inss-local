@@ -17,8 +17,7 @@ import {
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { formatCurrencyBRL } from "@/lib/utils";
-
-const PRICE = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
+import { PRICE_PIX_CENTS, PRICE_CARD_CENTS, PIX_DISCOUNT_PERCENT } from "@/lib/pricing";
 
 export default function HomePage() {
   return (
@@ -154,12 +153,14 @@ function HeroMock() {
       {/* Preço flutuante */}
       <div className="absolute -bottom-6 -left-4 hidden rounded-2xl border border-ink-950/10 bg-ink-950 px-5 py-4 text-white shadow-lift md:block animate-float">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-300">
-          A partir de
+          No Pix
         </p>
         <p className="mt-1 font-display text-2xl font-bold">
-          {formatCurrencyBRL(PRICE)}
+          {formatCurrencyBRL(PRICE_PIX_CENTS)}
         </p>
-        <p className="text-[11px] text-ink-400">pagamento único</p>
+        <p className="text-[11px] text-ink-400">
+          ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão
+        </p>
       </div>
     </div>
   );
@@ -553,14 +554,17 @@ function Pricing() {
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70">
               Ideal para quem quer agir rápido depois da negativa, sem precisar montar tudo sozinho.
             </p>
-            <div className="mt-6 flex items-baseline gap-2">
+            <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <span className="font-display text-6xl font-bold tracking-tight">
-                {formatCurrencyBRL(PRICE)}
+                {formatCurrencyBRL(PRICE_PIX_CENTS)}
               </span>
-              <span className="text-sm text-white/60">/ único</span>
+              <span className="rounded-full bg-gold-400/20 px-3 py-1 text-xs font-semibold text-gold-300 ring-1 ring-gold-400/30">
+                no Pix · {PIX_DISCOUNT_PERCENT}% de desconto
+              </span>
             </div>
             <p className="mt-3 text-sm text-white/60">
-              Valor único de <strong className="text-gold-300">{formatCurrencyBRL(PRICE)}</strong> por recurso
+              Ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão à vista, com parcelamento
+              disponível. Pagamento único, sem mensalidade.
             </p>
 
             <ul className="mt-8 space-y-3">
@@ -805,7 +809,7 @@ function StickyMobileCTA() {
             Prazo: 30 dias
           </p>
           <p className="text-sm font-bold text-ink-950">
-            {formatCurrencyBRL(PRICE)} <span className="text-xs font-normal text-ink-500">pagamento único</span>
+            {formatCurrencyBRL(PRICE_PIX_CENTS)} <span className="text-xs font-normal text-ink-500">no Pix</span>
           </p>
         </div>
         <Link href="/novo-recurso" className="btn-primary px-5 py-3 text-sm">

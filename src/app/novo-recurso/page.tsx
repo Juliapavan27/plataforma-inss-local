@@ -2,8 +2,7 @@ import { AppealForm } from "@/components/form/appeal-form";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { formatCurrencyBRL } from "@/lib/utils";
-
-const PRICE = Number(process.env.PRICE_RECURSO_CENTS ?? 29900);
+import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 
 export const metadata = { title: "Gerar recurso — Novo pedido" };
 
@@ -20,12 +19,13 @@ export default function NovoRecursoPage() {
             <p className="mt-3 text-ink-600">
               Responda em 3 etapas simples. Valor único:{" "}
               <span className="font-semibold text-brand-700">
-                {formatCurrencyBRL(PRICE)}
+                {formatCurrencyBRL(PRICE_PIX_CENTS)} no Pix
               </span>{" "}
+              ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão à vista{" "}
               — só você paga após confirmar os dados.
             </p>
           </div>
-          <AppealForm />
+          <AppealForm pricePixCents={PRICE_PIX_CENTS} priceCardCents={PRICE_CARD_CENTS} />
         </div>
       </main>
       <Footer />

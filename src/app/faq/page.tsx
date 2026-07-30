@@ -1,5 +1,7 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
+import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
+import { formatCurrencyBRL } from "@/lib/utils";
 
 export const metadata = {
   title: "FAQ — Dúvidas sobre recursos ao INSS",
@@ -33,8 +35,8 @@ const FAQ: { q: string; a: string }[] = [
     a: "Pode. Enquanto o recurso não for entregue, você cancela e recebe o valor integral de volta. Depois de entregue, você tem a garantia de 7 dias corridos (contados do pagamento) para solicitar o reembolso integral. É tudo feito pela sua área do cliente, em 'Cancelamento e reembolso'.",
   },
   {
-    q: "Como é feito o pagamento?",
-    a: "O pagamento é único, por cartão de crédito, processado de forma segura pelo Stripe. Não há mensalidade nem cobrança recorrente.",
+    q: "Como é feito o pagamento? Por que o Pix é mais barato?",
+    a: `O pagamento é único, feito por Pix ou cartão de crédito em ambiente seguro da InfinitePay. No Pix o recurso sai por ${formatCurrencyBRL(PRICE_PIX_CENTS)}; no cartão à vista, por ${formatCurrencyBRL(PRICE_CARD_CENTS)}, valor que já inclui a taxa cobrada pela operadora do cartão. Cobrar um preço menor no Pix é permitido pela Lei 13.455/2017. Não há mensalidade nem cobrança recorrente.`,
   },
   {
     q: "Meus dados estão seguros?",
