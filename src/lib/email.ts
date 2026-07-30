@@ -98,6 +98,8 @@ export async function sendPaymentConfirmationEmail(opts: {
   amountCents: number;
   dueAt: Date;
   trackingUrl: string;
+  /** Só para quem ainda não tem senha — quem comprou sem criar conta. */
+  setPasswordUrl?: string;
 }) {
   await send({
     to: opts.to,
@@ -110,10 +112,62 @@ export async function sendPaymentConfirmationEmail(opts: {
        <p><strong>Prazo de entrega:</strong> até ${formatDateBR(opts.dueAt)}. Você recebe
         o recurso em PDF e Word por e-mail, prontos para revisar antes de protocolar.</p>
        <p><a href="${opts.trackingUrl}" style="color:#2d43e0">Acompanhar meu pedido</a></p>
+       ${
+         opts.setPasswordUrl
+           ? `<p style="margin:20px 0;padding:16px;background:#f5f5f4;border-radius:8px">
+                <strong>Crie sua senha</strong><br>
+                Criamos uma conta com este e-mail junto com o seu pedido. Defina uma
+                senha para acessar seus recursos quando quiser:<br>
+                <a href="${opts.setPasswordUrl}" style="color:#2d43e0">Criar minha senha</a>
+              </p>`
+           : ""
+       }
        <p style="font-size:13px;color:#525252">Lembre-se do prazo do INSS: você tem 30 dias
         corridos da ciência da decisão para protocolar o recurso.</p>
        <p style="font-size:13px;color:#525252">Dúvidas? Escreva para ${SUPPORT_EMAIL} —
         respondemos em até ${SUPPORT_SLA_HOURS}h.</p>`,
+    ),
+  });
+}
+
+/**
+ * Link para definir (ou redefinir) a senha.
+ *
+ * `firstTime` muda o texto porque são situações diferentes: quem comprou sem
+ * criar conta nunca teve senha e não faz ideia de que tem cadastro; quem
+ * esqueceu sabe que tem.
+ */
+export async function sendPasswordSetupEmail(opts: {
+  to: string;
+  name: string;
+  url: string;
+  firstTime: boolean;
+}) {
+  const primeiroNome = opts.name.split(" ")[0];
+  await send({
+    to: opts.to,
+    subject: opts.firstTime
+      ? "Crie sua senha para acompanhar seus recursos"
+      : "Redefinir sua senha — Recurso Fácil",
+    html: layout(
+      opts.firstTime ? "Crie sua senha" : "Redefinir sua senha",
+      `<p>Olá, ${primeiroNome}!</p>
+       ${
+         opts.firstTime
+           ? `<p>Você já tem uma conta no Recurso Fácil, criada junto com o seu pedido.
+              Defina uma senha para acompanhar seus recursos e baixar os documentos
+              quando quiser.</p>`
+           : `<p>Recebemos um pedido para redefinir a senha da sua conta.</p>`
+       }
+       <p style="margin:24px 0">
+         <a href="${opts.url}" style="background:#2d43e0;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;display:inline-block;font-weight:600">
+           ${opts.firstTime ? "Criar minha senha" : "Redefinir minha senha"}
+         </a>
+       </p>
+       <p style="font-size:13px;color:#525252">O link vale por 2 horas e só pode ser
+        usado uma vez. Se não foi você quem pediu, ignore este e-mail — nada muda
+        na sua conta.</p>
+       <p style="font-size:13px;color:#525252">Dúvidas? Escreva para ${SUPPORT_EMAIL}.</p>`,
     ),
   });
 }

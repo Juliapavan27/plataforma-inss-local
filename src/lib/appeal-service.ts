@@ -20,6 +20,7 @@ import { stripe, isStripeConfigured, getOrCreateAbandonedCartCoupon } from "./st
 import { isInfinitePayConfigured, createCheckoutLink } from "./infinitepay";
 import { isMercadoPagoConfigured } from "./mercadopago";
 import { createPaymentToken } from "./payment-token";
+import { createPasswordResetToken } from "./password-reset";
 import { PRICE_CARD_CENTS } from "./pricing";
 import type { BenefitType, DenialReason } from "./types";
 
@@ -60,12 +61,24 @@ export async function markPaidAndNotifyAdmin(appealId: string) {
   // e-mail falhar, o pedido continua pago e o admin já foi avisado.
   try {
     const payment = await db.payment.findUnique({ where: { appealId } });
+
+    // Quem comprou sem criar conta não tem senha: o mesmo e-mail que confirma o
+    // pagamento já traz o convite para criar uma, que é quando ela está com a
+    // atenção no pedido.
+    const setPasswordUrl =
+      appeal.user.passwordSetAt === null
+        ? `${process.env.APP_URL}/definir-senha?token=${encodeURIComponent(
+            await createPasswordResetToken(appeal.user.id, 7 * 24 * 60 * 60_000),
+          )}`
+        : undefined;
+
     await sendPaymentConfirmationEmail({
       to: appeal.user.email,
       name: appeal.user.name,
       appealId: appeal.id,
       amountCents: payment?.amountCents ?? 0,
       dueAt,
+      setPasswordUrl,
       trackingUrl: `${process.env.APP_URL}/pagamento/${appeal.id}/confirmado?t=${encodeURIComponent(
         createPaymentToken(appeal.id, 30 * 24 * 60 * 60_000),
       )}`,

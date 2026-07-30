@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         name: data.name,
         email: data.email.toLowerCase(),
         passwordHash,
+        passwordSetAt: new Date(),
       },
       select: { id: true, email: true, name: true },
     });

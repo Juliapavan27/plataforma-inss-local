@@ -32,12 +32,19 @@ model User {
   state         String?
 
   role          String    @default("USER")
+
+  /// Quando a pessoa definiu a própria senha. Fica nulo para quem comprou sem
+  /// criar conta: nesses casos o cadastro nasce com senha aleatória, que ela
+  /// nunca viu — e por isso não adianta mandá-la para a tela de login.
+  passwordSetAt DateTime?
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  appeals  Appeal[]
-  sessions Session[]
-  payments Payment[]
+  appeals     Appeal[]
+  sessions    Session[]
+  payments    Payment[]
+  resetTokens PasswordResetToken[]
 }
 
 model Session {
@@ -213,4 +220,19 @@ model GenerationLog {
   createdAt    DateTime @default(now())
 
   @@index([appealId])
+}
+
+/// Token de definição/redefinição de senha, enviado por e-mail.
+/// Guarda só o hash: quem tiver acesso ao banco não consegue usar o link.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

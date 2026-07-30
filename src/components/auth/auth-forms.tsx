@@ -49,6 +49,11 @@ export function LoginForm() {
       <Button className="w-full" disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Entrar"}
       </Button>
+      <p className="text-center text-sm">
+        <Link href="/esqueci-senha" className="font-medium text-brand-700 hover:underline">
+          Esqueci minha senha
+        </Link>
+      </p>
       <p className="text-center text-sm text-ink-600">
         Não tem conta?{" "}
         <Link href="/cadastro" className="font-semibold text-brand-700">

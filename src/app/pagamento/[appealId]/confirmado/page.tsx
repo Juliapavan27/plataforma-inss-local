@@ -4,7 +4,7 @@ import { Footer } from "@/components/landing/footer";
 import { loadPaymentForCheckout } from "@/lib/payment-access";
 import { formatCurrencyBRL, formatDateBR } from "@/lib/utils";
 import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "@/lib/support";
-import { Check, Clock, Mail, FileText } from "lucide-react";
+import { Check, Clock, Mail, FileText, KeyRound } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -83,6 +83,26 @@ export default async function ConfirmadoPage({
                     texto="Lembre-se do prazo do INSS: 30 dias corridos da ciência da decisão."
                   />
                 </div>
+
+                {payment.user.passwordSetAt === null && (
+                  <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50 p-5 text-left">
+                    <p className="flex items-center gap-2 text-sm font-semibold text-ink-900">
+                      <KeyRound className="h-4 w-4 text-brand-600" />
+                      Crie sua senha
+                    </p>
+                    <p className="mt-1.5 text-sm text-ink-700">
+                      Sua conta já existe — criamos junto com o pedido. Defina uma senha
+                      para acessar seus recursos quando quiser. O link também foi para o
+                      seu e-mail.
+                    </p>
+                    <Link
+                      href="/esqueci-senha"
+                      className="btn-primary mt-4 w-full justify-center"
+                    >
+                      Criar minha senha
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <p className="mt-6 text-center text-sm text-ink-600">
