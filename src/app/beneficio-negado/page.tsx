@@ -5,7 +5,6 @@ import { Footer } from "@/components/landing/footer";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados } from "@/content/beneficios";
-import { getGuia } from "@/content/guias";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 import { formatCurrencyBRL } from "@/lib/utils";
 
@@ -108,11 +107,10 @@ export default function BeneficioNegadoPage() {
 
             <div className="mt-10 grid gap-5 md:grid-cols-2">
               {beneficiosNegados.map((b) => {
-                const guia = getGuia(b.guia);
                 return (
                   <Link
                     key={b.slug}
-                    href={`/guias/${b.guia}`}
+                    href={`/beneficio-negado/${b.slug}`}
                     className="group rounded-2xl border border-ink-200/70 bg-white p-6 shadow-ring transition hover:-translate-y-1 hover:shadow-lift"
                   >
                     <h3 className="font-display text-xl font-semibold text-ink-950">
@@ -133,7 +131,7 @@ export default function BeneficioNegadoPage() {
                     </ul>
 
                     <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
-                      {guia ? "Ler o guia completo" : "Saber mais"}
+                      Ver causas, documentos e prazo
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </span>
                   </Link>

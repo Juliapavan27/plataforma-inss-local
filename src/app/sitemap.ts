@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { guias } from "@/content/guias";
+import { beneficiosNegados } from "@/content/beneficios";
 
 /**
  * Sitemap das páginas públicas. Áreas autenticadas (/dashboard, /admin) e a API
@@ -33,6 +34,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: p.priority,
+    })),
+    // Folhas do cluster: prioridade acima dos guias porque respondem à busca
+    // com intenção mais próxima da decisão.
+    ...beneficiosNegados.map((b) => ({
+      url: `${base}/beneficio-negado/${b.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     })),
     ...guias.map((g) => ({
       url: `${base}/guias/${g.slug}`,
