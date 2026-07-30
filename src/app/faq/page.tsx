@@ -2,6 +2,8 @@ import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 import { formatCurrencyBRL } from "@/lib/utils";
+import { JsonLd } from "@/components/seo/json-ld";
+import { faqSchema, breadcrumbSchema } from "@/lib/schema";
 
 export const metadata = {
   title: "FAQ — Dúvidas sobre recursos ao INSS",
@@ -59,6 +61,17 @@ const FAQ: { q: string; a: string }[] = [
 export default function FAQPage() {
   return (
     <>
+      {/* As perguntas e respostas marcadas aqui são exatamente as visíveis na
+          página — FAQ declarada mas escondida é penalizada pelo Google. */}
+      <JsonLd
+        data={[
+          faqSchema(FAQ.map((f) => ({ pergunta: f.q, resposta: f.a }))),
+          breadcrumbSchema([
+            { nome: "Início", path: "/" },
+            { nome: "Perguntas frequentes", path: "/faq" },
+          ]),
+        ]}
+      />
       <Navbar />
       <main className="container max-w-3xl py-16">
         <div className="text-center">

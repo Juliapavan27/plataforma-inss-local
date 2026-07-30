@@ -15,6 +15,8 @@ import {
   Zap,
 } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
+import { JsonLd } from "@/components/seo/json-ld";
+import { serviceSchema } from "@/lib/schema";
 import { Footer } from "@/components/landing/footer";
 import { formatCurrencyBRL } from "@/lib/utils";
 import {
@@ -27,6 +29,12 @@ import {
 export default function HomePage() {
   return (
     <>
+      <JsonLd
+        data={serviceSchema({
+          pricePixCents: PRICE_PIX_CENTS,
+          priceCardCents: PRICE_CARD_CENTS,
+        })}
+      />
       <Navbar />
       <main className="relative">
         <Hero />

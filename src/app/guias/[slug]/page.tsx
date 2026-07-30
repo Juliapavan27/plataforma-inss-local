@@ -11,7 +11,11 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
-import { guias, getGuia, type Block } from "@/content/guias";
+import { guias, getGuia, fontesDoGuia, type Block } from "@/content/guias";
+import { JsonLd } from "@/components/seo/json-ld";
+import { articleSchema, breadcrumbSchema } from "@/lib/schema";
+import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
+import { formatDateBR } from "@/lib/utils";
 
 export function generateStaticParams() {
   return guias.map((g) => ({ slug: g.slug }));
@@ -97,10 +101,37 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
   const guia = getGuia(params.slug);
   if (!guia) notFound();
 
-  const outros = guias.filter((g) => g.slug !== guia.slug).slice(0, 3);
+  // Relacionados explícitos quando existem; senão, da mesma categoria. Os "3
+  // primeiros da lista" não têm relação nenhuma com o que a pessoa está lendo.
+  const relacionados = (guia.relacionados ?? [])
+    .map((slug) => guias.find((g) => g.slug === slug))
+    .filter((g): g is NonNullable<typeof g> => Boolean(g));
+  const outros =
+    relacionados.length > 0
+      ? relacionados
+      : guias.filter((g) => g.slug !== guia.slug && g.category === guia.category).slice(0, 3);
+
+  const fontes = fontesDoGuia(guia);
 
   return (
     <>
+      <JsonLd
+        data={[
+          articleSchema({
+            title: guia.title,
+            description: guia.excerpt,
+            path: `/guias/${guia.slug}`,
+            updatedAt: AUTORIA.revisadoEm,
+            authorName: AUTORIA.autor,
+            sources: fontes.map((f) => ({ titulo: f.titulo, url: f.url })),
+          }),
+          breadcrumbSchema([
+            { nome: "Início", path: "/" },
+            { nome: "Guias", path: "/guias" },
+            { nome: guia.title, path: `/guias/${guia.slug}` },
+          ]),
+        ]}
+      />
       <Navbar />
       <main className="relative">
         <article className="container max-w-3xl py-14">
@@ -127,9 +158,42 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
             <p className="mt-4 text-lg leading-relaxed text-ink-600 text-pretty">
               {guia.excerpt}
             </p>
+
+            {/* Autoria e data de revisão: em tema previdenciário (YMYL) o Google
+                e o leitor querem saber quem escreveu e quando foi conferido. */}
+            <p className="mt-6 text-sm text-ink-500">
+              Por <span className="font-medium text-ink-700">{AUTORIA.autor}</span>
+              {temCredencial && <span className="text-ink-600"> · OAB {AUTORIA.oab}</span>}
+              {" · "}
+              Revisado em {formatDateBR(revisadoEmData())}
+            </p>
           </header>
 
           <div>{guia.blocks.map(renderBlock)}</div>
+
+          {/* Fontes oficiais. Só legislação e órgãos públicos — em tema YMYL,
+              link para site de terceiro conta contra, não a favor. */}
+          {fontes.length > 0 && (
+            <section className="mt-14 rounded-2xl border border-ink-200/70 bg-white/60 p-6">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">
+                Fontes oficiais
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {fontes.map((f) => (
+                  <li key={f.url}>
+                    <a
+                      href={f.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-brand-700 underline decoration-brand-200 underline-offset-4 hover:decoration-brand-500"
+                    >
+                      {f.titulo}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* CTA no fim do artigo */}
           <div className="mt-16 rounded-3xl bg-ink-950 p-8 text-white md:p-10">
@@ -144,6 +208,23 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
               Gerar meu recurso <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+
+          {/* Caminhos de maior intenção. Ficam depois do CTA principal para não
+              competir com ele, mas antes do rodapé, onde ainda são vistos. */}
+          <nav className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            <Link href="/calculadora" className="font-medium text-brand-700 hover:underline">
+              Simular meu benefício
+            </Link>
+            <Link href="/guias/prazo-de-30-dias-para-recorrer" className="font-medium text-brand-700 hover:underline">
+              Qual é o meu prazo?
+            </Link>
+            <Link href="/guias/documentos-que-fortalecem-seu-recurso" className="font-medium text-brand-700 hover:underline">
+              Quais documentos juntar
+            </Link>
+            <Link href="/faq" className="font-medium text-brand-700 hover:underline">
+              Perguntas frequentes
+            </Link>
+          </nav>
 
           <p className="mt-8 text-xs leading-relaxed text-ink-400">
             Este conteúdo tem caráter informativo e não substitui orientação jurídica

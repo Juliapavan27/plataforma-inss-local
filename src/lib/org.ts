@@ -34,3 +34,15 @@ export const AUTORIA = {
 } as const;
 
 export const temCredencial = AUTORIA.oab.length > 0;
+
+/**
+ * Data de revisão como data local.
+ *
+ * `new Date("2026-07-30")` é interpretado como meia-noite UTC; no horário de
+ * Brasília isso cai no dia 29 e a página exibia a data errada. Montar a partir
+ * das partes mantém o dia que está escrito.
+ */
+export function revisadoEmData(): Date {
+  const [ano, mes, dia] = AUTORIA.revisadoEm.split("-").map(Number);
+  return new Date(ano, mes - 1, dia);
+}

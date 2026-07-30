@@ -21,12 +21,25 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
+    // Quem busca não pesquisa "recurso administrativo" — pesquisa "benefício
+    // negado", "auxílio-doença negado", "INSS indeferiu". O título precisa
+    // falar a língua da busca, não a do produto.
     default:
-      "Recurso Fácil — Recursos administrativos com qualidade técnica",
+      "Benefício negado pelo INSS? Recorra em até 24h — Recurso Fácil",
     template: "%s | Recurso Fácil",
   },
   description:
-    "Gere seu recurso administrativo contra decisões do INSS com entrega em até 24h. Fundamentação jurídica técnica, sem custos abusivos.",
+    "Teve auxílio-doença, BPC/LOAS, aposentadoria ou pensão negados pelo INSS? Monte seu recurso administrativo em PDF e Word, pronto para protocolar. Você tem 30 dias para recorrer.",
+  keywords: [
+    "benefício negado INSS",
+    "auxílio-doença negado",
+    "BPC LOAS negado",
+    "aposentadoria negada",
+    "como recorrer do INSS",
+    "recurso administrativo INSS",
+    "INSS indeferiu meu pedido",
+    "carta de indeferimento INSS",
+  ],
   metadataBase: new URL(process.env.APP_URL ?? "http://localhost:3000"),
   openGraph: {
     type: "website",
