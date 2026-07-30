@@ -353,6 +353,7 @@ function CardPanel({
             const data = await res.json();
             if (data.paid) return onPaid();
             if (data.pending) return setPending(true);
+            // Recusa vem com o motivo já traduzido pelo servidor.
             setError(
               data.error ??
                 "O pagamento não foi aprovado. Confira os dados ou tente outro cartão.",

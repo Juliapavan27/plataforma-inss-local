@@ -5,6 +5,7 @@
 import { Resend } from "resend";
 import { logger } from "./logger";
 import { formatCurrencyBRL, formatDateBR } from "./utils";
+import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "./support";
 
 const apiKey = process.env.RESEND_API_KEY;
 const resend = apiKey ? new Resend(apiKey) : null;
@@ -82,6 +83,37 @@ export async function sendAdminNewOrderEmail(appeal: {
       `<p>${appeal.userName} pagou e está aguardando a geração do recurso.</p>
        <p><strong>Prazo de entrega:</strong> ${appeal.dueAt ? formatDateBR(appeal.dueAt) : "não definido"}</p>
        <p><a href="${APP_URL}/admin/pedidos" style="color:#2d43e0">Abrir painel admin</a></p>`,
+    ),
+  });
+}
+
+/**
+ * Confirma a compra para o cliente. Sem este e-mail a pessoa paga e não recebe
+ * nada — nem comprovante, nem prazo, nem por onde acompanhar.
+ */
+export async function sendPaymentConfirmationEmail(opts: {
+  to: string;
+  name: string;
+  appealId: string;
+  amountCents: number;
+  dueAt: Date;
+  trackingUrl: string;
+}) {
+  await send({
+    to: opts.to,
+    subject: "Pagamento confirmado — seu recurso está em produção",
+    html: layout(
+      "Pagamento confirmado",
+      `<p>Olá, ${opts.name.split(" ")[0]}! Recebemos seu pagamento de
+        <strong>${formatCurrencyBRL(opts.amountCents)}</strong> e seu recurso já entrou
+        na fila de produção.</p>
+       <p><strong>Prazo de entrega:</strong> até ${formatDateBR(opts.dueAt)}. Você recebe
+        o recurso em PDF e Word por e-mail, prontos para revisar antes de protocolar.</p>
+       <p><a href="${opts.trackingUrl}" style="color:#2d43e0">Acompanhar meu pedido</a></p>
+       <p style="font-size:13px;color:#525252">Lembre-se do prazo do INSS: você tem 30 dias
+        corridos da ciência da decisão para protocolar o recurso.</p>
+       <p style="font-size:13px;color:#525252">Dúvidas? Escreva para ${SUPPORT_EMAIL} —
+        respondemos em até ${SUPPORT_SLA_HOURS}h.</p>`,
     ),
   });
 }

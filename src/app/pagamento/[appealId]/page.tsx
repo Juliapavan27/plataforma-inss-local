@@ -36,7 +36,11 @@ export default async function PagamentoPage({
   }
 
   if (payment.status === "PAID") {
-    redirect(`/dashboard/recursos/${params.appealId}?paid=1`);
+    redirect(
+      `/pagamento/${params.appealId}/confirmado?t=${encodeURIComponent(
+        createPaymentToken(params.appealId),
+      )}`,
+    );
   }
 
   if (!isMercadoPagoConfigured()) {
@@ -78,7 +82,7 @@ export default async function PagamentoPage({
         publicKey={process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY!}
         pricePixCents={amountToCharge(payment, "pix", prices)}
         priceCardCents={amountToCharge(payment, "credit_card", prices)}
-        successUrl={`/dashboard/recursos/${params.appealId}?paid=1`}
+        successUrl={`/pagamento/${params.appealId}/confirmado?t=${encodeURIComponent(token)}`}
       />
     </Shell>
   );

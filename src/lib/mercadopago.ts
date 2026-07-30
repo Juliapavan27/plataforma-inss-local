@@ -158,12 +158,88 @@ export async function createPixOrder(input: {
   return readOrder(data);
 }
 
+/**
+ * Traduz o motivo da recusa para uma frase que diz ao cliente o que fazer.
+ *
+ * Sem isso ele recebe "confira os dados" para qualquer recusa e tenta o mesmo
+ * cartão de novo — inclusive quando o problema era saldo, e nenhuma tentativa
+ * ia funcionar. É diferença de venda, não de texto.
+ */
+const MOTIVOS_RECUSA: Record<string, string> = {
+  // Códigos observados na própria API de Orders (sandbox, julho/2026).
+  insufficient_amount:
+    "O cartão não tem limite disponível para este valor. Tente outro cartão ou pague no Pix.",
+  bad_filled_card_data:
+    "Algum dado do cartão está incorreto. Confira o número, a validade e o código de segurança.",
+  required_call_for_authorize:
+    "Seu banco precisa autorizar esta compra. Ligue para o número no verso do cartão e tente de novo.",
+  card_disabled:
+    "Este cartão está bloqueado para compras online. Fale com seu banco ou use outro cartão.",
+  rejected_by_issuer:
+    "O banco emissor recusou a compra. Tente outro cartão ou pague no Pix.",
+  max_attempts_exceeded:
+    "Foram muitas tentativas com este cartão. Aguarde alguns minutos ou use outro cartão.",
+  invalid_installments:
+    "Este cartão não aceita esse número de parcelas. Escolha outra opção de parcelamento.",
+  invalid_card_token:
+    "Não foi possível ler os dados do cartão. Recarregue a página e digite de novo.",
+  processing_error:
+    "Houve um problema ao processar. Aguarde um minuto e tente de novo, ou pague no Pix.",
+};
+
+export class CardDeclinedError extends Error {
+  constructor(
+    readonly reason: string,
+    message: string,
+  ) {
+    super(message);
+    this.name = "CardDeclinedError";
+  }
+}
+
+/** O 402 do Mercado Pago traz o motivo em `errors[].details` como "PAY...: motivo". */
+function readDeclineReason(body: any): string | null {
+  const details: unknown = body?.errors?.[0]?.details;
+  if (Array.isArray(details) && typeof details[0] === "string") {
+    const afterColon = details[0].split(":").pop()?.trim();
+    if (afterColon) return afterColon;
+  }
+  return body?.data?.status_detail ?? null;
+}
+
 export async function createCardOrder(input: {
   appealId: string;
   amountCents: number;
   description: string;
   payer: OrderPayer;
   /** Token gerado pelo Brick no navegador — representa o cartão, e só serve uma vez. */
+  token: string;
+  paymentMethodId: string;
+  installments: number;
+  issuerId?: string;
+}): Promise<MpOrderResult> {
+  try {
+    return await postCardOrder(input);
+  } catch (err: any) {
+    // Recusa é resposta esperada do fluxo, não falha nossa: o 402 vira um erro
+    // tipado com o motivo, para a rota devolver uma frase útil ao cliente.
+    if (err?.mpStatus === 402) {
+      const reason = readDeclineReason(err.mpBody) ?? "desconhecido";
+      throw new CardDeclinedError(
+        reason,
+        MOTIVOS_RECUSA[reason] ??
+          "O pagamento não foi autorizado pelo banco. Tente outro cartão ou pague no Pix.",
+      );
+    }
+    throw err;
+  }
+}
+
+async function postCardOrder(input: {
+  appealId: string;
+  amountCents: number;
+  description: string;
+  payer: OrderPayer;
   token: string;
   paymentMethodId: string;
   installments: number;

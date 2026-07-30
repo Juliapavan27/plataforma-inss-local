@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { createCardOrder, isMercadoPagoConfigured } from "@/lib/mercadopago";
+import { createCardOrder, isMercadoPagoConfigured, CardDeclinedError } from "@/lib/mercadopago";
 import { loadPaymentForCheckout, amountToCharge } from "@/lib/payment-access";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
@@ -109,6 +109,15 @@ export async function POST(
       statusDetail: order.statusDetail,
     });
   } catch (err) {
+    // Cartão recusado não é erro de sistema — é o banco dizendo não. Vai como
+    // aviso, com o motivo, e o cliente vê o que precisa fazer.
+    if (err instanceof CardDeclinedError) {
+      logger.warn("pagamento.cartao recusado", {
+        appealId: params.appealId,
+        motivo: err.reason,
+      });
+      return NextResponse.json({ paid: false, declined: true, error: err.message }, { status: 200 });
+    }
     logger.error("pagamento.cartao falhou", err, { appealId: params.appealId });
     return NextResponse.json(
       { error: "Não foi possível processar o cartão. Confira os dados e tente novamente." },

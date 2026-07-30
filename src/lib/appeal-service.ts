@@ -11,7 +11,11 @@ import { buildAppealDocx } from "./docgen/docx";
 import { saveBuffer } from "./storage";
 import { redactPii } from "./pii";
 import { logger } from "./logger";
-import { sendAdminNewOrderEmail, sendAbandonedCartEmail } from "./email";
+import {
+  sendAdminNewOrderEmail,
+  sendAbandonedCartEmail,
+  sendPaymentConfirmationEmail,
+} from "./email";
 import { stripe, isStripeConfigured, getOrCreateAbandonedCartCoupon } from "./stripe";
 import { isInfinitePayConfigured, createCheckoutLink } from "./infinitepay";
 import { isMercadoPagoConfigured } from "./mercadopago";
@@ -51,6 +55,24 @@ export async function markPaidAndNotifyAdmin(appealId: string) {
     userName: appeal.user.name,
     dueAt,
   });
+
+  // O comprovante do cliente não pode derrubar a confirmação do pagamento: se o
+  // e-mail falhar, o pedido continua pago e o admin já foi avisado.
+  try {
+    const payment = await db.payment.findUnique({ where: { appealId } });
+    await sendPaymentConfirmationEmail({
+      to: appeal.user.email,
+      name: appeal.user.name,
+      appealId: appeal.id,
+      amountCents: payment?.amountCents ?? 0,
+      dueAt,
+      trackingUrl: `${process.env.APP_URL}/pagamento/${appeal.id}/confirmado?t=${encodeURIComponent(
+        createPaymentToken(appeal.id, 30 * 24 * 60 * 60_000),
+      )}`,
+    });
+  } catch (e) {
+    logger.error("confirmacao de pagamento nao enviada", e, { appealId });
+  }
 }
 
 const ABANDONED_AFTER_MS = 60 * 60_000; // 1h sem concluir o pagamento
