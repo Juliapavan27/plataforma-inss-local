@@ -8,11 +8,12 @@
     "copy-static": "cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/ 2>/dev/null || true",
     "start": "node .next/standalone/server.js",
     "lint": "next lint",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && npm run copy-pdf-worker",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "copy-pdf-worker": "cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.1",
@@ -38,6 +39,7 @@
     "next": "14.2.35",
     "next-auth": "^4.24.8",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "4.7.76",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",

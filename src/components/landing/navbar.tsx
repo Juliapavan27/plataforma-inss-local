@@ -44,6 +44,9 @@ export function Navbar() {
           <Link href="/beneficio-negado" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Benefício negado
           </Link>
+          <Link href="/analisar-indeferimento" className="text-sm font-medium text-ink-700 hover:text-ink-950">
+            Analisar carta
+          </Link>
           <Link href="/#como-funciona" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Como funciona
           </Link>
@@ -91,6 +94,9 @@ export function Navbar() {
           <div className="container flex flex-col gap-1 py-4">
             <Link href="/beneficio-negado" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Benefício negado
+            </Link>
+            <Link href="/analisar-indeferimento" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
+              Analisar carta
             </Link>
             <Link href="/#como-funciona" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Como funciona
