@@ -17,12 +17,10 @@
  *    art. 11); guardar exigiria base legal, prazo de retenção e um motivo — e
  *    não há motivo, a análise é entregue na hora.
  */
-import Anthropic from "@anthropic-ai/sdk";
+import { gerarTexto, isAIDisponivel } from "./provider";
 import { limparTextoCarta } from "../carta-inss";
 import { MOTIVOS, type MotivoKey } from "../pre-analise";
 import { beneficiosNegados } from "@/content/beneficios";
-
-const MODEL = "claude-sonnet-4-5-20250929";
 
 export interface AnaliseIndeferimento {
   /** Slug do benefício identificado, quando reconhecido. */
@@ -72,34 +70,19 @@ function limpar(texto: string) {
 }
 
 export function isAnalisadorConfigurado() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return isAIDisponivel();
 }
 
 export async function analisarIndeferimento(
   textoCarta: string,
 ): Promise<AnaliseIndeferimento> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error("ANTHROPIC_API_KEY não configurada");
-
-  const client = new Anthropic({ apiKey: key });
-  const res = await client.messages.create({
-    model: MODEL,
-    max_tokens: 1500,
+  const resposta = await gerarTexto({
     system: SISTEMA,
-    messages: [
-      {
-        role: "user",
-        content: `Analise esta comunicação de decisão do INSS:\n\n${limpar(textoCarta)}`,
-      },
-    ],
+    user: `Analise esta comunicação de decisão do INSS:\n\n${limpar(textoCarta)}`,
+    maxTokens: 1500,
   });
 
-  const bruto = res.content
-    .filter((b): b is Anthropic.TextBlock => b.type === "text")
-    .map((b) => b.text)
-    .join("")
-    .trim()
-    .replace(/^```(?:json)?\s*|\s*```$/g, "");
+  const bruto = resposta.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
 
   let dados: any;
   try {

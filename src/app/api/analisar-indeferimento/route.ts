@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { analisarIndeferimento, isAnalisadorConfigurado } from "@/lib/ai/indeferimento";
+import { AIIndisponivelError } from "@/lib/ai/provider";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
@@ -56,6 +57,12 @@ export async function POST(req: Request) {
         { error: err.errors[0]?.message ?? "Dados inválidos" },
         { status: 400 },
       );
+    }
+    // Problema de conta vai com o motivo: mandar "tente de novo" quando falta
+    // crédito é conselho errado, e esconde de nós o que precisa ser resolvido.
+    if (err instanceof AIIndisponivelError) {
+      logger.error("analise.indeferimento indisponivel", err, { motivo: err.motivo });
+      return NextResponse.json({ error: err.message, configuracao: true }, { status: 503 });
     }
     // Sem contexto extra de propósito: qualquer campo aqui poderia carregar
     // trecho da carta para o log.
