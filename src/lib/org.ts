@@ -18,17 +18,20 @@ export const ORG = {
 /**
  * Autoria dos guias.
  *
- * Conteúdo previdenciário é YMYL: o Google exige saber QUEM escreveu e com
- * que credencial. Página assinada por "nossa equipe" não pontua — pessoa
- * nomeada e verificável pontua.
- *
- * TODO(Julia): trocar por nome e OAB reais antes de considerar o E-E-A-T
- * resolvido. Enquanto `oab` estiver vazio, a credencial não é exibida nem
- * declarada no schema — melhor omitir do que publicar credencial vaga.
+ * Conteúdo previdenciário é YMYL: o Google quer saber QUEM escreveu. Página
+ * assinada por "nossa equipe" não pontua; pessoa nomeada pontua.
  */
 export const AUTORIA = {
-  autor: "Equipe Recurso Fácil",
+  autor: "Julia Laudi Matos",
+  /**
+   * Vazio por decisão da autora (30/07/2026) — não é pendência. Com o campo
+   * vazio nenhuma credencial é exibida nem declarada no schema, que é o certo:
+   * afirmar credencial sem o número que a torna verificável seria pior do que
+   * não afirmar nada.
+   */
   oab: "",
+  /** Único lugar onde a experiência da autora é descrita. Muda em todas as páginas de uma vez. */
+  descricaoAutor: "com formação em Direito e atuação em direito previdenciário",
   /** Data da última revisão jurídica do acervo de guias. */
   revisadoEm: "2026-07-30",
 } as const;

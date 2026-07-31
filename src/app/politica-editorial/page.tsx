@@ -48,8 +48,8 @@ export default function PoliticaEditorialPage() {
           <p>
             O conteúdo é produzido por{" "}
             <strong className="text-ink-900">{AUTORIA.autor}</strong>
-            {temCredencial && `, OAB ${AUTORIA.oab}`}, com formação e atuação em direito
-            previdenciário. Nenhum texto é publicado sem revisão jurídica.
+            {temCredencial && `, OAB ${AUTORIA.oab}`}, {AUTORIA.descricaoAutor}. Nenhum
+            texto é publicado sem revisão jurídica.
           </p>
           <p className="mt-3">
             A última revisão do acervo foi em{" "}

@@ -87,8 +87,8 @@ export default function BeneficioNegadoPage() {
               <Link href="/posso-recorrer" className="btn-primary px-7 py-3.5">
                 Descobrir se posso recorrer <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/posso-recorrer" className="btn-secondary px-7 py-3.5">
-                Descobrir se posso recorrer
+              <Link href="/novo-recurso" className="btn-secondary px-7 py-3.5">
+                Já sei, quero gerar meu recurso
               </Link>
             </div>
           </div>
