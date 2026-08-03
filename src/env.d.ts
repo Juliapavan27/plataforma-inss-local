@@ -4,10 +4,6 @@ declare namespace NodeJS {
     NEXTAUTH_URL: string;
     NEXTAUTH_SECRET: string;
     ANTHROPIC_API_KEY?: string;
-    /** Alternativa ao Anthropic. Usada quando ANTHROPIC_API_KEY não existe. */
-    GEMINI_API_KEY?: string;
-    /** Sobrescreve o modelo do Gemini. Padrão: gemini-2.5-flash. */
-    GEMINI_MODEL?: string;
     STRIPE_SECRET_KEY?: string;
     STRIPE_WEBHOOK_SECRET?: string;
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;

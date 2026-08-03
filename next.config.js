@@ -11,7 +11,7 @@ const csp = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self' https://checkout.stripe.com https://*.stripe.com https://checkout.infinitepay.io",
-  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isProd ? "" : " 'unsafe-eval'"} https://js.stripe.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net`,
+  `script-src 'self' 'unsafe-inline'${isProd ? "" : " 'unsafe-eval'"} https://js.stripe.com https://sdk.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.mlstatic.com",
   "font-src 'self' data: https://fonts.gstatic.com https://*.mlstatic.com",
   "img-src 'self' data: blob: https:",
