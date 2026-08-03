@@ -161,6 +161,16 @@ model Payment {
   paymentMethod             String?
   /// Desconto de recuperação de carrinho, em centavos. 0 = sem desconto.
   discountCents             Int      @default(0)
+
+  // Nota fiscal de serviço (NFS-e), emitida manualmente na prefeitura.
+
+  /// PENDENTE | EMITIDA | CANCELAR | CANCELADA | DISPENSADA
+  /// CANCELAR marca nota já emitida cujo pedido foi cancelado ou reembolsado:
+  /// sem cancelar na prefeitura, fica imposto pago sobre venda desfeita.
+  nfStatus                  String    @default("PENDENTE")
+  nfNumero                  String?
+  nfEmitidaEm               DateTime?
+  nfObservacao              String?
   paidAt              DateTime?
   abandonedEmailSentAt DateTime?
   createdAt           DateTime  @default(now())

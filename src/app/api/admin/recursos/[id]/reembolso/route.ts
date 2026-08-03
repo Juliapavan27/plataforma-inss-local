@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { sendRefundDecisionEmail } from "@/lib/email";
 import { logger } from "@/lib/logger";
+import { marcarNotaAposCancelamento } from "@/lib/nota-fiscal-service";
 
 export const runtime = "nodejs";
 
@@ -60,6 +61,8 @@ export async function POST(
           data: { status: "REFUNDED" },
         });
       }
+      // Acerta a situação da nota — vira pendência no painel se já foi emitida.
+      await marcarNotaAposCancelamento(appeal.id);
     }
 
     await sendRefundDecisionEmail({

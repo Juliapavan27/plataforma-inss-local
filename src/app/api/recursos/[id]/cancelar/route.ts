@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { computeRefundEligibility } from "@/lib/refund-policy";
+import { marcarNotaAposCancelamento } from "@/lib/nota-fiscal-service";
 import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -35,6 +36,10 @@ export async function POST(
       where: { id: appeal.id },
       data: { status: "CANCELED", canceledAt: new Date() },
     });
+
+    // Acerta a situação da nota. Não pode derrubar o cancelamento: para o
+    // cliente o pedido cancelou, e o acerto fiscal vira pendência no painel.
+    await marcarNotaAposCancelamento(appeal.id);
 
     return NextResponse.json({ ok: true });
   } catch (err) {

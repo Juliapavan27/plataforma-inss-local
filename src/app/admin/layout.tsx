@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Scale, Users, FileText, DollarSign, BookOpen, Settings, LogOut, Home } from "lucide-react";
+import { Scale, Users, FileText, DollarSign, BookOpen, Settings, LogOut, Home, Receipt } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { Providers } from "@/components/auth/session-provider";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
@@ -25,6 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <NavItem href="/admin/usuarios" icon={Users}>Usuários</NavItem>
             <NavItem href="/admin/pedidos" icon={FileText}>Pedidos</NavItem>
             <NavItem href="/admin/financeiro" icon={DollarSign}>Financeiro</NavItem>
+            <NavItem href="/admin/notas-fiscais" icon={Receipt}>Notas fiscais</NavItem>
             <NavItem href="/admin/conhecimento" icon={BookOpen}>Base de conhecimento</NavItem>
             <NavItem href="/admin/config" icon={Settings}>Configurações IA</NavItem>
             <div className="my-3 border-t border-ink-100" />
