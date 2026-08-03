@@ -44,9 +44,12 @@ export function Navbar() {
           <Link href="/beneficio-negado" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Benefício negado
           </Link>
+          {/* "Analisar carta" sai do menu enquanto não há chave de IA com saldo.
+              Para religar: descomentar aqui — a página e o sitemap já voltam
+              sozinhos assim que o provedor estiver configurado.
           <Link href="/analisar-indeferimento" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Analisar carta
-          </Link>
+          </Link> */}
           <Link href="/#como-funciona" className="text-sm font-medium text-ink-700 hover:text-ink-950">
             Como funciona
           </Link>
@@ -95,9 +98,10 @@ export function Navbar() {
             <Link href="/beneficio-negado" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Benefício negado
             </Link>
+            {/* ver comentário na versão desktop
             <Link href="/analisar-indeferimento" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Analisar carta
-            </Link>
+            </Link> */}
             <Link href="/#como-funciona" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-800 hover:bg-white">
               Como funciona
             </Link>

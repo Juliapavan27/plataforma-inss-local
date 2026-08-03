@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { guias } from "@/content/guias";
 import { beneficiosNegados } from "@/content/beneficios";
+import { isAIDisponivel } from "@/lib/ai/provider";
 
 /**
  * Sitemap das páginas públicas. Áreas autenticadas (/dashboard, /admin) e a API
@@ -17,7 +18,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // entrada da busca "benefício negado".
     { path: "/beneficio-negado", priority: 0.9 },
     { path: "/posso-recorrer", priority: 0.9 },
-    { path: "/analisar-indeferimento", priority: 0.9 },
     { path: "/calculadora", priority: 0.8 },
     { path: "/guias", priority: 0.8 },
     { path: "/tutorial", priority: 0.7 },
@@ -29,6 +29,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/privacidade", priority: 0.3 },
     { path: "/lgpd", priority: 0.3 },
   ];
+
+  // Só entra no sitemap quando existe IA para atender — indexar uma ferramenta
+  // que responde "indisponível" desperdiça rastreamento e frustra quem clica.
+  if (isAIDisponivel()) {
+    paginas.push({ path: "/analisar-indeferimento", priority: 0.9 });
+  }
 
   return [
     ...paginas.map((p) => ({

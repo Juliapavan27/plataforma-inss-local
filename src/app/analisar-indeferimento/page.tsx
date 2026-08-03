@@ -1,9 +1,13 @@
+import { redirect } from "next/navigation";
 import { Navbar } from "@/components/landing/navbar";
+import { isAIDisponivel } from "@/lib/ai/provider";
 import { Footer } from "@/components/landing/footer";
 import { AnalisadorForm } from "@/components/analisador/analisador-form";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbSchema } from "@/lib/schema";
 import { Lock, Zap, FileSearch } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Analisador de carta de indeferimento do INSS — gratuito",
@@ -20,6 +24,12 @@ export const metadata = {
 };
 
 export default function AnalisarIndeferimentoPage() {
+  // Sem provedor de IA configurado a ferramenta não faz nada. Em vez de mostrar
+  // uma tela que só sabe dizer "indisponível", manda para a pré-análise, que
+  // resolve boa parte da mesma dúvida sem depender de modelo. Volta sozinha
+  // quando a chave existir.
+  if (!isAIDisponivel()) redirect("/posso-recorrer");
+
   return (
     <>
       <JsonLd
