@@ -12,6 +12,7 @@ import {
 } from "@/lib/validations";
 import { maskCPF, maskPhone, onlyDigits, formatCurrencyBRL } from "@/lib/utils";
 import { buscarCep, maskCep } from "@/lib/cep";
+import { trackEvent } from "@/lib/tracking";
 import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 
 type Step = 1 | 2 | 3 | 4;
@@ -194,6 +195,14 @@ export function AppealForm({
         throw new Error(json.error ?? "Erro ao criar recurso");
       }
       const { appealId, checkoutUrl } = await res.json();
+
+      // Lead = pedido criado com dados completos. Dispara antes do redirect
+      // porque a navegação corta qualquer coisa pendente na página.
+      trackEvent("Lead", {
+        value: priceCardCents / 100,
+        content_name: "Recurso administrativo INSS",
+      });
+
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       } else {

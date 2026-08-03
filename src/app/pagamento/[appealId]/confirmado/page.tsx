@@ -5,6 +5,7 @@ import { loadPaymentForCheckout } from "@/lib/payment-access";
 import { formatCurrencyBRL, formatDateBR } from "@/lib/utils";
 import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "@/lib/support";
 import { Check, Clock, Mail, FileText, KeyRound } from "lucide-react";
+import { TrackOnMount } from "@/components/analytics/track-on-mount";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -46,6 +47,16 @@ export default async function ConfirmadoPage({
             </div>
           ) : (
             <div className="mx-auto max-w-lg">
+              {/* A conversão que importa. transaction_id = id do pedido, que é
+                  como o GA4 descarta reabertura desta página. */}
+              <TrackOnMount
+                event="Purchase"
+                value={payment.amountCents / 100}
+                transactionId={params.appealId}
+                contentName="Recurso administrativo INSS"
+                chaveUnica={`purchase-${params.appealId}`}
+              />
+
               <div className="rounded-2xl border border-success-200 bg-white p-8 text-center shadow-soft">
                 <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-success-600 text-white">
                   <Check className="h-7 w-7" />

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { PaymentCheckout } from "@/components/checkout/payment-checkout";
+import { TrackOnMount } from "@/components/analytics/track-on-mount";
 import { loadPaymentForCheckout, amountToCharge } from "@/lib/payment-access";
 import { createPaymentToken } from "@/lib/payment-token";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
@@ -75,6 +76,15 @@ export default async function PagamentoPage({
         <Selo icon={FileText} texto="PDF + Word" />
         <Selo icon={ShieldCheck} texto="Garantia de 7 dias" />
       </div>
+
+      {/* O valor do cartão é o teto anunciado; o Pix pode sair menos. Usar o
+          maior evita superestimar a receita se a pessoa desistir. */}
+      <TrackOnMount
+        event="InitiateCheckout"
+        value={amountToCharge(payment, "credit_card", prices) / 100}
+        contentName="Recurso administrativo INSS"
+        chaveUnica={`checkout-${params.appealId}`}
+      />
 
       <PaymentCheckout
         appealId={params.appealId}
