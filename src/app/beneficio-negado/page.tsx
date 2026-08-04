@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, FileText, ShieldCheck } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
+import { StickyMobileCTA } from "@/components/landing/sticky-mobile-cta";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados } from "@/content/beneficios";
@@ -259,6 +260,7 @@ export default function BeneficioNegadoPage() {
         </section>
       </main>
       <Footer />
+      <StickyMobileCTA />
     </>
   );
 }

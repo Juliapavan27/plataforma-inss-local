@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowLeft, Clock, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
+import { StickyMobileCTA } from "@/components/landing/sticky-mobile-cta";
 import { JsonLd } from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados, getBeneficio } from "@/content/beneficios";
@@ -66,7 +67,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
       <Navbar />
 
       <main className="relative">
-        <article className="container max-w-3xl py-12 md:py-16">
+        <article className="container max-w-3xl py-12 pb-28 md:py-16 md:pb-16">
           <Link
             href="/beneficio-negado"
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-500 transition hover:text-ink-900"
@@ -262,6 +263,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
         </article>
       </main>
       <Footer />
+      <StickyMobileCTA />
     </>
   );
 }

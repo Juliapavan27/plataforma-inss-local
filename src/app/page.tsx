@@ -824,7 +824,8 @@ function Mission() {
    ====================================================================== */
 function StickyMobileCTA() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 shadow-lift backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 pr-[4.75rem] shadow-lift backdrop-blur md:hidden">
+      {/* pr extra reserva o canto para o balão do chat não cobrir o botão. */}
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600">
