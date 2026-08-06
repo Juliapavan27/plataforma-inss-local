@@ -144,10 +144,10 @@ export async function POST(req: Request) {
         // entrega e ir direto ao pagamento — é atrito que não faz sentido para
         // um produto digital.
         address: {
-          cep: data.cep,
-          street: data.street,
-          neighborhood: data.neighborhood,
-          number: data.number,
+          cep: data.cep ?? "",
+          street: data.street ?? "",
+          neighborhood: data.neighborhood ?? "",
+          number: data.number ?? "",
           complement: data.complement ?? "",
         },
       });

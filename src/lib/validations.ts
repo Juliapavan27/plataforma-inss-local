@@ -68,14 +68,18 @@ export const appealCreateSchema = z.object({
   phone: z.string().min(10),
   email: z.string().email(),
 
-  // endereço — entra na qualificação do recorrente e vai preenchido ao checkout
-  cep: z.string().regex(/^\d{8}$/, "CEP deve ter 8 dígitos"),
-  street: z.string().min(2, "Informe a rua"),
-  number: z.string().min(1, "Informe o número"),
+  // Endereço — OPCIONAL no envio. Ele entra na qualificação da peça e na nota,
+  // mas as duas coisas acontecem depois do pagamento, então exigi-lo aqui só
+  // afastava tráfego frio antes de comprar. É coletado depois (fulfillment).
+  // `.or(z.literal(""))` aceita tanto vazio quanto preenchido válido — quem
+  // preenche pela metade ainda é barrado no cliente.
+  cep: z.string().regex(/^\d{8}$/, "CEP deve ter 8 dígitos").or(z.literal("")).optional(),
+  street: z.string().optional(),
+  number: z.string().optional(),
   complement: z.string().optional(),
-  neighborhood: z.string().min(2, "Informe o bairro"),
-  city: z.string().min(2, "Informe a cidade"),
-  state: z.string().length(2, "UF deve ter 2 letras"),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 
   // caso
   benefitType: z.enum(benefitTypes),

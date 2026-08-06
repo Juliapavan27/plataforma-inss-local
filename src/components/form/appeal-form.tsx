@@ -103,6 +103,9 @@ export function AppealForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
+  // Endereço começa recolhido: é opcional e só entra na peça/nota depois do
+  // pagamento. Mostrá-lo aberto no passo 1 espantava tráfego frio.
+  const [showEndereco, setShowEndereco] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const scenarioHint = getScenarioHint(state);
 
@@ -141,12 +144,14 @@ export function AppealForm({
       if (onlyDigits(state.cpf).length !== 11) e.cpf = "CPF inválido";
       if (onlyDigits(state.phone).length < 10) e.phone = "Telefone inválido";
       if (!/^[^@]+@[^@]+\.[^@]+$/.test(state.email)) e.email = "E-mail inválido";
-      if (onlyDigits(state.cep).length !== 8) e.cep = "CEP deve ter 8 dígitos";
-      if (state.street.trim().length < 2) e.street = "Informe a rua";
-      if (state.number.trim().length < 1) e.number = "Informe o número";
-      if (state.neighborhood.trim().length < 2) e.neighborhood = "Informe o bairro";
-      if (state.city.trim().length < 2) e.city = "Informe a cidade";
-      if (state.state.trim().length !== 2) e.state = "UF";
+      // Endereço é opcional para avançar: só é usado na peça e na nota, depois
+      // do pagamento. Se a pessoa abriu o bloco e começou a preencher, aí sim
+      // validamos o que ela digitou, para não mandar endereço pela metade.
+      if (showEndereco && (state.cep || state.street || state.number)) {
+        if (onlyDigits(state.cep).length !== 8) e.cep = "CEP deve ter 8 dígitos";
+        if (state.street.trim().length < 2) e.street = "Informe a rua";
+        if (state.number.trim().length < 1) e.number = "Informe o número";
+      }
     }
     if (s === 2) {
       if (!state.benefitType) e.benefitType = "Selecione o benefício";
@@ -280,13 +285,27 @@ export function AppealForm({
             </div>
 
             <div className="mt-8 border-t border-ink-100 pt-6">
-              <h3 className="font-display text-lg font-semibold text-ink-950">Endereço</h3>
+              {!showEndereco ? (
+                <button
+                  type="button"
+                  onClick={() => setShowEndereco(true)}
+                  className="text-sm font-medium text-brand-700 hover:underline"
+                >
+                  + Adicionar endereço agora (opcional)
+                </button>
+              ) : (
+                <h3 className="font-display text-lg font-semibold text-ink-950">
+                  Endereço <span className="text-sm font-normal text-ink-500">(opcional)</span>
+                </h3>
+              )}
               <p className="mt-1 text-sm text-ink-600">
-                Entra na qualificação do recorrente dentro da peça, como exige o recurso —
-                e agiliza seu pagamento depois.
+                Usado na qualificação do recurso e na nota fiscal. Você pode preencher
+                agora ou depois — não é obrigatório para continuar.
               </p>
             </div>
 
+            {showEndereco && (
+              <>
             <div className="grid gap-4 md:grid-cols-[200px_1fr]">
               <div>
                 <Label>CEP</Label>
@@ -370,6 +389,8 @@ export function AppealForm({
                 <FieldError>{errors.state}</FieldError>
               </div>
             </div>
+              </>
+            )}
           </div>
         )}
 
