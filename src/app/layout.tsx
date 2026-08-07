@@ -4,6 +4,7 @@ import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
 import { organizationSchema, webSiteSchema } from "@/lib/schema";
 import { Chatbot } from "@/components/chatbot";
+import { WhatsAppFab } from "@/components/landing/whatsapp-fab";
 import { Analytics, AnalyticsNoScript } from "@/components/analytics";
 
 const inter = Inter({
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AnalyticsNoScript />
         {children}
         <Chatbot />
+        <WhatsAppFab />
       </body>
     </html>
   );
