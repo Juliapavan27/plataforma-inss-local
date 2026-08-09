@@ -21,6 +21,7 @@ import { isInfinitePayConfigured, createCheckoutLink } from "./infinitepay";
 import { isMercadoPagoConfigured } from "./mercadopago";
 import { createPaymentToken } from "./payment-token";
 import { createPasswordResetToken } from "./password-reset";
+import { trackServerPurchase } from "./ga4-mp";
 import { PRICE_CARD_CENTS } from "./pricing";
 import type { BenefitType, DenialReason } from "./types";
 
@@ -57,10 +58,20 @@ export async function markPaidAndNotifyAdmin(appealId: string) {
     dueAt,
   });
 
+  // Conversão de compra registrada PELO SERVIDOR, direto na API do GA4. É a
+  // medição que o navegador não estava entregando — aqui é imune a bloqueador,
+  // CSP e consentimento. trackServerPurchase nunca lança, mas o await fica fora
+  // do try do e-mail para deixar claro que são coisas independentes.
+  const paidPayment = await db.payment.findUnique({ where: { appealId } });
+  await trackServerPurchase({
+    transactionId: appeal.id,
+    valueCents: paidPayment?.amountCents ?? 0,
+  });
+
   // O comprovante do cliente não pode derrubar a confirmação do pagamento: se o
   // e-mail falhar, o pedido continua pago e o admin já foi avisado.
   try {
-    const payment = await db.payment.findUnique({ where: { appealId } });
+    const payment = paidPayment;
 
     // Quem comprou sem criar conta não tem senha: o mesmo e-mail que confirma o
     // pagamento já traz o convite para criar uma, que é quando ela está com a

@@ -28,6 +28,10 @@ declare namespace NodeJS {
     NEXT_PUBLIC_META_PIXEL_ID?: string;
     NEXT_PUBLIC_GTM_ID?: string;
     NEXT_PUBLIC_GA4_ID?: string;
+    /** Segredo da API do Measurement Protocol (GA4) — mede conversões pelo servidor. */
+    GA4_API_SECRET?: string;
+    /** ID da métrica para o envio pelo servidor. Na falta, usa NEXT_PUBLIC_GA4_ID. */
+    GA4_MEASUREMENT_ID?: string;
     NEXT_PUBLIC_WHATSAPP_PHONE?: string;
     NEXT_PUBLIC_WHATSAPP_MESSAGE?: string;
   }
