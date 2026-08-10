@@ -6,6 +6,7 @@ import { Resend } from "resend";
 import { logger } from "./logger";
 import { formatCurrencyBRL, formatDateBR } from "./utils";
 import { SUPPORT_EMAIL, SUPPORT_SLA_HOURS } from "./support";
+import { WHATSAPP_HREF } from "./whatsapp";
 
 const apiKey = process.env.RESEND_API_KEY;
 const resend = apiKey ? new Resend(apiKey) : null;
@@ -127,6 +128,36 @@ export async function sendPaymentConfirmationEmail(opts: {
        <p style="font-size:13px;color:#525252">Dúvidas? Escreva para ${SUPPORT_EMAIL} —
         respondemos em até ${SUPPORT_SLA_HOURS}h.</p>`,
     ),
+  });
+}
+
+/** Entrega o manual comprado: PDF anexado + link para ler online. */
+export async function sendManualDeliveryEmail(opts: {
+  to: string;
+  name: string;
+  manualTitle: string;
+  readUrl: string;
+  pdf: Buffer;
+  pdfName: string;
+}) {
+  await send({
+    to: opts.to,
+    subject: `Seu manual chegou — ${opts.manualTitle}`,
+    html: layout(
+      "Seu manual está pronto",
+      `<p>Olá, ${opts.name.split(" ")[0]}! Obrigado pela compra. Seu manual
+        <strong>${opts.manualTitle}</strong> está anexado a este e-mail, em PDF.</p>
+       <p>Você também pode ler online quando quiser:</p>
+       <p><a href="${opts.readUrl}" style="color:#2d43e0">Abrir meu manual</a></p>
+       <p style="margin:20px 0;padding:16px;background:#e7f9ee;border-radius:8px">
+         <strong>Prefere receber o recurso pronto?</strong><br>
+         Nossa equipe monta o recurso completo, fundamentado e revisado para o seu
+         caso. <a href="${WHATSAPP_HREF}" style="color:#128C7E">Fale no WhatsApp</a>.
+       </p>
+       <p style="font-size:13px;color:#525252">Dúvidas? Escreva para ${SUPPORT_EMAIL} —
+        respondemos em até ${SUPPORT_SLA_HOURS}h.</p>`,
+    ),
+    attachments: [{ filename: opts.pdfName, content: opts.pdf }],
   });
 }
 

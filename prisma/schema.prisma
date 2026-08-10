@@ -185,6 +185,40 @@ model Payment {
   @@index([mercadopagoOrderId])
 }
 
+// ========= PRODUTOS DIGITAIS: MANUAIS =========
+// Esteira de entrada: quem busca "como recorrer do INSS" (intenção de dúvida,
+// não de compra) leva um manual em PDF por R$ 9,90 em vez de bater na venda de
+// R$ 299. Deliberadamente NÃO reaproveita Payment/Appeal: aquele par é casado
+// 1-a-1 (Payment.appealId é único e obrigatório) e representa um serviço sob
+// medida; o manual é um produto fixo, igual para todos, comprado só com
+// nome+e-mail. Tabela própria e aditiva evita mexer no schema de produção.
+//
+// status: "PENDING" | "PAID" | "FAILED"
+model ManualOrder {
+  id                   String    @id @default(cuid())
+  /// Qual manual foi comprado — casa com o slug em src/content/manuais.ts.
+  manualSlug           String
+  buyerName            String
+  buyerEmail           String
+  amountCents          Int       @default(990)
+  currency             String    @default("BRL")
+  status               String    @default("PENDING")
+  provider             String    @default("mercadopago")
+  mercadopagoOrderId   String?
+  mercadopagoPaymentId String?
+  /// Só "pix" por enquanto — ninguém parcela R$ 9,90.
+  paymentMethod        String?
+  paidAt               DateTime?
+  /// Quando o e-mail com o link de entrega saiu — evita reenviar a cada webhook.
+  deliveredAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([manualSlug])
+  @@index([mercadopagoOrderId])
+  @@index([status])
+}
+
 // ========= BASE DE CONHECIMENTO (RAG) =========
 // kind: "JURISPRUDENCIA" | "DOUTRINA" | "LEGISLACAO" | "MODELO_RECURSO" | "OUTRO"
 

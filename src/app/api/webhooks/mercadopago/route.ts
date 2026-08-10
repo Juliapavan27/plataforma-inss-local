@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getOrder, verifyWebhookSignature } from "@/lib/mercadopago";
 import { markPaidAndNotifyAdmin } from "@/lib/appeal-service";
+import { finalizeManualOrder } from "@/lib/manuais-service";
 import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -52,6 +53,15 @@ export async function POST(req: Request) {
     const order = await getOrder(String(dataId));
     const appealId = order.orderId ? await appealIdFromOrder(String(dataId)) : null;
     if (!appealId) {
+      // Não é recurso: pode ser a compra de um manual (tabela própria).
+      const manual = await db.manualOrder.findFirst({
+        where: { mercadopagoOrderId: String(dataId) },
+        select: { id: true },
+      });
+      if (manual) {
+        if (order.paid) await finalizeManualOrder(manual.id);
+        return NextResponse.json({ received: true });
+      }
       logger.warn("mercadopago.webhook: pedido não encontrado", { orderId: dataId });
       return NextResponse.json({ received: true });
     }

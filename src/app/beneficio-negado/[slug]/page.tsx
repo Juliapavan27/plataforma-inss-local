@@ -7,6 +7,8 @@ import { StickyMobileCTA } from "@/components/landing/sticky-mobile-cta";
 import { JsonLd } from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados, getBeneficio } from "@/content/beneficios";
+import { getManualPorBeneficio } from "@/content/manuais";
+import { ManualOffer } from "@/components/manuais/manual-offer";
 import { getGuia } from "@/content/guias";
 import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
 import { formatDateBR, formatCurrencyBRL } from "@/lib/utils";
@@ -44,6 +46,8 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
   const guias = b.guiasRelacionados
     .map((slug) => getGuia(slug))
     .filter((g): g is NonNullable<typeof g> => Boolean(g));
+
+  const manual = getManualPorBeneficio(b.slug);
 
   return (
     <>
@@ -188,6 +192,9 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           >
             Ver o passo a passo com telas do Meu INSS <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+
+          {/* Esteira: quem quer fazer sozinho leva o manual barato antes da venda cheia. */}
+          {manual && <ManualOffer manual={manual} />}
 
           {/* CTA de compra */}
           <div className="mt-14 rounded-3xl bg-ink-950 p-8 text-white md:p-10">

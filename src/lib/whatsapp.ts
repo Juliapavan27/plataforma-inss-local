@@ -9,6 +9,9 @@
 // País (55) + DDD (16) + número. wa.me exige só dígitos, sem "+".
 export const WHATSAPP_NUMERO = "5516996282137";
 
+/** Número formatado para leitura humana (rodapé do PDF, textos). */
+export const WHATSAPP_DISPLAY = "(16) 99628-2137";
+
 export const WHATSAPP_MENSAGEM_PADRAO =
   "Olá! Vim pelo site da Recurso Fácil e gostaria de tirar uma dúvida.";
 
