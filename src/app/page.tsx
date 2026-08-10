@@ -25,6 +25,11 @@ import {
   PIX_DISCOUNT_PERCENT,
   HAS_PIX_DISCOUNT,
 } from "@/lib/pricing";
+import { WHATSAPP_HREF } from "@/lib/whatsapp";
+import { getManual } from "@/content/manuais";
+
+// Manual-piloto usado nas ofertas da home (a esteira começa por ele).
+const MANUAL_DESTAQUE = getManual("auxilio-doenca");
 
 export default function HomePage() {
   return (
@@ -99,7 +104,16 @@ function Hero() {
             </Link>
           </div>
           <p className="mt-3 text-sm text-ink-500 animate-fade-up [animation-delay:280ms]">
-            Análise gratuita em 1 minuto, sem cadastro.
+            Análise gratuita em 1 minuto, sem cadastro — ou{" "}
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[#0f7a5f] underline-offset-2 hover:underline"
+            >
+              fale com um especialista no WhatsApp
+            </a>
+            .
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-600 animate-fade-up [animation-delay:320ms]">
@@ -544,72 +558,119 @@ function Differentials() {
    PRICING — cartão único premium
    ====================================================================== */
 function Pricing() {
-  const features = [
+  const recursoFeatures = [
     "Recurso completo pronto pra protocolar (PDF + Word)",
     "Fundamentação com base em legislação aplicável ao caso",
     "Checklist prático para revisar antes do protocolo",
-    "Acesso ao seu recurso na área do cliente",
-    "Suporte por email para dúvidas operacionais",
+    "Entrega em até 24h",
     "Garantia de 7 dias ou dinheiro de volta",
   ];
+  const manualFeatures = [
+    "Entenda por que o INSS negou e o que rebater",
+    "A estrutura da peça, com modelo para preencher",
+    "A base legal de cada argumento",
+    "Como protocolar no Meu INSS, passo a passo",
+  ];
+  const manualPreco = MANUAL_DESTAQUE?.precoCents ?? 990;
+
   return (
     <section className="container py-24">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow">Preço transparente</span>
+        <span className="eyebrow">Do jeito que você preferir</span>
         <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
-          Um preço. <span className="italic text-gradient-gold">Sem letras miúdas.</span>
+          Faça você mesmo, <span className="italic text-gradient-gold">ou deixe com a gente.</span>
         </h2>
         <p className="mt-5 text-lg text-ink-600">
-          Pagamento único por recurso. Sem mensalidade, sem plano, sem pegadinha.
+          Do manual que ensina o passo a passo ao recurso pronto para protocolar. Pagamento
+          único, sem mensalidade.
         </p>
       </div>
 
-      <div className="mx-auto mt-14 max-w-lg">
-        <div className="relative overflow-hidden rounded-3xl border border-ink-950/10 bg-gradient-to-b from-ink-950 to-[#0a1030] p-10 text-white shadow-lift">
+      <div className="mx-auto mt-14 grid max-w-4xl items-stretch gap-6 md:grid-cols-2">
+        {/* Manual — fazer você mesmo (entrada da esteira) */}
+        {MANUAL_DESTAQUE && (
+          <div className="flex flex-col rounded-3xl border border-ink-200 bg-white p-8 shadow-soft">
+            <span className="chip-brand self-start bg-brand-50 text-brand-700 ring-brand-200">
+              <FileText className="h-3.5 w-3.5" /> Fazer você mesmo
+            </span>
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="font-display text-5xl font-bold tracking-tight text-ink-950">
+                {formatCurrencyBRL(manualPreco)}
+              </span>
+              <span className="text-sm text-ink-500">no Pix</span>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-ink-600">
+              Manual completo em PDF: a base legal, a estrutura da peça, o modelo e os
+              documentos. Para quem quer recorrer por conta própria.
+            </p>
+            <ul className="mt-6 space-y-2.5">
+              {manualFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-sm text-ink-700">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-brand-600" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href={`/manuais/${MANUAL_DESTAQUE.slug}`}
+              className="btn-secondary mt-auto w-full justify-center pt-3.5"
+              style={{ marginTop: "2rem" }}
+            >
+              Ver o manual <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
+
+        {/* Recurso pronto — a gente faz por você (destaque) */}
+        <div className="relative flex flex-col overflow-hidden rounded-3xl border border-ink-950/10 bg-gradient-to-b from-ink-950 to-[#0a1030] p-8 text-white shadow-lift">
           <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-gold-400/20 blur-3xl" />
           <div className="pointer-events-none absolute -left-20 bottom-0 h-60 w-60 rounded-full bg-brand-500/30 blur-3xl" />
-
-          <div className="relative">
-            <span className="chip-dark">
-              <Award className="h-3.5 w-3.5 text-gold-400" /> Recurso completo
+          <div className="relative flex flex-1 flex-col">
+            <span className="chip-dark self-start">
+              <Award className="h-3.5 w-3.5 text-gold-400" /> A gente faz por você
             </span>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70">
-              Ideal para quem quer agir rápido depois da negativa, sem precisar montar tudo sozinho.
-            </p>
             <div className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="font-display text-6xl font-bold tracking-tight">
+              <span className="font-display text-5xl font-bold tracking-tight">
                 {formatCurrencyBRL(PRICE_PIX_CENTS)}
               </span>
               <span className="rounded-full bg-gold-400/20 px-3 py-1 text-xs font-semibold text-gold-300 ring-1 ring-gold-400/30">
-                no Pix{HAS_PIX_DISCOUNT && ` · ${PIX_DISCOUNT_PERCENT}% de desconto`}
+                no Pix{HAS_PIX_DISCOUNT && ` · ${PIX_DISCOUNT_PERCENT}% off`}
               </span>
             </div>
             <p className="mt-3 text-sm text-white/60">
-              Ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão à vista, com parcelamento
-              disponível. Pagamento único, sem mensalidade.
+              Ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão. Você descreve o caso e
+              recebe o recurso pronto para protocolar.
             </p>
-
-            <ul className="mt-8 space-y-3">
-              {features.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm text-white/90">
+            <ul className="mt-6 space-y-2.5">
+              {recursoFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-sm text-white/90">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-gold-400" />
                   {f}
                 </li>
               ))}
             </ul>
-
             <Link
               href="/novo-recurso"
-              className="btn-gold mt-10 w-full py-4 text-base"
+              className="btn-gold mt-auto w-full justify-center pt-3.5"
+              style={{ marginTop: "2rem" }}
             >
-              Gerar meu recurso agora
-              <ArrowRight className="h-4 w-4" />
+              Gerar meu recurso agora <ArrowRight className="h-4 w-4" />
             </Link>
-            <p className="mt-4 text-center text-[11px] uppercase tracking-[0.16em] text-white/40">
-              Pagamento seguro · Cartão de crédito
-            </p>
           </div>
         </div>
+      </div>
+
+      {/* WhatsApp — canal humano de baixo compromisso, para quem ainda tem dúvida. */}
+      <div className="mx-auto mt-8 flex max-w-4xl justify-center">
+        <a
+          href={WHATSAPP_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-6 py-3 text-sm font-semibold text-[#0f7a5f] transition hover:bg-[#25D366]/15"
+        >
+          Ainda com dúvida sobre o seu caso? Fale com um especialista no WhatsApp
+          <ArrowRight className="h-4 w-4" />
+        </a>
       </div>
     </section>
   );
@@ -875,12 +936,14 @@ function FinalCTA() {
             >
               Gerar meu recurso agora <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/faq"
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn px-7 py-4 text-base text-white ring-1 ring-white/20 hover:bg-white/10"
             >
-              Ainda tenho dúvidas
-            </Link>
+              Ainda tenho dúvidas — falar no WhatsApp
+            </a>
           </div>
         </div>
       </div>
