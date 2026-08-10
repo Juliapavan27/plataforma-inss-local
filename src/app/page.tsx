@@ -186,16 +186,16 @@ function HeroMock() {
         </div>
       </div>
 
-      {/* Preço flutuante */}
+      {/* Preço flutuante — o gancho de entrada é o preço mais baixo da esteira. */}
       <div className="absolute -bottom-6 -left-4 hidden rounded-2xl border border-ink-950/10 bg-ink-950 px-5 py-4 text-white shadow-lift md:block animate-float">
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-300">
-          No Pix
+          A partir de
         </p>
         <p className="mt-1 font-display text-2xl font-bold">
-          {formatCurrencyBRL(PRICE_PIX_CENTS)}
+          {formatCurrencyBRL(MANUAL_DESTAQUE?.precoCents ?? 990)}
         </p>
         <p className="text-[11px] text-ink-400">
-          ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão
+          manual em PDF · ou recurso pronto
         </p>
       </div>
     </div>
@@ -574,7 +574,7 @@ function Pricing() {
   const manualPreco = MANUAL_DESTAQUE?.precoCents ?? 990;
 
   return (
-    <section className="container py-24">
+    <section id="precos" className="container scroll-mt-24 py-24">
       <div className="mx-auto max-w-2xl text-center">
         <span className="eyebrow">Do jeito que você preferir</span>
         <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
@@ -893,11 +893,12 @@ function StickyMobileCTA() {
             Prazo: 30 dias
           </p>
           <p className="text-sm font-bold text-ink-950">
-            {formatCurrencyBRL(PRICE_PIX_CENTS)} <span className="text-xs font-normal text-ink-500">no Pix</span>
+            A partir de {formatCurrencyBRL(MANUAL_DESTAQUE?.precoCents ?? 990)}
+            <span className="text-xs font-normal text-ink-500"> · manual ou recurso</span>
           </p>
         </div>
-        <Link href="/novo-recurso" className="btn-primary px-5 py-3 text-sm">
-          Gerar recurso
+        <Link href="#precos" className="btn-primary px-5 py-3 text-sm">
+          Ver opções
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

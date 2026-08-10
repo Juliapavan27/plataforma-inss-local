@@ -16,6 +16,8 @@
  * sem conferência da autora.
  */
 
+import { beneficiosNegados } from "@/content/beneficios";
+
 export type BlocoManual =
   | { tipo: "paragrafo"; texto: string }
   | { tipo: "subtitulo"; texto: string }
@@ -377,6 +379,17 @@ export function getManual(slug: string): Manual | undefined {
 /** Manual que atende um benefício (para a oferta na página do benefício). */
 export function getManualPorBeneficio(beneficioSlug: string): Manual | undefined {
   return manuais.find((m) => m.beneficioSlug === beneficioSlug);
+}
+
+/**
+ * Manual relacionado a um guia — usa a ligação benefício→guia que já existe
+ * (`guiasRelacionados` em beneficios.ts) para não errar a oferta em cada artigo.
+ */
+export function getManualPorGuia(guiaSlug: string): Manual | undefined {
+  const beneficio = beneficiosNegados.find((b) =>
+    b.guiasRelacionados.includes(guiaSlug),
+  );
+  return beneficio ? getManualPorBeneficio(beneficio.slug) : undefined;
 }
 
 /** Total de pontos de jurisprudência ainda pendentes de validação da autora. */

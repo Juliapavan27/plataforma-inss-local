@@ -26,9 +26,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/input";
 import { beneficiosNegados } from "@/content/beneficios";
+import { getManualPorBeneficio } from "@/content/manuais";
 import { MOTIVOS, preAnalisar, type MotivoKey } from "@/lib/pre-analise";
 import { trackEvent } from "@/lib/tracking";
 import { whatsappHref } from "@/lib/whatsapp";
+import { formatCurrencyBRL } from "@/lib/utils";
 
 type Etapa = 1 | 2 | 3 | 4;
 
@@ -52,6 +54,9 @@ export function PossoRecorrer() {
         : null,
     [etapa, beneficio, motivo, dataNegativa],
   );
+
+  // Manual que atende o benefício escolhido — a opção mais barata da esteira.
+  const manualOferta = getManualPorBeneficio(beneficio);
 
   function reiniciar() {
     setBeneficio("");
@@ -225,6 +230,25 @@ export function PossoRecorrer() {
                 ? "Como o prazo aparenta ter passado, confira a data de ciência na carta antes de comprar. Se ela for outra, o recurso ainda cabe."
                 : "Você descreve o caso, anexa os documentos e recebe o recurso em PDF e Word, com fundamentação, para revisar antes de enviar ao INSS."}
             </p>
+            {/* Opção mais barata da esteira: fazer você mesmo com o manual. */}
+            {manualOferta && resultado.situacao !== "vencido" && (
+              <Link
+                href={`/manuais/${manualOferta.slug}`}
+                onClick={() => trackEvent("Lead", { content_name: "Manual - posso-recorrer" })}
+                className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+              >
+                <span>
+                  <span className="flex items-center gap-2 text-sm font-semibold text-white">
+                    <FileText className="h-4 w-4 text-brand-300" /> Prefere fazer você mesmo?
+                  </span>
+                  <span className="mt-0.5 block text-xs text-white/60">
+                    Manual completo em PDF, passo a passo — {formatCurrencyBRL(manualOferta.precoCents)}
+                  </span>
+                </span>
+                <ArrowRight className="h-4 w-4 flex-none text-white/70" />
+              </Link>
+            )}
+
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
                 href="/novo-recurso"

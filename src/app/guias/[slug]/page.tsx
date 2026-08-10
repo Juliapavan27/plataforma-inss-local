@@ -8,14 +8,17 @@ import {
   AlertTriangle,
   Lightbulb,
   CheckCircle2,
+  FileText,
 } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { guias, getGuia, fontesDoGuia, type Block } from "@/content/guias";
+import { getManualPorGuia } from "@/content/manuais";
 import { JsonLd } from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
-import { formatDateBR } from "@/lib/utils";
+import { formatDateBR, formatCurrencyBRL } from "@/lib/utils";
+import { whatsappHref } from "@/lib/whatsapp";
 
 export function generateStaticParams() {
   return guias.map((g) => ({ slug: g.slug }));
@@ -100,6 +103,9 @@ function renderBlock(block: Block, i: number) {
 export default function GuiaPage({ params }: { params: { slug: string } }) {
   const guia = getGuia(params.slug);
   if (!guia) notFound();
+
+  // Manual da esteira que atende o benefício deste guia (se houver).
+  const manual = getManualPorGuia(guia.slug);
 
   // Relacionados explícitos quando existem; senão, da mesma categoria. Os "3
   // primeiros da lista" não têm relação nenhuma com o que a pessoa está lendo.
@@ -195,18 +201,49 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
             </section>
           )}
 
-          {/* CTA no fim do artigo */}
+          {/* CTA no fim do artigo — a esteira: fazer você mesmo, a gente faz, ou WhatsApp. */}
           <div className="mt-16 rounded-3xl bg-ink-950 p-8 text-white md:p-10">
             <h2 className="font-display text-2xl font-semibold text-balance">
               Pronto para recorrer?
             </h2>
             <p className="mt-3 leading-relaxed text-white/70 text-pretty">
-              Responda um formulário guiado e receba seu recurso administrativo em PDF e
-              Word, com fundamentação técnica, pronto para protocolar no Meu INSS.
+              Faça você mesmo com o nosso manual, ou receba o recurso pronto para
+              protocolar — do jeito que preferir.
             </p>
-            <Link href="/novo-recurso" className="btn-gold mt-6 px-6 py-3.5">
-              Gerar meu recurso <ArrowRight className="h-4 w-4" />
-            </Link>
+
+            {manual && (
+              <Link
+                href={`/manuais/${manual.slug}`}
+                className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+              >
+                <span>
+                  <span className="flex items-center gap-2 text-sm font-semibold text-white">
+                    <FileText className="h-4 w-4 text-brand-300" /> Prefere fazer você mesmo?
+                  </span>
+                  <span className="mt-0.5 block text-xs text-white/60">
+                    Manual completo em PDF, passo a passo — {formatCurrencyBRL(manual.precoCents)}
+                  </span>
+                </span>
+                <ArrowRight className="h-4 w-4 flex-none text-white/70" />
+              </Link>
+            )}
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link href="/novo-recurso" className="btn-gold justify-center px-6 py-3.5">
+                Gerar meu recurso <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href={whatsappHref(
+                  "Olá! Vim pelos guias da Recurso Fácil e gostaria de tirar uma dúvida sobre o meu recurso.",
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
+                style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+              >
+                Falar no WhatsApp
+              </a>
+            </div>
           </div>
 
           {/* Caminhos de maior intenção. Ficam depois do CTA principal para não
