@@ -1,6 +1,7 @@
 "use client";
 
 import { trackEvent } from "@/lib/tracking";
+import { WHATSAPP_HREF } from "@/lib/whatsapp";
 
 /**
  * Botão flutuante de WhatsApp — o "outro lado" da tela em relação à Sofia.
@@ -19,13 +20,8 @@ import { trackEvent } from "@/lib/tracking";
  * este canal está de fato trazendo contato, e não só enfeitando a tela.
  */
 
-// País (55) + DDD (16) + número. wa.me exige só dígitos, sem "+".
-const WHATSAPP_NUMERO = "5516996282137";
-const MENSAGEM =
-  "Olá! Vim pelo site da Recurso Fácil e gostaria de tirar uma dúvida.";
-
 export function WhatsAppFab() {
-  const href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(MENSAGEM)}`;
+  const href = WHATSAPP_HREF;
 
   return (
     <a
