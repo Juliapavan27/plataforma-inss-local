@@ -201,48 +201,60 @@ export default function GuiaPage({ params }: { params: { slug: string } }) {
             </section>
           )}
 
-          {/* CTA no fim do artigo — a esteira: fazer você mesmo, a gente faz, ou WhatsApp. */}
+          {/* CTA WhatsApp-first: canal humano em destaque; manual e recurso como 2ª opção. */}
           <div className="mt-16 rounded-3xl bg-ink-950 p-8 text-white md:p-10">
             <h2 className="font-display text-2xl font-semibold text-balance">
-              Pronto para recorrer?
+              Ficou com dúvida sobre o seu caso?
             </h2>
             <p className="mt-3 leading-relaxed text-white/70 text-pretty">
-              Faça você mesmo com o nosso manual, ou receba o recurso pronto para
-              protocolar — do jeito que preferir.
+              Fale com um especialista no WhatsApp, sem compromisso. E, se preferir, a
+              gente monta o recurso pronto — ou você faz por conta própria com o manual.
             </p>
 
-            {manual && (
+            <a
+              href={whatsappHref(
+                "Olá! Vim pelos guias da Recurso Fácil e gostaria de tirar uma dúvida sobre o meu recurso.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5 sm:w-auto sm:px-8"
+              style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+            >
+              Falar no WhatsApp <ArrowRight className="h-4 w-4" />
+            </a>
+
+            <p className="mt-7 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+              Ou resolva por conta própria
+            </p>
+            <div className="mt-3 flex flex-col gap-3">
+              {manual && (
+                <Link
+                  href={`/manuais/${manual.slug}`}
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+                >
+                  <span>
+                    <span className="flex items-center gap-2 text-sm font-semibold text-white">
+                      <FileText className="h-4 w-4 text-brand-300" /> Fazer você mesmo com o manual
+                    </span>
+                    <span className="mt-0.5 block text-xs text-white/60">
+                      Passo a passo completo em PDF — {formatCurrencyBRL(manual.precoCents)}
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 flex-none text-white/70" />
+                </Link>
+              )}
               <Link
-                href={`/manuais/${manual.slug}`}
-                className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+                href="/novo-recurso"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
               >
                 <span>
-                  <span className="flex items-center gap-2 text-sm font-semibold text-white">
-                    <FileText className="h-4 w-4 text-brand-300" /> Prefere fazer você mesmo?
-                  </span>
+                  <span className="text-sm font-semibold text-white">Receber o recurso pronto</span>
                   <span className="mt-0.5 block text-xs text-white/60">
-                    Manual completo em PDF, passo a passo — {formatCurrencyBRL(manual.precoCents)}
+                    A gente monta e entrega em PDF e Word para protocolar
                   </span>
                 </span>
                 <ArrowRight className="h-4 w-4 flex-none text-white/70" />
               </Link>
-            )}
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href="/novo-recurso" className="btn-gold justify-center px-6 py-3.5">
-                Gerar meu recurso <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href={whatsappHref(
-                  "Olá! Vim pelos guias da Recurso Fácil e gostaria de tirar uma dúvida sobre o meu recurso.",
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
-                style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
-              >
-                Falar no WhatsApp
-              </a>
             </div>
           </div>
 

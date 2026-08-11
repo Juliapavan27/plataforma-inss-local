@@ -223,56 +223,67 @@ export function PossoRecorrer() {
             <h3 className="font-display text-xl font-semibold text-balance">
               {resultado.situacao === "vencido"
                 ? "Ainda dá para agir — fale com a gente antes de decidir"
-                : "Quer o recurso pronto para protocolar?"}
+                : "Converse com um especialista sobre o seu caso"}
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-white/70">
               {resultado.situacao === "vencido"
-                ? "Como o prazo aparenta ter passado, confira a data de ciência na carta antes de comprar. Se ela for outra, o recurso ainda cabe."
-                : "Você descreve o caso, anexa os documentos e recebe o recurso em PDF e Word, com fundamentação, para revisar antes de enviar ao INSS."}
+                ? "Como o prazo aparenta ter passado, confira a data de ciência na carta. Se ela for outra, o recurso ainda cabe — a gente te ajuda a confirmar, sem compromisso."
+                : "Tire suas dúvidas com quem entende, sem compromisso. E, se fizer sentido para você, a gente monta o recurso pronto para protocolar."}
             </p>
-            {/* Opção mais barata da esteira: fazer você mesmo com o manual. */}
-            {manualOferta && resultado.situacao !== "vencido" && (
+
+            {/* WhatsApp-first: é o canal que converte esta intenção (informacional). */}
+            <a
+              href={whatsappHref(
+                `Olá! Fiz a pré-análise no site da Recurso Fácil. Benefício: ${
+                  resultado.beneficio?.nome ?? "-"
+                }. Motivo da negativa: ${
+                  MOTIVOS.find((m) => m.key === motivo)?.label ?? "-"
+                }. Gostaria de saber se posso recorrer.`,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("Lead", { content_name: "WhatsApp - posso-recorrer" })}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
+              style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+            >
+              <WhatsAppGlyph className="h-5 w-5" /> Falar com um especialista no WhatsApp
+            </a>
+
+            {/* Compra direta — secundária, para quem já se decidiu. */}
+            <p className="mt-7 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+              Ou resolva por conta própria
+            </p>
+            <div className="mt-3 flex flex-col gap-3">
+              {manualOferta && resultado.situacao !== "vencido" && (
+                <Link
+                  href={`/manuais/${manualOferta.slug}`}
+                  onClick={() => trackEvent("Lead", { content_name: "Manual - posso-recorrer" })}
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+                >
+                  <span>
+                    <span className="flex items-center gap-2 text-sm font-semibold text-white">
+                      <FileText className="h-4 w-4 text-brand-300" /> Fazer você mesmo com o manual
+                    </span>
+                    <span className="mt-0.5 block text-xs text-white/60">
+                      Passo a passo completo em PDF — {formatCurrencyBRL(manualOferta.precoCents)}
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 flex-none text-white/70" />
+                </Link>
+              )}
               <Link
-                href={`/manuais/${manualOferta.slug}`}
-                onClick={() => trackEvent("Lead", { content_name: "Manual - posso-recorrer" })}
-                className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
+                href="/novo-recurso"
+                onClick={() => trackEvent("Lead", { content_name: "Gerar - posso-recorrer" })}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/5 p-4 transition hover:bg-white/10"
               >
                 <span>
-                  <span className="flex items-center gap-2 text-sm font-semibold text-white">
-                    <FileText className="h-4 w-4 text-brand-300" /> Prefere fazer você mesmo?
-                  </span>
+                  <span className="text-sm font-semibold text-white">Receber o recurso pronto</span>
                   <span className="mt-0.5 block text-xs text-white/60">
-                    Manual completo em PDF, passo a passo — {formatCurrencyBRL(manualOferta.precoCents)}
+                    A gente monta e entrega em PDF e Word para protocolar
                   </span>
                 </span>
                 <ArrowRight className="h-4 w-4 flex-none text-white/70" />
               </Link>
-            )}
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href="/novo-recurso"
-                onClick={() => trackEvent("Lead", { content_name: "Gerar - posso-recorrer" })}
-                className="btn-gold justify-center px-6 py-3"
-              >
-                Gerar meu recurso agora <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href={whatsappHref(
-                  `Olá! Fiz a pré-análise no site da Recurso Fácil. Benefício: ${
-                    resultado.beneficio?.nome ?? "-"
-                  }. Motivo da negativa: ${
-                    MOTIVOS.find((m) => m.key === motivo)?.label ?? "-"
-                  }. Gostaria de saber se posso recorrer.`,
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackEvent("Lead", { content_name: "WhatsApp - posso-recorrer" })}
-                className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
-                style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
-              >
-                <WhatsAppGlyph className="h-5 w-5" /> Falar no WhatsApp
-              </a>
             </div>
             {resultado.guiaBeneficio && (
               <p className="mt-4">

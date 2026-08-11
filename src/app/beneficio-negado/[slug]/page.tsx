@@ -13,6 +13,7 @@ import { getGuia } from "@/content/guias";
 import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
 import { formatDateBR, formatCurrencyBRL } from "@/lib/utils";
 import { PRICE_PIX_CENTS, PRICE_CARD_CENTS } from "@/lib/pricing";
+import { WHATSAPP_HREF } from "@/lib/whatsapp";
 
 export function generateStaticParams() {
   return beneficiosNegados.map((b) => ({ slug: b.slug }));
@@ -196,21 +197,34 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           {/* Esteira: quem quer fazer sozinho leva o manual barato antes da venda cheia. */}
           {manual && <ManualOffer manual={manual} />}
 
-          {/* CTA de compra */}
+          {/* CTA — WhatsApp-first: a audiência é informacional e o canal humano
+              é o que converte. A compra direta fica como segunda opção. */}
           <div className="mt-14 rounded-3xl bg-ink-950 p-8 text-white md:p-10">
             <h2 className="font-display text-2xl font-semibold text-balance">
-              Quer o recurso pronto para protocolar?
+              Ficou com dúvida sobre o seu caso?
             </h2>
             <p className="mt-3 leading-relaxed text-white/70 text-pretty">
-              Descreva o que aconteceu, anexe seus documentos e receba o recurso em PDF e
-              Word, com fundamentação, para revisar antes de enviar.
+              Fale com um especialista no WhatsApp, sem compromisso. E, se preferir, a
+              gente monta o recurso pronto — em PDF e Word, para você revisar e protocolar.
             </p>
-            <p className="mt-4 text-sm text-white/60">
-              {formatCurrencyBRL(PRICE_PIX_CENTS)} no Pix ou{" "}
-              {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão — pagamento único, sem
-              percentual sobre o seu benefício.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/70">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl px-7 py-3.5 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
+                style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+              >
+                Falar no WhatsApp <ArrowRight className="h-4 w-4" />
+              </a>
+              <Link
+                href="/novo-recurso"
+                className="btn px-7 py-3.5 text-base text-white ring-1 ring-white/20 hover:bg-white/10"
+              >
+                Gerar meu recurso ({formatCurrencyBRL(PRICE_PIX_CENTS)})
+              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/60">
               <span className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-gold-400" /> Entrega em até 24h
               </span>
@@ -218,9 +232,6 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
                 <ShieldCheck className="h-4 w-4 text-gold-400" /> Garantia de 7 dias
               </span>
             </div>
-            <Link href="/novo-recurso" className="btn-gold mt-7 px-6 py-3.5">
-              Gerar meu recurso <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
 
           <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">

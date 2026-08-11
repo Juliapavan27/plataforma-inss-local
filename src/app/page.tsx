@@ -91,29 +91,26 @@ function Hero() {
             Descreva o que aconteceu, anexe seus documentos e receba um recurso administrativo estruturado para revisar e protocolar no Meu INSS.
           </p>
 
-          {/* O caminho gratuito vem primeiro: quem acabou de tomar a negativa
-              ainda não está pronto para comprar, mas está pronto para saber se
-              o prazo dele está de pé. */}
+          {/* WhatsApp-first: a audiência é informacional (topo de funil) e só
+              o canal humano converte. O quiz grátis vem em segundo; a compra
+              direta fica na seção de preço, para quem já chega decidido. */}
           <div className="mt-9 flex flex-wrap gap-3 animate-fade-up [animation-delay:240ms]">
-            <Link href="/posso-recorrer" className="btn-primary px-8 py-4 text-base">
-              Descubra se você pode recorrer
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href="/novo-recurso" className="btn-secondary px-7 py-4 text-base">
-              Já sei, quero gerar meu recurso
-            </Link>
-          </div>
-          <p className="mt-3 text-sm text-ink-500 animate-fade-up [animation-delay:280ms]">
-            Análise gratuita em 1 minuto, sem cadastro — ou{" "}
             <a
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#0f7a5f] underline-offset-2 hover:underline"
+              className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
+              style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
             >
-              fale com um especialista no WhatsApp
+              Fale com um especialista no WhatsApp
+              <ArrowRight className="h-4 w-4" />
             </a>
-            .
+            <Link href="/posso-recorrer" className="btn-secondary px-7 py-4 text-base">
+              Descobrir se posso recorrer (grátis)
+            </Link>
+          </div>
+          <p className="mt-3 text-sm text-ink-500 animate-fade-up [animation-delay:280ms]">
+            Atendimento humano e sem compromisso — ou faça a análise gratuita em 1 minuto.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-600 animate-fade-up [animation-delay:320ms]">
@@ -890,17 +887,22 @@ function StickyMobileCTA() {
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600">
-            Prazo: 30 dias
+            Prazo: 30 dias para recorrer
           </p>
           <p className="text-sm font-bold text-ink-950">
-            A partir de {formatCurrencyBRL(MANUAL_DESTAQUE?.precoCents ?? 990)}
-            <span className="text-xs font-normal text-ink-500"> · manual ou recurso</span>
+            Fale agora, sem compromisso
           </p>
         </div>
-        <Link href="#precos" className="btn-primary px-5 py-3 text-sm">
-          Ver opções
+        <a
+          href={WHATSAPP_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold text-white"
+          style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+        >
+          WhatsApp
           <ArrowRight className="h-4 w-4" />
-        </Link>
+        </a>
       </div>
     </div>
   );
@@ -931,20 +933,21 @@ function FinalCTA() {
             ou, se preferir manter sua garantia de 7 dias, em até 8 dias.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href="/novo-recurso"
-              className="btn-gold px-7 py-4 text-base"
-            >
-              Gerar meu recurso agora <ArrowRight className="h-4 w-4" />
-            </Link>
             <a
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-2xl px-7 py-4 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
+              style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+            >
+              Fale com um especialista no WhatsApp <ArrowRight className="h-4 w-4" />
+            </a>
+            <Link
+              href="/novo-recurso"
               className="btn px-7 py-4 text-base text-white ring-1 ring-white/20 hover:bg-white/10"
             >
-              Ainda tenho dúvidas — falar no WhatsApp
-            </a>
+              Ou gerar meu recurso agora
+            </Link>
           </div>
         </div>
       </div>
