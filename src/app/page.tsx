@@ -27,6 +27,7 @@ import {
 } from "@/lib/pricing";
 import { WHATSAPP_HREF } from "@/lib/whatsapp";
 import { getManual } from "@/content/manuais";
+import { Reveal } from "@/components/ui/reveal";
 
 // Manual-piloto usado nas ofertas da home (a esteira começa por ele).
 const MANUAL_DESTAQUE = getManual("auxilio-doenca");
@@ -42,17 +43,15 @@ export default function HomePage() {
       />
       <Navbar />
       <main className="relative">
+        {/* Home enxuta e comercial: menos seções, uma jornada clara até o
+            contato. As seções "ensaio" antigas (Stats, Mission, SamplePreview,
+            Comparison, Differentials, TrustAndCompliance) saíram do fluxo para
+            não dispersar o público. */}
         <Hero />
         <TrustBar />
-        <Stats />
         <HowItWorks />
-        <Mission />
-        <SamplePreview />
         <Benefits />
-        <Comparison />
-        <Differentials />
         <Pricing />
-        <TrustAndCompliance />
         <FAQTeaser />
         <FinalCTA />
       </main>
@@ -262,51 +261,73 @@ function HowItWorks() {
     {
       icon: FileText,
       title: "Conte o que aconteceu",
-      text: "Você responde perguntas simples sobre o benefício negado e anexa os documentos que tiver. Leva menos de 5 minutos — tudo em linguagem fácil.",
+      text: "Responda perguntas simples e anexe o que tiver. Menos de 5 minutos, em linguagem fácil.",
     },
     {
       icon: CreditCard,
       title: "Pague uma vez só",
-      text: "Pagamento único no cartão ou Pix. Sem mensalidade, sem taxa escondida e sem cobrança recorrente. Você paga e pronto.",
+      text: "Pix ou cartão. Sem mensalidade, sem pegadinha. Você paga e pronto.",
     },
     {
       icon: Sparkles,
-      title: "Receba e protocole",
-      text: "Em até 24h (ou 8 dias, se preferir manter seu prazo de arrependimento) seu recurso chega pronto em PDF e Word. É só imprimir ou enviar pelo Meu INSS.",
+      title: "Receba pronto para protocolar",
+      text: "Seu recurso chega em PDF e Word, pronto para enviar pelo Meu INSS.",
     },
   ];
   return (
-    <section id="como-funciona" className="container py-24">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow">Simples e rápido</span>
-        <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
-          Três passos. <span className="italic text-gradient-brand">Nenhuma burocracia.</span>
-        </h2>
-        <p className="mt-5 text-lg leading-relaxed text-ink-600 text-pretty">
-          Você não precisa saber de direito. O fluxo ajuda a entender a negativa, organiza suas informações e monta uma peça recursal clara para você revisar antes do protocolo.
-        </p>
-      </div>
+    <section id="como-funciona" className="relative overflow-hidden bg-ink-950 py-20 text-white md:py-28">
+      <div className="pointer-events-none absolute -right-24 top-10 h-80 w-80 rounded-full bg-brand-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -left-24 bottom-10 h-80 w-80 rounded-full bg-[#25D366]/15 blur-3xl" />
+      <div className="container relative">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold uppercase tracking-wide text-white/80">
+            Simples e rápido
+          </span>
+          <h2 className="mt-5 font-display text-3xl font-black leading-tight text-balance md:text-5xl">
+            Como funciona? <span className="text-gold-300">3 passos.</span>
+          </h2>
+          <p className="mt-4 text-lg text-white/70">
+            Você não precisa saber de direito. A gente cuida da parte difícil.
+          </p>
+        </Reveal>
 
-      <div className="relative mt-16 grid gap-6 md:grid-cols-3">
-        {/* linha conectora */}
-        <div className="pointer-events-none absolute left-[12%] right-[12%] top-[4.25rem] hidden h-px bg-gradient-to-r from-transparent via-ink-300 to-transparent md:block" />
+        {/* Régua vertical: cada passo surge conforme a pessoa desce. */}
+        <div className="relative mx-auto mt-14 max-w-2xl">
+          <div
+            className="absolute bottom-8 left-7 top-8 w-1 rounded-full bg-gradient-to-b from-brand-400 via-brand-500 to-[#25D366]/60"
+            aria-hidden="true"
+          />
+          <ol className="space-y-5">
+            {steps.map((s, i) => (
+              <Reveal key={i} delay={i * 100}>
+                <li className="relative flex items-stretch gap-5">
+                  <span className="relative z-10 grid h-14 w-14 flex-none place-items-center rounded-full bg-brand-600 text-xl font-black text-white shadow-lift ring-4 ring-ink-950">
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 className="flex items-center gap-3 font-display text-xl font-bold text-white md:text-2xl">
+                      <s.icon className="h-6 w-6 text-gold-300" />
+                      {s.title}
+                    </h3>
+                    <p className="mt-2 text-base leading-relaxed text-white/70 md:text-lg">{s.text}</p>
+                  </div>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
 
-        {steps.map((s, i) => (
-          <div key={i} className="card-lift">
-            <div className="flex items-center justify-between">
-              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 ring-1 ring-brand-200/60">
-                <s.icon className="h-6 w-6" />
-              </div>
-              <span className="font-display text-5xl font-bold text-ink-100">
-                0{i + 1}
-              </span>
-            </div>
-            <h3 className="mt-5 font-display text-xl font-semibold tracking-tight text-ink-950">
-              {s.title}
-            </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-ink-600">{s.text}</p>
-          </div>
-        ))}
+        <Reveal className="mt-12 text-center">
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-base font-bold text-white shadow-lift transition hover:-translate-y-0.5"
+            style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+          >
+            Tirar minha dúvida no WhatsApp <ArrowRight className="h-4 w-4" />
+          </a>
+        </Reveal>
       </div>
     </section>
   );
@@ -393,49 +414,50 @@ function SamplePreview() {
    ====================================================================== */
 function Benefits() {
   const items = [
-    "Fundamentação legal (Lei 8.213/91, Decreto 3.048/99)",
-    "Súmulas do CRPS e jurisprudência pertinente",
-    "Estrutura profissional de peça recursal",
-    "Saída em PDF e Word (.docx) editáveis",
-    "Checklist com pontos e documentos que merecem atenção",
-    "Histórico completo na área do cliente",
-    "Fluxo guiado para quem não quer começar do zero",
-    "Garantia de 7 dias para testar com mais tranquilidade",
+    "Recurso pronto para protocolar, em PDF e Word",
+    "Escrito com a base legal do seu caso",
+    "Do jeito que o INSS entende",
+    "Checklist do que você precisa anexar",
+    "Entrega rápida — em até 24h",
+    "Garantia de 7 dias ou seu dinheiro de volta",
   ];
   return (
-    <section className="relative overflow-hidden bg-ink-950 py-24 text-white">
-      <div className="pointer-events-none absolute inset-0 opacity-70">
-        <div className="absolute -left-40 top-10 h-96 w-96 rounded-full bg-brand-700/30 blur-3xl" />
-        <div className="absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-gold-500/10 blur-3xl" />
-      </div>
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.04]" />
+    <section className="relative overflow-hidden bg-ink-950 py-20 text-white md:py-28">
+      <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-brand-700/30 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-gold-500/10 blur-3xl" />
 
-      <div className="container relative grid gap-14 md:grid-cols-12">
-        <div className="md:col-span-5">
-          <span className="chip-dark">
-            <Award className="h-3.5 w-3.5 text-gold-400" /> Benefícios
-          </span>
-          <h2 className="mt-5 font-display text-display-md font-semibold text-balance">
-            O que você recebe,{" "}
-            <span className="italic text-gradient-gold">sem complicação.</span>
+      <div className="container relative">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-3xl font-black leading-tight text-balance md:text-5xl">
+            O que você recebe
           </h2>
-          <p className="mt-5 max-w-md text-white/70 text-pretty">
-            A proposta aqui é objetiva: tirar a pessoa da paralisia depois da negativa
-            e entregar um caminho claro, com recurso estruturado e arquivos editáveis.
+          <p className="mt-4 text-lg text-white/70">
+            Sem juridiquês. Um recurso feito pra dar certo — e alguém pra te ajudar.
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="grid gap-3 self-center md:col-span-7 sm:grid-cols-2">
-          {items.map((b) => (
-            <li
-              key={b}
-              className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 text-sm backdrop-blur transition hover:bg-white/[0.08]"
-            >
-              <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-gold-400" />
-              <span className="text-white/90">{b}</span>
-            </li>
+        <ul className="mx-auto mt-12 grid max-w-3xl gap-3 sm:grid-cols-2">
+          {items.map((b, i) => (
+            <Reveal key={b} delay={i * 70}>
+              <li className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.05] p-5 text-base font-medium text-white/90 md:text-lg">
+                <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-gold-400" />
+                {b}
+              </li>
+            </Reveal>
           ))}
         </ul>
+
+        <Reveal className="mt-12 text-center">
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-base font-bold text-white shadow-lift transition hover:-translate-y-0.5"
+            style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+          >
+            Falar com um especialista agora <ArrowRight className="h-4 w-4" />
+          </a>
+        </Reveal>
       </div>
     </section>
   );
@@ -572,16 +594,17 @@ function Pricing() {
 
   return (
     <section id="precos" className="container scroll-mt-24 py-24">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow">Do jeito que você preferir</span>
-        <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
-          Faça você mesmo, <span className="italic text-gradient-gold">ou deixe com a gente.</span>
+      <Reveal className="mx-auto max-w-2xl text-center">
+        <span className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold uppercase tracking-wide text-brand-700 ring-1 ring-brand-200">
+          Do jeito que você preferir
+        </span>
+        <h2 className="mt-5 font-display text-3xl font-black text-balance text-ink-950 md:text-5xl">
+          Faça você mesmo, <span className="text-gradient-gold">ou deixe com a gente.</span>
         </h2>
-        <p className="mt-5 text-lg text-ink-600">
-          Do manual que ensina o passo a passo ao recurso pronto para protocolar. Pagamento
-          único, sem mensalidade.
+        <p className="mt-4 text-lg text-ink-600">
+          Do manual barato ao recurso pronto. Pagamento único, sem mensalidade.
         </p>
-      </div>
+      </Reveal>
 
       <div className="mx-auto mt-14 grid max-w-4xl items-stretch gap-6 md:grid-cols-2">
         {/* Manual — fazer você mesmo (entrada da esteira) */}
@@ -737,62 +760,52 @@ function TrustAndCompliance() {
 function FAQTeaser() {
   const items = [
     {
-      q: "A plataforma substitui um advogado?",
-      a: "Não. A plataforma entrega um recurso administrativo estruturado para casos em que a pessoa quer agir com rapidez e menor custo. Ela não substitui consultoria jurídica personalizada nem promete resultado.",
+      q: "Isso é um advogado?",
+      a: "Não. A gente monta o seu recurso pronto para protocolar, rápido e barato — e você tem uma pessoa de verdade pra conversar no WhatsApp. Não substitui advogado nem promete resultado.",
     },
     {
-      q: "Preciso revisar antes de protocolar?",
-      a: "Sim. Você pode revisar no PDF ou editar no Word antes de enviar pelo Meu INSS. Essa etapa aumenta sua segurança sobre o que está sendo protocolado em seu nome.",
+      q: "Quanto custa?",
+      a: "A partir de R$ 9,90 (o manual, pra fazer você mesmo) ou R$ 281 no Pix (recurso pronto). Pagamento único, sem mensalidade. E falar no WhatsApp é de graça.",
     },
     {
-      q: "Quais documentos ajudam mais no recurso?",
-      a: "Isso varia conforme o benefício e o motivo da negativa, mas normalmente carta de indeferimento, laudos, exames, receitas, comprovantes e documentos de contribuição fortalecem bastante o caso. A plataforma sugere o que pode faltar.",
+      q: "Meu dinheiro está seguro?",
+      a: "Sim. O pagamento é seguro pelo Mercado Pago, e você tem 7 dias de garantia — se não gostar, devolvemos o dinheiro.",
     },
     {
-      q: "Como funciona a garantia de 7 dias?",
-      a: "É o seu direito de arrependimento (art. 49 do CDC), válido em qualquer compra online. Na hora da compra você escolhe: manter esse prazo de 7 dias e receber o recurso em até 8 dias, ou abrir mão dele para receber em até 24h.",
-    },
-    {
-      q: "Meus dados e documentos ficam protegidos?",
-      a: "Sim. O envio acontece em ambiente autenticado, com páginas de privacidade e LGPD dedicadas. Os documentos são tratados para gerar o recurso e manter seu histórico na área do cliente.",
-    },
-    {
-      q: "E se eu não souber o motivo exato da negativa?",
-      a: "O formulário guiado ajuda você a identificar o motivo a partir da carta do INSS e organiza o recurso com base nesse contexto. Quando falta documento ou informação, a plataforma sinaliza isso com clareza.",
+      q: "Não sei o motivo da negativa, e agora?",
+      a: "Sem problema. A gente te ajuda a entender a carta do INSS e o que fazer. É só chamar no WhatsApp que a gente vê junto com você.",
     },
   ];
   return (
-    <section className="container py-24">
-      <div className="grid gap-14 md:grid-cols-2">
-        <div>
-          <span className="eyebrow">FAQ essencial</span>
-          <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
-            Dúvidas que <span className="italic text-gradient-brand">afetam a decisão de compra.</span>
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-ink-600">
-            Respondemos aqui as dúvidas que mais impactam conversão, segurança e confiança. O restante continua na página completa de FAQ.
-          </p>
-          <Link href="/faq" className="link-underline mt-8 inline-flex items-center gap-2 text-sm">
-            Ver todas as perguntas <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="space-y-3">
-          {items.map((it) => (
-            <details
-              key={it.q}
-              className="group rounded-2xl border border-ink-200/70 bg-white/80 p-5 shadow-ring transition open:shadow-lift"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-semibold text-ink-900">
+    <section className="container py-20 md:py-28">
+      <Reveal className="mx-auto max-w-2xl text-center">
+        <h2 className="font-display text-3xl font-black text-balance text-ink-950 md:text-5xl">
+          Perguntas frequentes
+        </h2>
+        <p className="mt-4 text-lg text-ink-600">As dúvidas que mais aparecem, sem enrolação.</p>
+      </Reveal>
+
+      <div className="mx-auto mt-10 max-w-2xl space-y-3">
+        {items.map((it, i) => (
+          <Reveal key={it.q} delay={i * 60}>
+            <details className="group rounded-2xl border border-ink-200 bg-white p-5 shadow-soft transition open:shadow-lift">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-bold text-ink-900">
                 {it.q}
-                <span className="grid h-7 w-7 place-items-center rounded-full border border-ink-200 text-ink-500 transition group-open:rotate-45">
+                <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-ink-100 text-xl text-ink-600 transition group-open:rotate-45">
                   +
                 </span>
               </summary>
-              <p className="mt-3 text-sm leading-relaxed text-ink-600">{it.a}</p>
+              <p className="mt-3 text-base leading-relaxed text-ink-700">{it.a}</p>
             </details>
-          ))}
-        </div>
+          </Reveal>
+        ))}
       </div>
+
+      <Reveal className="mt-8 text-center">
+        <Link href="/faq" className="link-underline inline-flex items-center gap-2 text-base font-semibold">
+          Ver todas as perguntas <ArrowRight className="h-4 w-4" />
+        </Link>
+      </Reveal>
     </section>
   );
 }
