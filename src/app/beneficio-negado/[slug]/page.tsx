@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, Clock, FileText, ShieldCheck, AlertTriangle } from "lucide-react";
+import { ArrowRight, ArrowLeft, Clock, FileText, ShieldCheck, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
+import { Reveal } from "@/components/ui/reveal";
 import { Footer } from "@/components/landing/footer";
 import { StickyMobileCTA } from "@/components/landing/sticky-mobile-cta";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -147,84 +148,111 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
             </Link>
           </div>
 
-          <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
-            Por que o INSS nega {b.nome.toLowerCase()}
-          </h2>
-          <div className="mt-6 space-y-5">
+          <Reveal>
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+              Por que o INSS nega {b.nome.toLowerCase()}
+            </h2>
+          </Reveal>
+          <div className="mt-8 space-y-5">
             {b.causas.map((c, i) => (
-              <div key={c.titulo} className="rounded-2xl border border-ink-200/70 bg-white p-6">
-                <h3 className="flex gap-3 font-display text-lg font-semibold text-ink-950">
-                  <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-ink-950 text-xs font-bold text-white">
-                    {i + 1}
-                  </span>
-                  {c.titulo}
-                </h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-ink-700">{c.explicacao}</p>
-                <p className="mt-4 rounded-xl bg-success-50 p-4 text-sm leading-relaxed text-ink-800">
-                  <strong className="text-success-700">O que costuma ajudar:</strong>{" "}
-                  {c.oQueAjuda}
+              <Reveal key={c.titulo} delay={i * 80}>
+                <div className="rounded-3xl border border-ink-200 bg-white p-6 shadow-soft md:p-7">
+                  <h3 className="flex items-start gap-4 font-display text-xl font-bold text-ink-950 md:text-2xl">
+                    <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-ink-950 text-base font-black text-white">
+                      {i + 1}
+                    </span>
+                    <span className="pt-1.5">{c.titulo}</span>
+                  </h3>
+                  <p className="mt-4 text-base leading-relaxed text-ink-700 md:text-lg">{c.explicacao}</p>
+                  <p className="mt-5 flex gap-3 rounded-2xl bg-success-50 p-5 text-base leading-relaxed text-ink-800">
+                    <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-success-600" />
+                    <span>
+                      <strong className="font-bold text-success-700">O que costuma ajudar:</strong>{" "}
+                      {c.oQueAjuda}
+                    </span>
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal>
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+              Documentos que ajudam no seu recurso
+            </h2>
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {b.documentos.map((d) => (
+                <li
+                  key={d}
+                  className="flex items-start gap-3 rounded-2xl border border-ink-200 bg-white p-4 text-base font-medium text-ink-800 shadow-soft"
+                >
+                  <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-brand-600" />
+                  {d}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal>
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+              Você tem só 30 dias
+            </h2>
+            <div className="mt-8 overflow-hidden rounded-3xl border-2 border-amber-300 bg-amber-50">
+              <div className="flex items-center gap-3 bg-amber-400/90 px-6 py-4">
+                <AlertTriangle className="h-7 w-7 flex-none text-amber-950" />
+                <p className="font-display text-xl font-bold text-amber-950 md:text-2xl">
+                  30 dias corridos a partir da ciência
                 </p>
               </div>
-            ))}
+              <div className="p-6">
+                <p className="text-base leading-relaxed text-ink-800 md:text-lg">
+                  Ciência é a data em que você ficou sabendo — em geral a data da carta ou do
+                  aviso no Meu INSS. Perdeu o prazo? Aí o caminho passa a ser um novo pedido
+                  ou a Justiça.
+                  {b.observacaoPrazo ? ` ${b.observacaoPrazo}` : ""}
+                </p>
+                <Link
+                  href="/guias/prazo-de-30-dias-para-recorrer"
+                  className="mt-4 inline-flex items-center gap-1.5 text-base font-bold text-brand-700 hover:underline"
+                >
+                  Entender o prazo <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+              Como recorrer, passo a passo
+            </h2>
+          </Reveal>
+          {/* Régua vertical desenhada: cada passo surge conforme a pessoa rola. */}
+          <div className="relative mt-8">
+            <div
+              className="absolute bottom-8 left-6 top-8 w-1 rounded-full bg-gradient-to-b from-brand-500 via-brand-400 to-brand-200 md:left-7"
+              aria-hidden="true"
+            />
+            <ol className="space-y-5">
+              {[
+                "Localize na carta o motivo exato da negativa — é a ele que o recurso responde.",
+                "Reúna os documentos acima, dando prioridade aos que são novos no seu processo.",
+                "Monte o recurso apontando o erro e ligando cada documento ao que o INSS questionou.",
+                "Protocole no Meu INSS, em “Recorrer de decisão”. É de graça e você mesmo pode fazer.",
+                "Acompanhe pelo Meu INSS. Quem julga é a Junta de Recursos do CRPS.",
+              ].map((passo, i) => (
+                <Reveal key={passo} delay={i * 90}>
+                  <li className="relative flex items-stretch gap-5">
+                    <span className="relative z-10 grid h-12 w-12 flex-none place-items-center rounded-full bg-brand-600 text-lg font-black text-white shadow-lift ring-4 ring-white md:h-14 md:w-14">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 rounded-2xl border border-ink-200 bg-white p-5 text-base leading-relaxed text-ink-800 shadow-soft md:text-lg">
+                      {passo}
+                    </div>
+                  </li>
+                </Reveal>
+              ))}
+            </ol>
           </div>
-
-          <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
-            Documentos que costumam ser relevantes
-          </h2>
-          <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
-            {b.documentos.map((d) => (
-              <li
-                key={d}
-                className="flex items-start gap-2.5 rounded-xl bg-ink-50 px-4 py-3 text-sm text-ink-700"
-              >
-                <FileText className="mt-0.5 h-4 w-4 flex-none text-brand-600" />
-                {d}
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
-            Qual é o seu prazo
-          </h2>
-          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-6">
-            <p className="flex gap-3 font-semibold text-amber-900">
-              <AlertTriangle className="mt-0.5 h-5 w-5 flex-none text-amber-600" />
-              30 dias corridos a partir da ciência da decisão
-            </p>
-            <p className="mt-3 pl-8 text-sm leading-relaxed text-ink-800">
-              Ciência é a data em que você tomou conhecimento — normalmente a data da carta
-              ou do aviso no Meu INSS —, que pode ser diferente da data em que o INSS
-              decidiu. Perdido esse prazo, o caminho normalmente passa a ser um novo
-              requerimento ou a via judicial.
-              {b.observacaoPrazo ? ` ${b.observacaoPrazo}` : ""}
-            </p>
-            <Link
-              href="/guias/prazo-de-30-dias-para-recorrer"
-              className="mt-4 inline-flex items-center gap-1.5 pl-8 text-sm font-semibold text-brand-700 hover:underline"
-            >
-              Entender o prazo em detalhe <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
-            Como recorrer, passo a passo
-          </h2>
-          <ol className="mt-6 space-y-4">
-            {[
-              "Localize na carta o motivo exato do indeferimento — é a ele que o recurso precisa responder.",
-              "Reúna os documentos acima, priorizando os que são novos em relação ao que já estava no processo.",
-              "Monte o recurso apontando o erro na análise e ligando cada documento ao requisito questionado.",
-              "Protocole no Meu INSS, em “Recorrer de decisão”. O protocolo é gratuito e pode ser feito por você.",
-              "Acompanhe pelo Meu INSS. O julgamento é feito pela Junta de Recursos do CRPS.",
-            ].map((passo, i) => (
-              <li key={passo} className="flex gap-4">
-                <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-brand-600 text-xs font-bold text-white">
-                  {i + 1}
-                </span>
-                <p className="text-[15px] leading-relaxed text-ink-700">{passo}</p>
-              </li>
-            ))}
-          </ol>
           <Link
             href="/guias/como-protocolar-recurso-no-meu-inss"
             className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
