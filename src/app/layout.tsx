@@ -3,7 +3,6 @@ import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
 import { organizationSchema, webSiteSchema } from "@/lib/schema";
-import { Chatbot } from "@/components/chatbot";
 import { WhatsAppFab } from "@/components/landing/whatsapp-fab";
 import { Analytics, AnalyticsNoScript } from "@/components/analytics";
 
@@ -61,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <AnalyticsNoScript />
         {children}
-        <Chatbot />
         <WhatsAppFab />
       </body>
     </html>

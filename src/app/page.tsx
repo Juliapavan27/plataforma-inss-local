@@ -66,66 +66,50 @@ export default function HomePage() {
    ====================================================================== */
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden pt-10">
-      {/* background mesh */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-x-0 -top-40 h-[600px] bg-radial-brand" />
-        <div className="absolute -left-40 top-40 h-[420px] w-[420px] rounded-full bg-gold-200/40 blur-3xl" />
-        <div className="absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-brand-200/50 blur-3xl" />
-        <div className="absolute inset-0 bg-grid mask-fade-b opacity-60" />
-      </div>
+    <section className="relative overflow-hidden bg-ink-950 text-white">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-600/30 blur-3xl" />
+      <div className="pointer-events-none absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-[#25D366]/15 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.05]" />
 
-      <div className="container grid gap-14 py-20 md:grid-cols-12 md:gap-10 md:py-28 lg:py-32">
-        <div className="md:col-span-7">
-          <span className="chip-brand animate-fade-up bg-red-50 text-red-700 ring-red-200">
-            <Clock className="h-3.5 w-3.5" /> Prazo de 30 dias para recorrer
-          </span>
+      <div className="container relative py-16 text-center md:py-24">
+        <span className="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-1.5 text-sm font-extrabold uppercase tracking-wide text-white">
+          <Clock className="h-4 w-4" /> Você tem só 30 dias
+        </span>
 
-          <h1 className="mt-6 font-display text-display-lg font-semibold text-balance text-ink-950 animate-fade-up [animation-delay:80ms]">
-            O INSS{" "}
-            <span className="italic text-gradient-brand">negou seu benefício?</span>
-          </h1>
+        <h1 className="mx-auto mt-6 max-w-4xl font-display text-4xl font-black leading-[1.05] text-balance sm:text-5xl md:text-6xl">
+          O INSS negou o seu benefício?{" "}
+          <span className="text-red-400">Você pode recorrer.</span>
+        </h1>
 
-          <p className="mt-6 max-w-xl text-xl leading-relaxed text-ink-700 text-pretty animate-fade-up [animation-delay:160ms]">
-            Descreva o que aconteceu, anexe seus documentos e receba um recurso administrativo estruturado para revisar e protocolar no Meu INSS.
-          </p>
+        <p className="mx-auto mt-5 max-w-xl text-lg font-semibold leading-snug text-white/85 sm:text-xl">
+          A gente resolve com você — sem juridiquês e sem sair de casa. Fale agora, é de graça.
+        </p>
 
-          {/* WhatsApp-first: a audiência é informacional (topo de funil) e só
-              o canal humano converte. O quiz grátis vem em segundo; a compra
-              direta fica na seção de preço, para quem já chega decidido. */}
-          <div className="mt-9 flex flex-wrap gap-3 animate-fade-up [animation-delay:240ms]">
-            <a
-              href={WHATSAPP_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-base font-semibold text-white shadow-lift transition hover:-translate-y-0.5"
-              style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
-            >
-              Fale com um especialista no WhatsApp
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <Link href="/posso-recorrer" className="btn-secondary px-7 py-4 text-base">
-              Descobrir se posso recorrer (grátis)
-            </Link>
-          </div>
-          <p className="mt-3 text-sm text-ink-500 animate-fade-up [animation-delay:280ms]">
-            Atendimento humano e sem compromisso — ou faça a análise gratuita em 1 minuto.
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-600 animate-fade-up [animation-delay:320ms]">
-            <span className="flex items-center gap-2 font-medium text-success-600">
-              <ShieldCheck className="h-4 w-4" />
-              Garantia de 7 dias
-            </span>
-            <span className="hidden h-4 w-px bg-ink-200 sm:block" />
-            <span className="font-medium text-ink-700">Pagamento único</span>
-            <span className="hidden h-4 w-px bg-ink-200 sm:block" />
-            <span className="font-medium text-ink-700">PDF + Word para revisar antes de enviar</span>
-          </div>
+        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl px-8 py-5 text-lg font-extrabold uppercase tracking-wide text-white shadow-lift transition hover:-translate-y-0.5 sm:w-auto"
+            style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+          >
+            Falar no WhatsApp <ArrowRight className="h-5 w-5" />
+          </a>
+          <Link
+            href="/posso-recorrer"
+            className="inline-flex w-full items-center justify-center rounded-2xl px-7 py-5 text-base font-semibold text-white ring-1 ring-white/25 transition hover:bg-white/10 sm:w-auto"
+          >
+            Descobrir se posso recorrer (grátis)
+          </Link>
         </div>
+        <p className="mt-4 text-sm font-medium text-white/60">
+          Atendimento humano · Resposta rápida · Sem compromisso
+        </p>
 
-        <div className="relative md:col-span-5">
-          <HeroMock />
+        <div className="mx-auto mt-8 flex max-w-lg flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-semibold text-white/85">
+          <span>✅ Sem enrolação</span>
+          <span>✅ Você entende seus direitos</span>
+          <span>✅ A partir de R$ 9,90</span>
         </div>
       </div>
     </section>
@@ -210,11 +194,11 @@ function TrustBar() {
     "Modelos validados por especialistas",
   ];
   return (
-    <section className="border-y border-ink-200/60 bg-white/60 backdrop-blur">
-      <div className="container flex flex-wrap items-center justify-center gap-x-10 gap-y-3 py-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-500">
+    <section className="border-b border-white/10 bg-ink-950">
+      <div className="container flex flex-wrap items-center justify-center gap-x-8 gap-y-3 py-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
         {items.map((i) => (
           <span key={i} className="inline-flex items-center gap-2">
-            <span className="h-1 w-1 rounded-full bg-gold-500" />
+            <span className="h-1 w-1 rounded-full bg-gold-400" />
             {i}
           </span>
         ))}
@@ -895,7 +879,7 @@ function Mission() {
    ====================================================================== */
 function StickyMobileCTA() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 pr-[4.75rem] shadow-lift backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 shadow-lift backdrop-blur md:hidden">
       {/* pr extra reserva o canto para o balão do chat não cobrir o botão. */}
       <div className="flex items-center gap-3">
         <div className="flex-1">
