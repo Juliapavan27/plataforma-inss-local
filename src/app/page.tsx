@@ -674,12 +674,12 @@ function Pricing() {
                 {formatCurrencyBRL(PRICE_PIX_CENTS)}
               </span>
               <span className="rounded-full bg-gold-400/20 px-3 py-1 text-xs font-semibold text-gold-300 ring-1 ring-gold-400/30">
-                no Pix{HAS_PIX_DISCOUNT && ` · ${PIX_DISCOUNT_PERCENT}% off`}
+                à vista ou até 12x
               </span>
             </div>
             <p className="mt-3 text-sm text-white/60">
-              Ou {formatCurrencyBRL(PRICE_CARD_CENTS)} no cartão. Você descreve o caso e
-              recebe o recurso pronto para protocolar.
+              No Pix ou no cartão, parcelado em até 12x. Você descreve o caso e recebe o
+              recurso pronto para protocolar.
             </p>
             <ul className="mt-6 space-y-2.5">
               {recursoFeatures.map((f) => (
@@ -785,7 +785,7 @@ function FAQTeaser() {
     },
     {
       q: "Quanto custa?",
-      a: "A partir de R$ 9,90 (o manual, pra fazer você mesmo) ou R$ 281 no Pix (recurso pronto). Pagamento único, sem mensalidade. E falar no WhatsApp é de graça.",
+      a: "A partir de R$ 9,90 (o manual, pra fazer você mesmo) ou R$ 197 pelo recurso pronto — à vista ou em até 12x no cartão. Pagamento único, sem mensalidade. E falar no WhatsApp é de graça.",
     },
     {
       q: "Meu dinheiro está seguro?",
