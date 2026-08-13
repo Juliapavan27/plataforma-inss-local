@@ -155,6 +155,20 @@ const auxilioDoenca: Manual = {
             "Não basta provar que você tem uma doença. É preciso mostrar que ela IMPEDE você de exercer a sua função. Uma tendinite grave incapacita um pedreiro, não necessariamente um recepcionista. O laudo tem que falar de limitação funcional em relação ao seu trabalho concreto.",
         },
         {
+          tipo: "destaque",
+          variante: "cuidado",
+          titulo: "O argumento que costuma ganhar o caso",
+          texto:
+            "O perito do INSS não pode simplesmente discordar do seu médico assistente — o especialista que te acompanha e conhece a evolução da doença — sem uma fundamentação técnica idônea que justifique a divergência. Uma conclusão pericial genérica, que só diz 'apto' sem rebater o laudo do seu médico, é frágil. No recurso, aponte essa divergência de frente: de um lado, o laudo detalhado do especialista; do outro, uma perícia de poucos minutos, sem motivação específica.",
+        },
+        {
+          tipo: "destaque",
+          variante: "info",
+          titulo: "Traduza a doença em impedimentos concretos",
+          texto:
+            "Não escreva só 'estou doente'. Liste, em tópicos, o que a doença te impede de fazer NO SEU trabalho. Ex.: 'não consigo ficar em pé por mais de X minutos', 'não posso pegar peso', 'a exposição ao sol/poeira agrava o quadro', 'a dor impede movimentos repetitivos'. Ligar cada sintoma a uma exigência real da sua função é o que transforma um diagnóstico em incapacidade laborativa.",
+        },
+        {
           tipo: "subtitulo",
           texto: "Motivo B — 'Perda da qualidade de segurado'",
         },
@@ -236,6 +250,13 @@ const auxilioDoenca: Manual = {
           texto:
             "As Súmulas 47 e 27 são da TNU (Turma Nacional de Uniformização) — jurisprudência dos juizados federais. No recurso administrativo, valem como reforço de argumento (persuasivo), não como regra que obriga a Junta. Ainda assim, mostram que o entendimento existe e ajudam a sustentar o pedido.",
         },
+        {
+          tipo: "destaque",
+          variante: "dica",
+          titulo: "Princípio da proteção (in dubio pro misero)",
+          texto:
+            "Em matéria de benefício por incapacidade, havendo dúvida razoável sobre a capacidade do segurado, o entendimento protetivo pesa a favor de quem depende do benefício — é o chamado in dubio pro misero. Use isso no fecho do 'Do direito': se a sua prova médica é robusta e a perícia foi genérica, a dúvida se resolve, no mínimo, com uma nova e adequada avaliação.",
+        },
       ],
     },
     {
@@ -250,31 +271,37 @@ const auxilioDoenca: Manual = {
           tipo: "modelo",
           titulo: "Endereçamento e identificação",
           texto:
-            "À JUNTA DE RECURSOS DO CONSELHO DE RECURSOS DA PREVIDÊNCIA SOCIAL (CRPS)\n\nProcesso/Requerimento nº [número do benefício / protocolo]\nNB (Número do Benefício): [se houver]\n\n[NOME COMPLETO], [nacionalidade], [estado civil], [profissão], inscrito(a) no CPF sob o nº [CPF], residente em [endereço completo], vem, tempestivamente, apresentar RECURSO em face da decisão que indeferiu o benefício por incapacidade temporária, pelas razões a seguir.",
+            "À JUNTA DE RECURSOS DO CONSELHO DE RECURSOS DA PREVIDÊNCIA SOCIAL (CRPS)\n\nRef.: Recurso Ordinário — Benefício por Incapacidade Temporária (Espécie 31)\nNº do Benefício: [se houver]   |   NIT: [ ]\nDecisão recorrida: [data / nº]   |   Ciência da decisão: [data]\n\n[NOME COMPLETO], [nacionalidade], [estado civil], [profissão], inscrito(a) no CPF sob o nº [CPF], residente em [endereço], vem, tempestivamente, com fundamento no art. 126 da Lei 8.213/91 e no art. 305 do Decreto 3.048/99, interpor RECURSO ORDINÁRIO contra a decisão que INDEFERIU o benefício, pelas razões a seguir.",
         },
         {
           tipo: "modelo",
-          titulo: "I – Dos fatos",
+          titulo: "I – Da tempestividade",
           texto:
-            "Narre, em ordem: quando adoeceu/se acidentou; qual é a doença ou lesão (com o CID, se souber); como ela afeta o seu trabalho; quando pediu o benefício; e o que o INSS respondeu.\n\nEx.: 'O(A) recorrente exerce a função de [função], que exige [esforço/movimento]. Em [data], passou a sofrer de [doença/CID], que o(a) impede de [o que não consegue mais fazer]. Requereu o benefício em [data], indeferido sob o fundamento de [motivo da carta].'",
+            "Comece mostrando que está no prazo — isso garante o conhecimento do recurso.\n\nEx.: 'A recorrente tomou ciência da decisão em [data]. O prazo do recurso ordinário é de 30 dias (art. 305 do Decreto 3.048/99 e Regimento Interno do CRPS). Protocolado dentro desse prazo, o presente recurso é TEMPESTIVO e merece conhecimento.'",
         },
         {
           tipo: "modelo",
-          titulo: "II – Do direito",
+          titulo: "II – Da síntese dos fatos",
           texto:
-            "Aqui você rebate o motivo da negativa usando a lei da Seção 4. Escreva um parágrafo por argumento.\n\nSe foi Motivo A (incapacidade): sustente, com base no art. 59 da Lei 8.213/91 e nos laudos, que existe incapacidade para a atividade habitual, detalhando a limitação funcional.\n\nSe foi Motivo B (qualidade de segurado): invoque o art. 15 e demonstre que, na data do início da incapacidade, você ainda estava no período de graça.\n\nSe foi Motivo C (carência): aponte as contribuições existentes (ou a hipótese de dispensa do art. 26, II) e junte o CNIS.",
+            "Narre em ordem: qual a doença/lesão (com o CID); há quanto tempo; como afeta o SEU trabalho; quando pediu o benefício; e o que o INSS decidiu.\n\nEx.: 'A recorrente exerce a função de [função], que exige [esforço]. É portadora de [doença/CID], acompanhada por [especialidade]. Requereu o benefício em [data], indeferido sob o fundamento de [motivo da carta] — decisão que diverge da documentação médica, conforme se demonstrará.'",
         },
         {
           tipo: "modelo",
-          titulo: "III – Dos documentos",
+          titulo: "III – Do direito e das razões da reforma",
           texto:
-            "Liste os documentos que acompanham o recurso (ver a Seção 6). Ex.: 'Instruem este recurso: laudo do Dr.(a) [nome], de [data], com CID [ ]; exames de [data]; extrato do CNIS; cópia da carta de indeferimento.'",
+            "Rebata o motivo da negativa, um argumento por parágrafo. Exemplo para o Motivo A (incapacidade):\n\n1) Da divergência com a prova médica: 'O art. 59 da Lei 8.213/91 assegura o benefício a quem está incapaz para a atividade habitual. O perito não pode divergir do laudo do médico assistente, que acompanha a recorrente, sem fundamentação técnica idônea; a conclusão pericial genérica não pode prevalecer.'\n\n2) Do impacto funcional concreto: liste em tópicos o que a doença impede no seu trabalho.\n\n3) Do princípio da proteção: 'Havendo dúvida, milita em favor do segurado o in dubio pro misero, impondo-se, no mínimo, nova e adequada avaliação.'\n\n(Motivo B: invoque o art. 15 e mostre que estava no período de graça. Motivo C: aponte as contribuições/dispensa do art. 26, II, e junte o CNIS.)",
         },
         {
           tipo: "modelo",
-          titulo: "IV – Do pedido",
+          titulo: "IV – Dos pedidos",
           texto:
-            "'Ante o exposto, requer o conhecimento e provimento do recurso, para reformar a decisão recorrida e conceder o benefício por incapacidade temporária desde a data do requerimento, com o pagamento das parcelas em atraso.'\n\nLocal, data e assinatura.",
+            "Peça o principal E um pedido subsidiário — ele salva o caso quando a Junta não provê direto:\n\n'Ante o exposto, requer: (a) o conhecimento e provimento do recurso; (b) a REFORMA da decisão, com a concessão/restabelecimento do benefício desde a cessação/indeferimento (DCB/DER), com o pagamento das parcelas em atraso; (c) SUBSIDIARIAMENTE, a realização de NOVA PERÍCIA, de preferência com especialista, com análise expressa de toda a documentação e da prova nova juntada; (d) a juntada e apreciação dos documentos anexos como PROVA NOVA.'\n\nLocal, data e assinatura.",
+        },
+        {
+          tipo: "modelo",
+          titulo: "Anexo – Relação de documentos",
+          texto:
+            "Feche com uma lista numerada dos documentos, dando o nome de 'prova nova' aos laudos, exames e fotos recentes:\n\n'Instruem este recurso: (a) cópia da decisão recorrida; (b) laudo do Dr.(a) [nome], CRM [ ], de [data], com CID [ ]; (c) exames e fotos do estado atual da doença (PROVA NOVA); (d) documento de identificação e comprovantes de contribuição.'",
         },
         {
           tipo: "destaque",
@@ -312,6 +339,13 @@ const auxilioDoenca: Manual = {
           titulo: "Como pegar o CNIS e a carta",
           texto:
             "Os dois saem do Meu INSS (aplicativo ou site meu.inss.gov.br), na área 'Extrato Previdenciário (CNIS)' e no histórico do seu pedido. O CNIS mostra todas as suas contribuições — confira se não falta nenhuma, porque vínculo faltando é a causa mais comum de negativa por carência.",
+        },
+        {
+          tipo: "destaque",
+          variante: "info",
+          titulo: "Dê nome aos bois: “prova nova”",
+          texto:
+            "Laudos, exames e FOTOS recentes que o INSS ainda não tinha visto valem muito — e mais ainda quando você os apresenta com esse nome: PROVA NOVA. Fotos do estado atual da lesão ou da doença, com uma legenda curta (ex.: 'lesões em [parte do corpo], [data]'), mostram à Junta o que a perícia de poucos minutos não viu. Numere tudo num anexo ao final do recurso (ver o modelo).",
         },
       ],
     },
