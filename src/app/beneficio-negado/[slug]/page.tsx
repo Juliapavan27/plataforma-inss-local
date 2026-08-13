@@ -10,6 +10,7 @@ import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados, getBeneficio } from "@/content/beneficios";
 import { getManualPorBeneficio } from "@/content/manuais";
 import { ManualOffer } from "@/components/manuais/manual-offer";
+import { ManualFloatingOffer } from "@/components/manuais/manual-floating-offer";
 import { getGuia } from "@/content/guias";
 import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
 import { formatDateBR, formatCurrencyBRL } from "@/lib/utils";
@@ -134,19 +135,39 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
             </p>
           </header>
 
-          {/* Pré-análise cedo: quem chegou aqui quer saber se ainda dá tempo. */}
-          <div className="mt-10 rounded-2xl border border-brand-200 bg-brand-50/70 p-6">
-            <p className="font-display text-lg font-semibold text-ink-950">
-              Ainda dá tempo de recorrer?
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">
+          {/* Pré-análise cedo: quem chegou aqui quer saber se ainda dá tempo.
+              Escura de propósito — faz a ponte entre o hero de impacto e o corpo. */}
+          <div className="mt-10 rounded-2xl border border-white/10 bg-ink-950 p-6 text-white">
+            <p className="font-display text-lg font-bold">Ainda dá tempo de recorrer?</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">
               O prazo é de 30 dias corridos da ciência da decisão. Responda 3 perguntas e
-              descubra em qual situação você está — é gratuito e não pede cadastro.
+              descubra em qual situação você está — grátis e sem cadastro.
             </p>
-            <Link href="/posso-recorrer" className="btn-primary mt-4 px-6 py-3">
-              Fazer a pré-análise <ArrowRight className="h-4 w-4" />
+            <Link
+              href="/posso-recorrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-ink-950 transition hover:-translate-y-0.5"
+            >
+              Fazer a pré-análise (grátis) <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+
+          {/* Oferta do manual cedo, para o mobile (que não tem a lateral fixa). */}
+          {manual && (
+            <Link
+              href={`/manuais/${manual.slug}`}
+              className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-ink-200 bg-white p-4 shadow-soft xl:hidden"
+            >
+              <span>
+                <span className="flex items-center gap-2 text-sm font-bold text-ink-950">
+                  <FileText className="h-4 w-4 text-brand-600" /> Prefere fazer você mesmo?
+                </span>
+                <span className="mt-0.5 block text-xs text-ink-500">
+                  Manual completo em PDF, passo a passo — {formatCurrencyBRL(manual.precoCents)}
+                </span>
+              </span>
+              <ArrowRight className="h-4 w-4 flex-none text-brand-600" />
+            </Link>
+          )}
 
           <Reveal>
             <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
@@ -348,6 +369,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
       </main>
       <Footer />
       <StickyMobileCTA />
+      {manual && <ManualFloatingOffer manual={manual} />}
     </>
   );
 }
