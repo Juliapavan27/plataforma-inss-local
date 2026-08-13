@@ -35,6 +35,8 @@ const GREEN_D = rgb(0.07, 0.55, 0.49);
 const VIOLET = rgb(0.42, 0.28, 0.75);
 const AMBER = rgb(0.7, 0.48, 0.05);
 const RED = rgb(0.78, 0.2, 0.2);
+const GOLD = rgb(0.83, 0.64, 0.24);
+const INK950 = rgb(0.05, 0.06, 0.1);
 
 // Ícone de telefone (viewBox 24x24) — SÓ com M/L/V/C/Z (sem arcos). O glyph
 // oficial do WhatsApp usa arcos (`a`), e o conversor de arco do pdf-lib gera
@@ -360,6 +362,83 @@ function ctaPage(ctx: Ctx) {
   center("recursofacil.com", ctx.bold, 11, BRAND, 4);
 }
 
+/** Capa premium: página escura com título grande, marca e WhatsApp. */
+function coverPage(ctx: Ctx, manual: Manual) {
+  const page = ctx.doc.addPage([A4.w, A4.h]);
+  page.drawRectangle({ x: 0, y: 0, width: A4.w, height: A4.h, color: INK950 });
+  page.drawRectangle({ x: 0, y: A4.h - 8, width: A4.w, height: 8, color: GOLD });
+
+  page.drawText("MANUAL EM PDF", { x: M, y: A4.h - 112, size: 11, font: ctx.bold, color: GOLD });
+
+  let y = A4.h - 210;
+  const titleSize = 29;
+  for (const line of wrap(ansi(manual.titulo), ctx.bold, titleSize, CONTENT_W - 8)) {
+    page.drawText(line, { x: M, y: y - titleSize, size: titleSize, font: ctx.bold, color: rgb(1, 1, 1) });
+    y -= titleSize + 8;
+  }
+  y -= 16;
+  for (const line of wrap(ansi(manual.subtitulo), ctx.reg, 13, CONTENT_W - 60)) {
+    page.drawText(line, { x: M, y: y - 13, size: 13, font: ctx.reg, color: rgb(0.72, 0.74, 0.8) });
+    y -= 13 + 6;
+  }
+  y -= 24;
+  page.drawRectangle({ x: M, y, width: 64, height: 4, color: GOLD });
+
+  page.drawText("RECURSO FÁCIL", { x: M, y: 142, size: 15, font: ctx.bold, color: rgb(1, 1, 1) });
+  page.drawText("Recursos jurídicos previdenciários", {
+    x: M,
+    y: 124,
+    size: 10,
+    font: ctx.reg,
+    color: rgb(0.55, 0.57, 0.62),
+  });
+  waBadge(page, M + 9, 82, 9);
+  page.drawText(ansi(`Fale com um especialista  ·  ${WHATSAPP_DISPLAY}`), {
+    x: M + 26,
+    y: 78,
+    size: 10,
+    font: ctx.bold,
+    color: GREEN,
+  });
+}
+
+/** Página de índice — "o que você vai encontrar". */
+function indexContent(ctx: Ctx, manual: Manual) {
+  ctx.y -= 8;
+  writeLines(ctx, "O que você vai encontrar", ctx.bold, 22, INK, { lineGap: 4 });
+  ctx.y -= 2;
+  writeLines(
+    ctx,
+    "Um passo a passo completo — do prazo ao protocolo —, com a base legal, o modelo do recurso e os argumentos que costumam fazer diferença.",
+    ctx.reg,
+    11,
+    INK600,
+    { lineGap: 5 },
+  );
+  ctx.y -= 18;
+
+  const secs = manual.secoes.filter(
+    (s) => !(s.blocos.length === 1 && s.blocos[0].tipo === "cta_final"),
+  );
+  for (const s of secs) {
+    ensure(ctx, 40);
+    const top = ctx.y;
+    ctx.page.drawRectangle({ x: M, y: top - 13, width: 6, height: 6, color: GOLD });
+    const lines = wrap(ansi(s.titulo), ctx.bold, 12.5, CONTENT_W - 22);
+    lines.forEach((l, i) => {
+      ctx.page.drawText(l, { x: M + 16, y: top - 12 - i * 16, size: 12.5, font: ctx.bold, color: INK });
+    });
+    const used = 12 + (lines.length - 1) * 16 + 20;
+    ctx.page.drawLine({
+      start: { x: M, y: top - used + 8 },
+      end: { x: A4.w - M, y: top - used + 8 },
+      thickness: 0.5,
+      color: rgb(0.9, 0.9, 0.92),
+    });
+    ctx.y = top - used;
+  }
+}
+
 export async function buildManualPdf(manual: Manual): Promise<Buffer> {
   const doc = await PDFDocument.create();
   doc.setTitle(manual.titulo);
@@ -375,39 +454,22 @@ export async function buildManualPdf(manual: Manual): Promise<Buffer> {
     mono: await doc.embedFont(StandardFonts.Courier),
     pageNum: 0,
   };
-  newPage(ctx);
-
-  // Capa/cabeçalho
-  ctx.y -= 6;
-  ctx.page.drawText("MANUAL EM PDF · RECURSO FÁCIL", {
-    x: M,
-    y: ctx.y - 9,
-    size: 9,
-    font: ctx.bold,
-    color: BRAND,
-  });
-  ctx.y -= 26;
-  writeLines(ctx, manual.titulo, ctx.bold, 21, INK, { lineGap: 4 });
-  ctx.y -= 4;
-  writeLines(ctx, manual.subtitulo, ctx.reg, 12, INK600, { lineGap: 5 });
-  ctx.y -= 8;
-  ctx.page.drawLine({
-    start: { x: M, y: ctx.y },
-    end: { x: A4.w - M, y: ctx.y },
-    thickness: 0.5,
-    color: rgb(0.88, 0.88, 0.9),
-  });
-  ctx.y -= 20;
+  coverPage(ctx, manual);
+  newPage(ctx); // página 1 — índice
+  indexContent(ctx, manual);
+  newPage(ctx); // o conteúdo começa em página nova
 
   for (const secao of manual.secoes) {
     // Seção que é só o CTA final não leva título: a própria página de CTA já
     // tem a chamada, e o título solto ficava órfão no fim da página anterior.
     const soCta = secao.blocos.length === 1 && secao.blocos[0].tipo === "cta_final";
     if (!soCta) {
+      ctx.y -= 16;
+      ensure(ctx, 78);
+      ctx.page.drawRectangle({ x: M, y: ctx.y - 4, width: 30, height: 4, color: GOLD });
+      ctx.y -= 14;
+      writeLines(ctx, secao.titulo, ctx.bold, 17, INK, { lineGap: 4 });
       ctx.y -= 8;
-      ensure(ctx, 60);
-      writeLines(ctx, secao.titulo, ctx.bold, 15, INK, { lineGap: 4 });
-      ctx.y -= 6;
     }
     for (const b of secao.blocos) bloco(ctx, b);
   }
