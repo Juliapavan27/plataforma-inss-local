@@ -9,7 +9,6 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { beneficiosNegados, getBeneficio } from "@/content/beneficios";
 import { getManualPorBeneficio } from "@/content/manuais";
-import { ManualOffer } from "@/components/manuais/manual-offer";
 import { ManualFloatingOffer } from "@/components/manuais/manual-floating-offer";
 import { getGuia } from "@/content/guias";
 import { AUTORIA, temCredencial, revisadoEmData } from "@/lib/org";
@@ -73,7 +72,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
       />
       <Navbar />
 
-      <main className="relative">
+      <main className="relative bg-ink-950 text-white">
         {/* HERO DE IMPACTO — feito para o tráfego de anúncio: celular, decide em
             segundos, reage a impacto e não lê texto longo. Grande, curto, alto
             contraste, WhatsApp gritando. O conteúdo rico segue no <article> abaixo,
@@ -115,22 +114,22 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
         <article className="container max-w-3xl py-12 pb-28 md:py-16 md:pb-16">
           <Link
             href="/beneficio-negado"
-            className="inline-flex items-center gap-2 text-sm font-medium text-ink-500 transition hover:text-ink-900"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/50 transition hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" /> Todos os benefícios
           </Link>
 
-          <header className="mt-6 border-b border-ink-200/70 pb-8">
-            <span className="chip-brand bg-red-50 text-red-700 ring-red-200">
+          <header className="mt-6 border-b border-white/10 pb-8">
+            <span className="inline-flex items-center gap-2 rounded-full bg-red-600/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
               <Clock className="h-3.5 w-3.5" /> 30 dias para recorrer
             </span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.1] text-balance text-ink-950">
+            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.1] text-balance text-white">
               {b.titulo}: por que acontece e como recorrer
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-ink-700 text-pretty">{b.intro}</p>
-            <p className="mt-6 text-sm text-ink-500">
-              Por <span className="font-medium text-ink-700">{AUTORIA.autor}</span>
-              {temCredencial && <span className="text-ink-600"> · OAB {AUTORIA.oab}</span>}
+            <p className="mt-5 text-lg leading-relaxed text-white/70 text-pretty">{b.intro}</p>
+            <p className="mt-6 text-sm text-white/50">
+              Por <span className="font-medium text-white/80">{AUTORIA.autor}</span>
+              {temCredencial && <span className="text-white/70"> · OAB {AUTORIA.oab}</span>}
               {" · "}Revisado em {formatDateBR(revisadoEmData())}
             </p>
           </header>
@@ -155,40 +154,40 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           {manual && (
             <Link
               href={`/manuais/${manual.slug}`}
-              className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-ink-200 bg-white p-4 shadow-soft xl:hidden"
+              className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 xl:hidden"
             >
               <span>
-                <span className="flex items-center gap-2 text-sm font-bold text-ink-950">
-                  <FileText className="h-4 w-4 text-brand-600" /> Prefere fazer você mesmo?
+                <span className="flex items-center gap-2 text-sm font-bold text-white">
+                  <FileText className="h-4 w-4 text-gold-300" /> Prefere fazer você mesmo?
                 </span>
-                <span className="mt-0.5 block text-xs text-ink-500">
+                <span className="mt-0.5 block text-xs text-white/60">
                   Manual completo em PDF, passo a passo — {formatCurrencyBRL(manual.precoCents)}
                 </span>
               </span>
-              <ArrowRight className="h-4 w-4 flex-none text-brand-600" />
+              <ArrowRight className="h-4 w-4 flex-none text-white/70" />
             </Link>
           )}
 
           <Reveal>
-            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-white md:text-4xl">
               Por que o INSS nega {b.nome.toLowerCase()}
             </h2>
           </Reveal>
           <div className="mt-8 space-y-5">
             {b.causas.map((c, i) => (
               <Reveal key={c.titulo} delay={i * 80}>
-                <div className="rounded-3xl border border-ink-200 bg-white p-6 shadow-soft md:p-7">
-                  <h3 className="flex items-start gap-4 font-display text-xl font-bold text-ink-950 md:text-2xl">
-                    <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-ink-950 text-base font-black text-white">
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-7">
+                  <h3 className="flex items-start gap-4 font-display text-xl font-bold text-white md:text-2xl">
+                    <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-brand-600 text-base font-black text-white">
                       {i + 1}
                     </span>
                     <span className="pt-1.5">{c.titulo}</span>
                   </h3>
-                  <p className="mt-4 text-base leading-relaxed text-ink-700 md:text-lg">{c.explicacao}</p>
-                  <p className="mt-5 flex gap-3 rounded-2xl bg-success-50 p-5 text-base leading-relaxed text-ink-800">
-                    <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-success-600" />
+                  <p className="mt-4 text-base leading-relaxed text-white/70 md:text-lg">{c.explicacao}</p>
+                  <p className="mt-5 flex gap-3 rounded-2xl bg-success-500/10 p-5 text-base leading-relaxed text-white/80">
+                    <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-success-400" />
                     <span>
-                      <strong className="font-bold text-success-700">O que costuma ajudar:</strong>{" "}
+                      <strong className="font-bold text-success-400">O que costuma ajudar:</strong>{" "}
                       {c.oQueAjuda}
                     </span>
                   </p>
@@ -198,16 +197,16 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           </div>
 
           <Reveal>
-            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-white md:text-4xl">
               Documentos que ajudam no seu recurso
             </h2>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {b.documentos.map((d) => (
                 <li
                   key={d}
-                  className="flex items-start gap-3 rounded-2xl border border-ink-200 bg-white p-4 text-base font-medium text-ink-800 shadow-soft"
+                  className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-base font-medium text-white/85"
                 >
-                  <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-brand-600" />
+                  <CheckCircle2 className="mt-0.5 h-6 w-6 flex-none text-brand-300" />
                   {d}
                 </li>
               ))}
@@ -215,18 +214,18 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           </Reveal>
 
           <Reveal>
-            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-white md:text-4xl">
               Você tem só 30 dias
             </h2>
-            <div className="mt-8 overflow-hidden rounded-3xl border-2 border-amber-300 bg-amber-50">
-              <div className="flex items-center gap-3 bg-amber-400/90 px-6 py-4">
+            <div className="mt-8 overflow-hidden rounded-3xl border-2 border-amber-500/40 bg-amber-500/10">
+              <div className="flex items-center gap-3 bg-amber-400 px-6 py-4">
                 <AlertTriangle className="h-7 w-7 flex-none text-amber-950" />
                 <p className="font-display text-xl font-bold text-amber-950 md:text-2xl">
                   30 dias corridos a partir da ciência
                 </p>
               </div>
               <div className="p-6">
-                <p className="text-base leading-relaxed text-ink-800 md:text-lg">
+                <p className="text-base leading-relaxed text-white/80 md:text-lg">
                   Ciência é a data em que você ficou sabendo — em geral a data da carta ou do
                   aviso no Meu INSS. Perdeu o prazo? Aí o caminho passa a ser um novo pedido
                   ou a Justiça.
@@ -234,7 +233,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
                 </p>
                 <Link
                   href="/guias/prazo-de-30-dias-para-recorrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-base font-bold text-brand-700 hover:underline"
+                  className="mt-4 inline-flex items-center gap-1.5 text-base font-bold text-amber-300 hover:underline"
                 >
                   Entender o prazo <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -243,14 +242,14 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           </Reveal>
 
           <Reveal>
-            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-ink-950 md:text-4xl">
+            <h2 className="mt-16 font-display text-3xl font-bold text-balance text-white md:text-4xl">
               Como recorrer, passo a passo
             </h2>
           </Reveal>
           {/* Régua vertical desenhada: cada passo surge conforme a pessoa rola. */}
           <div className="relative mt-8">
             <div
-              className="absolute bottom-8 left-6 top-8 w-1 rounded-full bg-gradient-to-b from-brand-500 via-brand-400 to-brand-200 md:left-7"
+              className="absolute bottom-8 left-6 top-8 w-1 rounded-full bg-gradient-to-b from-brand-400 via-brand-500 to-[#25D366]/60 md:left-7"
               aria-hidden="true"
             />
             <ol className="space-y-5">
@@ -263,10 +262,10 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
               ].map((passo, i) => (
                 <Reveal key={passo} delay={i * 90}>
                   <li className="relative flex items-stretch gap-5">
-                    <span className="relative z-10 grid h-12 w-12 flex-none place-items-center rounded-full bg-brand-600 text-lg font-black text-white shadow-lift ring-4 ring-white md:h-14 md:w-14">
+                    <span className="relative z-10 grid h-12 w-12 flex-none place-items-center rounded-full bg-brand-600 text-lg font-black text-white shadow-lift ring-4 ring-ink-950 md:h-14 md:w-14">
                       {i + 1}
                     </span>
-                    <div className="flex-1 rounded-2xl border border-ink-200 bg-white p-5 text-base leading-relaxed text-ink-800 shadow-soft md:text-lg">
+                    <div className="flex-1 rounded-2xl border border-white/10 bg-white/5 p-5 text-base leading-relaxed text-white/85 md:text-lg">
                       {passo}
                     </div>
                   </li>
@@ -276,18 +275,15 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
           </div>
           <Link
             href="/guias/como-protocolar-recurso-no-meu-inss"
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:underline"
           >
             Ver o passo a passo com telas do Meu INSS <ArrowRight className="h-3.5 w-3.5" />
           </Link>
 
-          {/* Esteira: quem quer fazer sozinho leva o manual barato antes da venda cheia. */}
-          {manual && <ManualOffer manual={manual} />}
-
           {/* CTA — WhatsApp-first: a audiência é informacional e o canal humano
               é o que converte. A compra direta fica como segunda opção. */}
-          <div className="mt-14 rounded-3xl bg-ink-950 p-8 text-white md:p-10">
-            <h2 className="font-display text-2xl font-semibold text-balance">
+          <div className="mt-14 rounded-3xl bg-gradient-to-br from-brand-700 via-brand-800 to-ink-900 p-8 text-white ring-1 ring-white/10 md:p-10">
+            <h2 className="font-display text-2xl font-bold text-balance">
               Ficou com dúvida sobre o seu caso?
             </h2>
             <p className="mt-3 leading-relaxed text-white/70 text-pretty">
@@ -321,24 +317,24 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
             </div>
           </div>
 
-          <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
+          <h2 className="mt-14 font-display text-2xl font-bold text-balance text-white">
             Perguntas frequentes
           </h2>
-          <div className="mt-6 divide-y divide-ink-200/70 overflow-hidden rounded-2xl border border-ink-200/70 bg-white">
+          <div className="mt-6 divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
             {b.perguntas.map((p) => (
-              <details key={p.pergunta} className="group px-6 py-5 open:bg-ink-50/60">
-                <summary className="flex cursor-pointer items-center justify-between font-semibold text-ink-900">
+              <details key={p.pergunta} className="group px-6 py-5 open:bg-white/5">
+                <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
                   {p.pergunta}
-                  <span className="ml-4 text-brand-600 transition group-open:rotate-45">+</span>
+                  <span className="ml-4 text-brand-300 transition group-open:rotate-45">+</span>
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-ink-700">{p.resposta}</p>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">{p.resposta}</p>
               </details>
             ))}
           </div>
 
           {guias.length > 0 && (
             <>
-              <h2 className="mt-14 font-display text-2xl font-semibold text-balance text-ink-950">
+              <h2 className="mt-14 font-display text-2xl font-bold text-balance text-white">
                 Continue lendo
               </h2>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -346,12 +342,12 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
                   <Link
                     key={g.slug}
                     href={`/guias/${g.slug}`}
-                    className="group rounded-2xl border border-ink-200/70 bg-white p-5 transition hover:-translate-y-1 hover:shadow-lift"
+                    className="group rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-1 hover:bg-white/10"
                   >
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-300">
                       {g.category}
                     </span>
-                    <p className="mt-2 font-display text-base font-semibold leading-snug text-balance text-ink-950">
+                    <p className="mt-2 font-display text-base font-semibold leading-snug text-balance text-white">
                       {g.title}
                     </p>
                   </Link>
@@ -360,7 +356,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
             </>
           )}
 
-          <p className="mt-12 text-xs leading-relaxed text-ink-400">
+          <p className="mt-12 text-xs leading-relaxed text-white/40">
             Este conteúdo tem caráter informativo e não substitui orientação jurídica
             individualizada. A Recurso Fácil é uma plataforma privada e independente, sem
             vínculo com o INSS ou com o Governo Federal.
