@@ -24,7 +24,6 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/input";
 import { beneficiosNegados } from "@/content/beneficios";
 import { getManualPorBeneficio } from "@/content/manuais";
 import { MOTIVOS, preAnalisar, type MotivoKey } from "@/lib/pre-analise";
@@ -35,10 +34,10 @@ import { formatCurrencyBRL } from "@/lib/utils";
 type Etapa = 1 | 2 | 3 | 4;
 
 const estiloPrazo = {
-  dentro: { wrap: "border-success-200 bg-success-50", icon: "text-success-600", Icon: CheckCircle2 },
-  apertado: { wrap: "border-amber-200 bg-amber-50", icon: "text-amber-600", Icon: AlertTriangle },
-  vencido: { wrap: "border-red-200 bg-red-50", icon: "text-red-600", Icon: AlertTriangle },
-  sem_data: { wrap: "border-ink-200 bg-ink-50", icon: "text-ink-500", Icon: CalendarClock },
+  dentro: { wrap: "border-success-500/30 bg-success-500/10", icon: "text-success-400", Icon: CheckCircle2 },
+  apertado: { wrap: "border-amber-500/30 bg-amber-500/10", icon: "text-amber-400", Icon: AlertTriangle },
+  vencido: { wrap: "border-red-500/30 bg-red-500/10", icon: "text-red-400", Icon: AlertTriangle },
+  sem_data: { wrap: "border-white/15 bg-white/5", icon: "text-white/50", Icon: CalendarClock },
 } as const;
 
 export function PossoRecorrer() {
@@ -90,7 +89,7 @@ export function PossoRecorrer() {
 
       {etapa === 2 && (
         <Pergunta titulo="O que a carta diz sobre o motivo?">
-          <p className="mb-4 text-sm text-ink-600">
+          <p className="mb-4 text-sm text-white/60">
             Se não souber ao certo, escolha a última opção — a pré-análise funciona mesmo
             assim.
           </p>
@@ -114,11 +113,11 @@ export function PossoRecorrer() {
 
       {etapa === 3 && (
         <Pergunta titulo="Quando você soube da negativa?">
-          <p className="mb-4 text-sm text-ink-600">
+          <p className="mb-4 text-sm text-white/60">
             É a data em que você tomou conhecimento da decisão — normalmente a data da
             carta ou do aviso no Meu INSS. É o que define o seu prazo.
           </p>
-          <Label>Data da ciência</Label>
+          <label className="text-sm font-semibold text-white/80">Data da ciência</label>
           <input
             type="date"
             className="input mt-1.5"
@@ -130,7 +129,7 @@ export function PossoRecorrer() {
             <Button type="button" onClick={() => setEtapa(4)}>
               Ver minha pré-análise <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" type="button" onClick={() => setEtapa(4)}>
+            <Button variant="ghost" type="button" className="text-white/70 hover:bg-white/10 hover:text-white" onClick={() => setEtapa(4)}>
               Não sei a data
             </Button>
           </div>
@@ -153,18 +152,18 @@ export function PossoRecorrer() {
             return (
               <div className="text-center">
                 <span
-                  className={`chip-brand ${
+                  className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ring-1 ${
                     positivo
-                      ? "bg-success-50 text-success-700 ring-success-200"
-                      : "bg-amber-50 text-amber-700 ring-amber-200"
+                      ? "bg-success-500/15 text-success-300 ring-success-500/30"
+                      : "bg-amber-500/15 text-amber-300 ring-amber-500/30"
                   }`}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" /> Pré-análise concluída
                 </span>
-                <h2 className="mt-4 font-display text-2xl font-bold text-balance text-ink-950 md:text-3xl">
+                <h2 className="mt-4 font-display text-2xl font-black text-balance text-white md:text-3xl">
                   {titulo}
                 </h2>
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ink-600">
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/60">
                   Toda negativa do INSS pode ser questionada por recurso administrativo — o
                   que muda é o argumento. Veja abaixo o que costuma pesar no seu caso (
                   {resultado.beneficio?.nome ?? "benefício"} ·{" "}
@@ -179,38 +178,38 @@ export function PossoRecorrer() {
             const e = estiloPrazo[resultado.situacao];
             return (
               <div className={`rounded-2xl border p-6 ${e.wrap}`}>
-                <p className="flex items-start gap-2.5 font-display text-lg font-semibold text-ink-950">
+                <p className="flex items-start gap-2.5 font-display text-lg font-bold text-white">
                   <e.Icon className={`mt-0.5 h-5 w-5 flex-none ${e.icon}`} />
                   {resultado.tituloPrazo}
                 </p>
-                <p className="mt-2 pl-[30px] text-sm leading-relaxed text-ink-700">
+                <p className="mt-2 pl-[30px] text-sm leading-relaxed text-white/70">
                   {resultado.textoPrazo}
                 </p>
               </div>
             );
           })()}
 
-          <div className="rounded-2xl border border-ink-200 bg-white p-6">
-            <h3 className="font-display text-lg font-semibold text-ink-950">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="font-display text-lg font-bold text-white">
               O que costuma pesar num caso assim
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">{resultado.oQuePesa}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">{resultado.oQuePesa}</p>
             <Link
               href={`/guias/${resultado.guiaMotivo}`}
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:underline"
             >
               Ler o guia sobre isso <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-ink-200 bg-white p-6">
-            <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-ink-950">
-              <FileText className="h-4 w-4 text-brand-600" />
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="flex items-center gap-2 font-display text-lg font-bold text-white">
+              <FileText className="h-4 w-4 text-gold-300" />
               Documentos que costumam ser relevantes
             </h3>
             <ul className="mt-3 space-y-2">
               {resultado.documentos.map((d) => (
-                <li key={d} className="flex gap-2.5 text-sm text-ink-700">
+                <li key={d} className="flex gap-2.5 text-sm text-white/70">
                   <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-gold-500" />
                   {d}
                 </li>
@@ -298,12 +297,12 @@ export function PossoRecorrer() {
           </div>
 
           <div className="flex justify-center">
-            <Button variant="ghost" type="button" onClick={reiniciar}>
+            <Button variant="ghost" type="button" className="text-white/70 hover:bg-white/10 hover:text-white" onClick={reiniciar}>
               <RotateCcw className="h-4 w-4" /> Refazer a pré-análise
             </Button>
           </div>
 
-          <p className="text-center text-xs leading-relaxed text-ink-400">
+          <p className="text-center text-xs leading-relaxed text-white/40">
             Esta pré-análise é orientação informativa baseada apenas nas respostas acima.
             Não é parecer jurídico, não avalia o seu processo e não prevê resultado. Suas
             respostas não foram enviadas nem armazenadas.
@@ -332,12 +331,12 @@ function Progresso({ etapa }: { etapa: Etapa }) {
           <span
             key={n}
             className={`h-1.5 flex-1 rounded-full transition ${
-              n <= etapa ? "bg-brand-600" : "bg-ink-200"
+              n <= etapa ? "bg-brand-500" : "bg-white/15"
             }`}
           />
         ))}
       </div>
-      <p className="mt-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-ink-400">
+      <p className="mt-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
         Passo {etapa} de 3
       </p>
     </div>
@@ -346,8 +345,8 @@ function Progresso({ etapa }: { etapa: Etapa }) {
 
 function Pergunta({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-ink-200 bg-white p-6 shadow-soft md:p-8">
-      <h2 className="mb-5 font-display text-2xl font-semibold text-balance text-ink-950">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8">
+      <h2 className="mb-5 font-display text-2xl font-bold text-balance text-white">
         {titulo}
       </h2>
       {children}
@@ -370,8 +369,8 @@ function Opcao({
       onClick={onClick}
       className={`rounded-xl border px-4 py-3.5 text-left text-sm font-medium transition ${
         ativo
-          ? "border-brand-500 bg-brand-50 text-brand-900 ring-2 ring-brand-200"
-          : "border-ink-200 bg-white text-ink-800 hover:border-brand-300 hover:bg-brand-50/40"
+          ? "border-brand-400 bg-brand-500/20 text-white ring-2 ring-brand-400/40"
+          : "border-white/15 bg-white/5 text-white hover:border-brand-400 hover:bg-white/10"
       }`}
     >
       {children}
@@ -384,7 +383,7 @@ function Voltar({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 transition hover:text-ink-900"
+      className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-white/50 transition hover:text-white"
     >
       <ArrowLeft className="h-4 w-4" /> Voltar
     </button>

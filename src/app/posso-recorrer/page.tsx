@@ -21,15 +21,15 @@ export default function PossoRecorrerPage() {
         ])}
       />
       <Navbar />
-      <main className="bg-gradient-to-b from-brand-50/40 to-white">
+      <main className="bg-ink-950 text-white">
         <div className="container py-14 md:py-20">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <h1 className="font-display text-4xl font-bold text-balance text-ink-950">
+            <h1 className="font-display text-4xl font-black text-balance text-white md:text-5xl">
               O INSS negou seu benefício?
             </h1>
-            <p className="mt-4 text-lg leading-relaxed text-ink-600 text-pretty">
-              Descubra gratuitamente se você ainda pode recorrer. São 3 perguntas, leva
-              menos de um minuto e não precisa de cadastro.
+            <p className="mt-4 text-lg leading-relaxed text-white/70 text-pretty">
+              Descubra <span className="font-semibold text-white">grátis</span> se você ainda
+              pode recorrer. São 3 perguntas, leva menos de um minuto e não precisa de cadastro.
             </p>
           </div>
           <PossoRecorrer />
