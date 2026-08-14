@@ -1,16 +1,42 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { WHATSAPP_HREF } from "@/lib/whatsapp";
+import { formatCurrencyBRL } from "@/lib/utils";
+import type { Manual } from "@/content/manuais";
 
 /**
- * Barra fixa no rodapé do celular — nas páginas de benefício, onde os anúncios caem.
+ * Barra fixa no rodapé do celular (páginas de benefício).
  *
- * WhatsApp-first: o público de tráfego pago é informacional e decide no impulso;
- * o canal que converte é o humano. A barra mantém o WhatsApp sempre à vista
- * enquanto a pessoa rola. `md:hidden` — só no celular. A home tem a própria versão.
+ * Âncora clara para quem chega perdido no meio do conteúdo: a oferta do manual
+ * (barata e concreta) fica fixa o tempo todo. O WhatsApp segue acessível pelo
+ * botão flutuante. Onde não há manual para o benefício, cai no WhatsApp.
  */
-export function StickyMobileCTA() {
+export function StickyMobileCTA({ manual }: { manual?: Manual }) {
+  const barra =
+    "fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 shadow-lift backdrop-blur md:hidden";
+
+  if (manual) {
+    return (
+      <div className={barra}>
+        <Link href={`/manuais/${manual.slug}`} className="flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-700">
+              Manual completo em PDF
+            </p>
+            <p className="text-sm font-bold text-ink-950">
+              Adquira por apenas {formatCurrencyBRL(manual.precoCents)}
+            </p>
+          </div>
+          <span className="btn-primary px-5 py-3 text-sm">
+            Adquirir <ArrowRight className="h-4 w-4" />
+          </span>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 shadow-lift backdrop-blur md:hidden">
+    <div className={barra}>
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <p className="text-[11px] font-bold uppercase tracking-wide text-red-600">

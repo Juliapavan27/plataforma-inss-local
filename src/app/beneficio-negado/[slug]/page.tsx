@@ -364,7 +364,7 @@ export default function BeneficioPage({ params }: { params: { slug: string } }) 
         </article>
       </main>
       <Footer />
-      <StickyMobileCTA />
+      <StickyMobileCTA manual={manual} />
       {manual && <ManualFloatingOffer manual={manual} />}
     </>
   );

@@ -916,27 +916,40 @@ function Mission() {
 function StickyMobileCTA() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200/70 bg-white/95 p-3 shadow-lift backdrop-blur md:hidden">
-      {/* pr extra reserva o canto para o balão do chat não cobrir o botão. */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600">
-            Prazo: 30 dias para recorrer
-          </p>
-          <p className="text-sm font-bold text-ink-950">
-            Fale agora, sem compromisso
-          </p>
+      {MANUAL_DESTAQUE ? (
+        <Link href={`/manuais/${MANUAL_DESTAQUE.slug}`} className="flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-700">
+              Manual completo em PDF
+            </p>
+            <p className="text-sm font-bold text-ink-950">
+              Adquira por apenas {formatCurrencyBRL(MANUAL_DESTAQUE.precoCents)}
+            </p>
+          </div>
+          <span className="btn-primary px-5 py-3 text-sm">
+            Adquirir <ArrowRight className="h-4 w-4" />
+          </span>
+        </Link>
+      ) : (
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600">
+              Prazo: 30 dias para recorrer
+            </p>
+            <p className="text-sm font-bold text-ink-950">Fale agora, sem compromisso</p>
+          </div>
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold text-white"
+            style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
+          >
+            WhatsApp
+            <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
-        <a
-          href={WHATSAPP_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold text-white"
-          style={{ backgroundImage: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)" }}
-        >
-          WhatsApp
-          <ArrowRight className="h-4 w-4" />
-        </a>
-      </div>
+      )}
     </div>
   );
 }
