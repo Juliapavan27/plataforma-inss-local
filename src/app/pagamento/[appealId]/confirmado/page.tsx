@@ -33,7 +33,7 @@ export default async function ConfirmadoPage({
   return (
     <>
       <Navbar />
-      <main className="bg-gradient-to-b from-brand-50/40 to-white">
+      <main className="bg-gradient-to-b from-brand-50 to-white">
         <div className="container py-16">
           {!payment ? (
             <div className="mx-auto max-w-md rounded-2xl border border-ink-200 bg-white p-8 text-center">

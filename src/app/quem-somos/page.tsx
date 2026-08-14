@@ -40,23 +40,23 @@ function Hero() {
   return (
     <section className="relative isolate overflow-hidden pt-10">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-x-0 -top-40 h-[500px] bg-radial-brand" />
-        <div className="absolute -left-40 top-40 h-[420px] w-[420px] rounded-full bg-gold-200/40 blur-3xl" />
-        <div className="absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-brand-200/50 blur-3xl" />
+        <div className="absolute inset-x-0 -top-40 h-[500px] bg-radial-brand opacity-30" />
+        <div className="absolute -left-40 top-40 h-[420px] w-[420px] rounded-full bg-gold-500/10 blur-3xl" />
+        <div className="absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-brand-600/20 blur-3xl" />
       </div>
 
       <div className="container py-20 md:py-28">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="chip-brand">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-200 ring-1 ring-white/15">
             <Heart className="h-3.5 w-3.5" /> Quem somos
           </span>
-          <h1 className="mt-6 font-display text-display-lg font-semibold text-balance text-ink-950">
+          <h1 className="mt-6 font-display text-display-lg font-semibold text-balance text-white">
             Somos profissionais do direito com uma{" "}
-            <span className="italic text-gradient-brand">
+            <span className="italic text-gold-300">
               convicção compartilhada.
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-600 text-pretty">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70 text-pretty">
             Dedicamos nossas trajetórias ao direito e à gestão jurídica. Ao
             longo desses anos, chegamos à mesma conclusão: é preciso ampliar o
             acesso técnico a quem mais precisa recorrer e muitas vezes não sabe
@@ -73,15 +73,15 @@ function Manifesto() {
     <section className="relative overflow-hidden py-24">
       <div className="container">
         <div className="mx-auto max-w-3xl">
-          <span className="eyebrow">Nosso propósito</span>
-          <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
+          <span className="eyebrow text-brand-300">Nosso propósito</span>
+          <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-white">
             Ampliar o acesso à justiça{" "}
-            <span className="italic text-gradient-brand">
+            <span className="italic text-gold-300">
               para quem ainda não chega até ela.
             </span>
           </h2>
 
-          <div className="prose mt-10 space-y-6 text-[17px] leading-relaxed text-ink-700">
+          <div className="prose prose-invert mt-10 space-y-6 text-[17px] leading-relaxed text-white/70">
             <p>
               O direito previdenciário protege, em sua essência, as pessoas
               mais vulneráveis: trabalhadores que contribuíram por décadas,
@@ -116,20 +116,20 @@ function Manifesto() {
               , construído por quem vive o direito por dentro e acredita no
               poder transformador dele.
             </p>
-            <p className="text-sm text-ink-500">
+            <p className="text-sm text-white/50">
               Somos uma plataforma privada e independente — sem qualquer vínculo com
               o INSS ou com o Governo Federal.
             </p>
           </div>
 
-          <div className="mt-12 rounded-2xl border-l-4 border-brand-600 bg-brand-50/50 p-6">
-            <Quote className="h-6 w-6 text-brand-600" />
-            <p className="mt-3 font-display text-xl leading-snug text-ink-900">
+          <div className="mt-12 rounded-2xl border-l-4 border-brand-500 bg-brand-500/10 p-6">
+            <Quote className="h-6 w-6 text-brand-300" />
+            <p className="mt-3 font-display text-xl leading-snug text-white">
               &ldquo;A tecnologia, bem aplicada, é uma ponte. Não substitui o
               direito, nem os profissionais que o exercem: cria caminhos para
               que mais pessoas possam percorrê-lo.&rdquo;
             </p>
-            <p className="mt-3 text-sm font-semibold text-ink-600">
+            <p className="mt-3 text-sm font-semibold text-white/60">
               — Fundadores da Recurso Fácil
             </p>
           </div>
@@ -277,23 +277,23 @@ function Values() {
   return (
     <section className="container py-24">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow">Nossos valores</span>
-        <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-ink-950">
+        <span className="eyebrow text-brand-300">Nossos valores</span>
+        <h2 className="mt-5 font-display text-display-md font-semibold text-balance text-white">
           Seis princípios que{" "}
-          <span className="italic text-gradient-brand">guiam tudo que fazemos.</span>
+          <span className="italic text-gold-300">guiam tudo que fazemos.</span>
         </h2>
       </div>
 
       <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {values.map((v) => (
-          <div key={v.title} className="card-lift">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 ring-1 ring-brand-200/60">
+          <div key={v.title} className="rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/[0.08]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300 ring-1 ring-brand-400/30">
               <v.icon className="h-5 w-5" />
             </div>
-            <h3 className="mt-5 font-display text-lg font-semibold tracking-tight text-ink-950">
+            <h3 className="mt-5 font-display text-lg font-semibold tracking-tight text-white">
               {v.title}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-600">{v.text}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/60">{v.text}</p>
           </div>
         ))}
       </div>
@@ -315,13 +315,13 @@ function Numbers() {
         {stats.map((s) => (
           <div
             key={s.label}
-            className="relative overflow-hidden rounded-2xl border border-ink-200/70 bg-white/80 p-6 shadow-ring"
+            className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6"
           >
-            <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand-100/70 blur-2xl" />
-            <p className="font-display text-4xl font-bold tracking-tight text-ink-950">
+            <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand-600/20 blur-2xl" />
+            <p className="font-display text-4xl font-bold tracking-tight text-white">
               {s.kpi}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-ink-600">{s.label}</p>
+            <p className="mt-2 text-sm leading-relaxed text-white/60">{s.label}</p>
           </div>
         ))}
       </div>

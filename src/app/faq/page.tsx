@@ -199,13 +199,15 @@ export default function FAQPage() {
         ]}
       />
       <Navbar />
-      <main className="container max-w-3xl py-16">
+      <main className="container max-w-3xl py-16 text-white">
         <div className="text-center">
-          <span className="chip">Dúvidas frequentes</span>
-          <h1 className="mt-4 font-display text-4xl font-bold text-ink-950">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white/70 ring-1 ring-white/15">
+            Dúvidas frequentes
+          </span>
+          <h1 className="mt-4 font-display text-4xl font-bold text-white">
             Perguntas frequentes
           </h1>
-          <p className="mt-3 text-ink-600">
+          <p className="mt-3 text-white/60">
             Tudo que você precisa saber antes de gerar seu recurso.
           </p>
         </div>
@@ -213,24 +215,24 @@ export default function FAQPage() {
             parede de texto e a pessoa desiste antes de achar a dela. */}
         {grupos.map((grupo) => (
           <section key={grupo} className="mt-12">
-            <h2 className="font-display text-xl font-semibold text-ink-950">{grupo}</h2>
-            <div className="mt-4 divide-y divide-ink-100 rounded-2xl border border-ink-100 bg-white">
+            <h2 className="font-display text-xl font-semibold text-white">{grupo}</h2>
+            <div className="mt-4 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5">
               {FAQ.filter((f) => f.grupo === grupo).map((item, i) => (
-                <details key={i} className="group px-6 py-5 open:bg-ink-50/60">
-                  <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold text-ink-900">
+                <details key={i} className="group px-6 py-5 open:bg-white/[0.04]">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold text-white">
                     {item.q}
-                    <span className="text-brand-600 transition group-open:rotate-45">+</span>
+                    <span className="text-brand-300 transition group-open:rotate-45">+</span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-700">{item.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/70">{item.a}</p>
                 </details>
               ))}
             </div>
           </section>
         ))}
 
-        <div className="mt-14 rounded-2xl border border-ink-200/70 bg-white p-6 text-center">
-          <p className="font-semibold text-ink-950">Não achou sua dúvida?</p>
-          <p className="mt-2 text-sm text-ink-600">
+        <div className="mt-14 rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+          <p className="font-semibold text-white">Não achou sua dúvida?</p>
+          <p className="mt-2 text-sm text-white/60">
             Escreva para {SUPPORT_EMAIL} — respondemos em até {SUPPORT_SLA_HOURS}h.
           </p>
           <Link href="/posso-recorrer" className="btn-primary mt-5 px-6 py-3">

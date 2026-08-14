@@ -12,13 +12,15 @@ export default function CalculadoraPage() {
   return (
     <>
       <Navbar />
-      <main className="container max-w-4xl py-16">
+      <main className="container max-w-4xl py-16 text-white">
         <div className="text-center">
-          <span className="chip-brand">Calculadora gratuita</span>
-          <h1 className="mt-4 font-display text-4xl font-bold text-ink-950">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-200 ring-1 ring-white/15">
+            Calculadora gratuita
+          </span>
+          <h1 className="mt-4 font-display text-4xl font-bold text-white">
             Calculadora de aposentadoria e benefícios do INSS
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-ink-600">
+          <p className="mx-auto mt-3 max-w-2xl text-white/60">
             Simule o valor estimado da sua aposentadoria ou de um benefício negado —
             auxílio-doença, aposentadoria por invalidez, pensão por morte, salário-maternidade
             ou BPC/LOAS.
@@ -29,8 +31,8 @@ export default function CalculadoraPage() {
           <CalculatorTabs />
         </div>
 
-        <div className="mt-16 space-y-6 text-sm text-ink-600">
-          <h2 className="font-display text-xl font-semibold text-ink-950">
+        <div className="mt-16 space-y-6 text-sm text-white/60">
+          <h2 className="font-display text-xl font-semibold text-white">
             Como funciona o cálculo do INSS?
           </h2>
           <p>
@@ -51,10 +53,10 @@ export default function CalculadoraPage() {
             pensão por morte, salário-maternidade e BPC/LOAS, cada um segue uma regra própria de
             cálculo — detalhada nos resultados da aba &ldquo;Benefício negado&rdquo; acima.
           </p>
-          <p className="text-xs text-ink-400">
+          <p className="text-xs text-white/40">
             As estimativas desta página têm caráter meramente informativo e não substituem a
             simulação oficial do INSS nem orientação jurídica. Se seu pedido foi negado, você
-            pode <a href="/novo-recurso" className="font-semibold text-brand-700">gerar um recurso administrativo</a> com entrega em até 24h.
+            pode <a href="/novo-recurso" className="font-semibold text-brand-300">gerar um recurso administrativo</a> com entrega em até 24h.
           </p>
         </div>
       </main>

@@ -48,13 +48,15 @@ export default function TutorialPage() {
   return (
     <>
       <Navbar />
-      <main className="container max-w-3xl py-16">
+      <main className="container max-w-3xl py-16 text-white">
         <div className="text-center">
-          <span className="chip-brand">Tutorial</span>
-          <h1 className="mt-4 font-display text-4xl font-bold text-ink-950">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-200 ring-1 ring-white/15">
+            Tutorial
+          </span>
+          <h1 className="mt-4 font-display text-4xl font-bold text-white">
             Como gerar seu recurso, passo a passo
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-ink-600">
+          <p className="mx-auto mt-3 max-w-xl text-white/60">
             Do formulário ao protocolo no Meu INSS — veja exatamente o que esperar em
             cada etapa.
           </p>
@@ -62,22 +64,22 @@ export default function TutorialPage() {
 
         <div className="mt-12 space-y-4">
           {steps.map((s) => (
-            <div key={s.title} className="card flex items-start gap-4">
-              <div className="grid h-11 w-11 flex-none place-items-center rounded-xl bg-brand-50 text-brand-700 ring-1 ring-brand-200/60">
+            <div key={s.title} className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-6">
+              <div className="grid h-11 w-11 flex-none place-items-center rounded-xl bg-brand-500/15 text-brand-300 ring-1 ring-brand-400/30">
                 <s.icon className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-lg font-semibold text-ink-950">
+                <h2 className="font-display text-lg font-semibold text-white">
                   {s.title}
                 </h2>
-                <p className="mt-1 text-sm leading-relaxed text-ink-600">{s.text}</p>
+                <p className="mt-1 text-sm leading-relaxed text-white/60">{s.text}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
-          <strong>Atenção ao prazo:</strong> você tem 30 dias corridos a partir da
+        <div className="mt-12 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-5 text-sm text-amber-200">
+          <strong className="text-amber-100">Atenção ao prazo:</strong> você tem 30 dias corridos a partir da
           ciência da decisão do INSS para apresentar o recurso administrativo. Comece
           o quanto antes.
         </div>

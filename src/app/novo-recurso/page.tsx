@@ -10,7 +10,7 @@ export default function NovoRecursoPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-gradient-to-b from-brand-50/40 to-white">
+      <main className="min-h-screen bg-gradient-to-b from-brand-50 to-white">
         <div className="container py-12">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <h1 className="font-display text-3xl font-bold text-ink-950 md:text-4xl">

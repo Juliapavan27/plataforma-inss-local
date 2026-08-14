@@ -64,21 +64,21 @@ export default function BeneficioNegadoPage() {
       />
       <Navbar />
 
-      <main className="relative">
+      <main className="relative bg-ink-950 text-white">
         <section className="relative isolate overflow-hidden">
           <div className="pointer-events-none absolute inset-0 -z-10">
-            <div className="absolute inset-x-0 -top-40 h-[520px] bg-radial-brand" />
-            <div className="absolute inset-0 bg-grid mask-fade-b opacity-60" />
+            <div className="absolute inset-x-0 -top-40 h-[520px] bg-radial-brand opacity-30" />
+            <div className="absolute inset-0 bg-grid mask-fade-b opacity-20" />
           </div>
 
           <div className="container max-w-3xl py-16 md:py-20">
-            <span className="chip-brand bg-red-50 text-red-700 ring-red-200">
+            <span className="inline-flex items-center gap-2 rounded-full bg-red-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-red-300 ring-1 ring-red-400/30">
               <Clock className="h-3.5 w-3.5" /> Você tem 30 dias para recorrer
             </span>
-            <h1 className="mt-6 font-display text-display-lg font-semibold text-balance text-ink-950">
-              Benefício negado pelo INSS: <span className="italic text-gradient-brand">o que fazer agora</span>
+            <h1 className="mt-6 font-display text-display-lg font-semibold text-balance text-white">
+              Benefício negado pelo INSS: <span className="italic text-gold-300">o que fazer agora</span>
             </h1>
-            <p className="mt-6 text-xl leading-relaxed text-ink-700 text-pretty">
+            <p className="mt-6 text-xl leading-relaxed text-white/70 text-pretty">
               Receber a carta de indeferimento não significa que você não tem direito.
               Significa que, com o que estava no processo, o INSS entendeu que faltava
               algum requisito — e isso pode ser contestado.
@@ -88,7 +88,10 @@ export default function BeneficioNegadoPage() {
               <Link href="/posso-recorrer" className="btn-primary px-7 py-3.5">
                 Descobrir se posso recorrer <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/novo-recurso" className="btn-secondary px-7 py-3.5">
+              <Link
+                href="/novo-recurso"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+              >
                 Já sei, quero gerar meu recurso
               </Link>
             </div>
@@ -96,12 +99,12 @@ export default function BeneficioNegadoPage() {
         </section>
 
         {/* Entrada por benefício — o jeito como a pessoa procura */}
-        <section className="border-t border-ink-200/60 bg-white/60">
+        <section className="border-t border-white/10 bg-white/[0.03]">
           <div className="container max-w-5xl py-16">
-            <h2 className="font-display text-3xl font-semibold text-balance text-ink-950">
+            <h2 className="font-display text-3xl font-semibold text-balance text-white">
               Qual benefício foi negado?
             </h2>
-            <p className="mt-3 max-w-2xl text-ink-600">
+            <p className="mt-3 max-w-2xl text-white/60">
               Cada benefício é negado por motivos diferentes, e o recurso precisa atacar
               exatamente o motivo que aparece na sua carta.
             </p>
@@ -112,26 +115,26 @@ export default function BeneficioNegadoPage() {
                   <Link
                     key={b.slug}
                     href={`/beneficio-negado/${b.slug}`}
-                    className="group rounded-2xl border border-ink-200/70 bg-white p-6 shadow-ring transition hover:-translate-y-1 hover:shadow-lift"
+                    className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:bg-white/[0.08]"
                   >
-                    <h3 className="font-display text-xl font-semibold text-ink-950">
+                    <h3 className="font-display text-xl font-semibold text-white">
                       {b.titulo}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-600">{b.chamada}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/60">{b.chamada}</p>
 
-                    <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">
+                    <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
                       Motivos mais comuns
                     </p>
                     <ul className="mt-2 space-y-1.5">
                       {b.motivosComuns.map((m) => (
-                        <li key={m} className="flex gap-2 text-sm text-ink-700">
-                          <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-gold-500" />
+                        <li key={m} className="flex gap-2 text-sm text-white/70">
+                          <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-gold-400" />
                           {m}
                         </li>
                       ))}
                     </ul>
 
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300">
                       Ver causas, documentos e prazo
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </span>
@@ -143,9 +146,9 @@ export default function BeneficioNegadoPage() {
         </section>
 
         {/* Passos — intenção alta, leva para conversão */}
-        <section className="border-t border-ink-200/60">
+        <section className="border-t border-white/10">
           <div className="container max-w-3xl py-16">
-            <h2 className="font-display text-3xl font-semibold text-balance text-ink-950">
+            <h2 className="font-display text-3xl font-semibold text-balance text-white">
               Como recorrer, passo a passo
             </h2>
             <ol className="mt-8 space-y-6">
@@ -180,13 +183,13 @@ export default function BeneficioNegadoPage() {
                     {i + 1}
                   </span>
                   <div>
-                    <h3 className="font-display text-lg font-semibold text-ink-950">
+                    <h3 className="font-display text-lg font-semibold text-white">
                       {passo.titulo}
                     </h3>
-                    <p className="mt-1.5 leading-relaxed text-ink-600">{passo.texto}</p>
+                    <p className="mt-1.5 leading-relaxed text-white/60">{passo.texto}</p>
                     <Link
                       href={passo.href}
-                      className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
+                      className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-300 hover:underline"
                     >
                       {passo.link} <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
@@ -198,26 +201,26 @@ export default function BeneficioNegadoPage() {
         </section>
 
         {/* FAQ visível — é o que autoriza o FAQ schema lá em cima */}
-        <section className="border-t border-ink-200/60 bg-white/60">
+        <section className="border-t border-white/10 bg-white/[0.03]">
           <div className="container max-w-3xl py-16">
-            <h2 className="font-display text-3xl font-semibold text-balance text-ink-950">
+            <h2 className="font-display text-3xl font-semibold text-balance text-white">
               Perguntas frequentes
             </h2>
-            <div className="mt-8 divide-y divide-ink-200/70 overflow-hidden rounded-2xl border border-ink-200/70 bg-white">
+            <div className="mt-8 divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
               {PERGUNTAS.map((p) => (
-                <details key={p.pergunta} className="group px-6 py-5 open:bg-ink-50/60">
-                  <summary className="flex cursor-pointer items-center justify-between font-semibold text-ink-900">
+                <details key={p.pergunta} className="group px-6 py-5 open:bg-white/[0.04]">
+                  <summary className="flex cursor-pointer items-center justify-between font-semibold text-white">
                     {p.pergunta}
-                    <span className="ml-4 text-brand-600 transition group-open:rotate-45">+</span>
+                    <span className="ml-4 text-brand-300 transition group-open:rotate-45">+</span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-700">{p.resposta}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/70">{p.resposta}</p>
                 </details>
               ))}
             </div>
 
-            <p className="mt-6 text-sm text-ink-600">
+            <p className="mt-6 text-sm text-white/60">
               Mais dúvidas na{" "}
-              <Link href="/faq" className="font-medium text-brand-700 hover:underline">
+              <Link href="/faq" className="font-medium text-brand-300 hover:underline">
                 página de perguntas frequentes
               </Link>
               .
@@ -225,9 +228,9 @@ export default function BeneficioNegadoPage() {
           </div>
         </section>
 
-        <section className="border-t border-ink-200/60">
+        <section className="border-t border-white/10">
           <div className="container max-w-3xl py-16">
-            <div className="rounded-3xl bg-ink-950 p-8 text-white md:p-10">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-white md:p-10">
               <h2 className="font-display text-2xl font-semibold text-balance">
                 Pronto para recorrer?
               </h2>
@@ -251,7 +254,7 @@ export default function BeneficioNegadoPage() {
               </Link>
             </div>
 
-            <p className="mt-8 text-xs leading-relaxed text-ink-400">
+            <p className="mt-8 text-xs leading-relaxed text-white/40">
               Este conteúdo tem caráter informativo e não substitui orientação jurídica
               individualizada. A Recurso Fácil é uma plataforma privada e independente, sem
               vínculo com o INSS ou com o Governo Federal.

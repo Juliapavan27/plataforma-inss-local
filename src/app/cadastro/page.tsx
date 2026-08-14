@@ -8,7 +8,7 @@ export const metadata = { title: "Criar conta" };
 export default function CadastroPage() {
   return (
     <Providers>
-      <div className="min-h-screen bg-gradient-to-b from-brand-50/40 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-brand-50 to-white">
         <div className="container flex min-h-screen items-center justify-center py-12">
           <div className="w-full max-w-md">
             <Link

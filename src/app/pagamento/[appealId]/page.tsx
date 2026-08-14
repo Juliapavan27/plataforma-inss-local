@@ -102,7 +102,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main className="bg-gradient-to-b from-brand-50/40 to-white">
+      <main className="bg-gradient-to-b from-brand-50 to-white">
         <div className="container py-12 md:py-16">{children}</div>
       </main>
       <Footer />
