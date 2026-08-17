@@ -90,9 +90,9 @@ function FounderBand() {
             <p className="mt-1 font-display text-xl font-black text-white">Julia Matos</p>
             <p className="text-sm text-white/60">Fundadora · Formada em Direito</p>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">
-              &ldquo;Criei a Recurso Fácil ao lado de um advogado com mais de 30 anos de
-              experiência em Direito e recursos. Nossa missão é simples: que ninguém desista de
-              um direito só por não saber o que escrever.&rdquo;
+              &ldquo;Criei a Recurso Fácil ao lado de um especialista na área do Direito, com
+              mais de 30 anos de experiência em recursos. Nossa missão é simples: que ninguém
+              desista de um direito só por não saber o que escrever.&rdquo;
             </p>
           </div>
         </div>
