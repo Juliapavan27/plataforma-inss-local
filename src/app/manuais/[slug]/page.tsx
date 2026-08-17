@@ -71,6 +71,36 @@ function SeloGarantia() {
   );
 }
 
+/** Bloco de autoridade: rosto + nome + credencial reais desarmam o medo de golpe. */
+function FounderBand() {
+  return (
+    <section className="relative border-y border-white/10 bg-white/[0.03]">
+      <div className="container py-10">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/julia-matos.jpeg"
+            alt="Julia Matos, fundadora da Recurso Fácil"
+            className="h-24 w-24 flex-none rounded-2xl object-cover shadow-lift ring-2 ring-white/15"
+          />
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gold-300">
+              Quem está por trás
+            </p>
+            <p className="mt-1 font-display text-xl font-black text-white">Julia Matos</p>
+            <p className="text-sm text-white/60">Fundadora · Formada em Direito</p>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">
+              &ldquo;Criei a Recurso Fácil ao lado de um advogado com mais de 30 anos de
+              experiência em Direito e recursos. Nossa missão é simples: que ninguém desista de
+              um direito só por não saber o que escrever.&rdquo;
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ManualSalesPage({ params }: { params: { slug: string } }) {
   const m = getManual(params.slug);
   if (!m) notFound();
@@ -145,6 +175,9 @@ export default function ManualSalesPage({ params }: { params: { slug: string } }
           </div>
         </section>
 
+        {/* ===================== QUEM ESTÁ POR TRÁS ===================== */}
+        <FounderBand />
+
         {/* ===================== OFERTA + CONTEÚDO ===================== */}
         <section className="relative">
           <div className="container pb-16">
@@ -165,6 +198,13 @@ export default function ManualSalesPage({ params }: { params: { slug: string } }
                   <ShieldCheck className="h-3.5 w-3.5 text-success-400" />
                   Entrega imediata · Garantia de 7 dias (CDC art. 49)
                 </p>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-white/40">
+                  <span className="inline-flex items-center gap-1">
+                    <Lock className="h-3 w-3" /> Pagamento via Mercado Pago
+                  </span>
+                  <span>·</span>
+                  <span>Empresa privada — não somos o INSS</span>
+                </div>
               </div>
 
               {/* Pitch comercial */}
@@ -200,11 +240,12 @@ export default function ManualSalesPage({ params }: { params: { slug: string } }
                   <SeloGarantia />
                   <div>
                     <h3 className="font-display text-lg font-bold text-white">
-                      Risco zero para você
+                      O risco é meu, não seu
                     </h3>
                     <p className="mt-1 text-sm leading-relaxed text-white/70">
-                      Não gostou? Você tem 7 dias para pedir o reembolso integral dos {preco},
-                      sem precisar justificar (CDC art. 49). O risco é todo nosso.
+                      Se você achar que não valeu, eu devolvo seus {preco} em até 7 dias — sem
+                      perguntar nada, sem precisar justificar (CDC art. 49). Você não perde nada
+                      testando.
                     </p>
                   </div>
                 </div>
@@ -217,8 +258,10 @@ export default function ManualSalesPage({ params }: { params: { slug: string } }
                   <p className="mt-2 text-sm leading-relaxed text-white/75">
                     Porque a maioria das negativas do INSS pode ser recorrida pela própria pessoa,
                     de graça, no Meu INSS — o que falta não é permissão, é saber{" "}
-                    <strong className="text-white">exatamente o que escrever</strong>. Este manual
-                    entrega esse caminho sem custar o preço de um serviço completo.
+                    <strong className="text-white">exatamente o que escrever</strong>. Somos a{" "}
+                    <strong className="text-white">mesma equipe que monta o recurso pronto por{" "}
+                    {formatCurrencyBRL(PRICE_PIX_CENTS)}</strong>: o manual é a versão que você faz
+                    sozinho, com a mesma base técnica — pelo preço de um lanche.
                   </p>
                 </div>
 
@@ -251,6 +294,41 @@ export default function ManualSalesPage({ params }: { params: { slug: string } }
                     </div>
                   </div>
                 )}
+
+                {/* É confiável? — nomeia o medo de golpe e responde de frente */}
+                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-7">
+                  <h2 className="font-display text-2xl font-black text-balance text-white">
+                    Dá pra confiar? <span className="text-gold-300">Perguntas honestas</span>
+                  </h2>
+                  <div className="mt-5 divide-y divide-white/10">
+                    {[
+                      {
+                        q: "Isso é golpe?",
+                        a: `Não. A Recurso Fácil é uma plataforma real, o pagamento é processado pelo Mercado Pago e você tem 7 dias para pedir o dinheiro de volta. Antes de comprar, você pode até falar com a gente no WhatsApp.`,
+                      },
+                      {
+                        q: "Isso é oficial do INSS ou do governo?",
+                        a: "Não. Somos uma empresa privada e independente — e é justamente por isso que ajudamos você a contestar a decisão do INSS. Nunca pedimos a sua senha do Meu INSS.",
+                      },
+                      {
+                        q: "Vou mesmo receber o material?",
+                        a: "Sim. Assim que o pagamento é confirmado, o PDF chega no seu e-mail e abre na hora aqui na tela. Acesso imediato.",
+                      },
+                      {
+                        q: "E se não funcionar para o meu caso?",
+                        a: `Você tem 7 dias de garantia (CDC art. 49): se achar que não valeu, devolvemos os ${preco} integralmente, sem perguntar nada.`,
+                      },
+                    ].map((f) => (
+                      <details key={f.q} className="group py-4">
+                        <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold text-white">
+                          {f.q}
+                          <span className="text-brand-300 transition group-open:rotate-45">+</span>
+                        </summary>
+                        <p className="mt-2 text-sm leading-relaxed text-white/70">{f.a}</p>
+                      </details>
+                    ))}
+                  </div>
+                </div>
 
                 {/* Upsell Diamante — "em até 12x" (sem número de parcela) */}
                 <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-800 to-ink-900 p-7 ring-1 ring-white/10">
