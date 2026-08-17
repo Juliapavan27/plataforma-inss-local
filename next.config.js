@@ -17,7 +17,7 @@ const csp = [
   "img-src 'self' data: blob: https:",
   // *.ingest.sentry.io / *.ingest.us.sentry.io cobrem os hosts de ingestão mais comuns do
   // Sentry — se o DSN do projeto usar outra região, ajuste aqui.
-  "connect-src 'self' https://api.stripe.com https://api.mercadopago.com https://api.mercadolibre.com https://*.mercadopago.com https://*.mlstatic.com https://api.checkout.infinitepay.io https://viacep.com.br https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
+  "connect-src 'self' https://api.stripe.com https://api.mercadopago.com https://*.mercadolibre.com https://*.mercadopago.com https://*.mlstatic.com https://api.checkout.infinitepay.io https://viacep.com.br https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.facebook.com https://*.facebook.net https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io",
   "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://checkout.infinitepay.io https://*.mercadopago.com https://*.mercadolibre.com",
   "worker-src 'self' blob:",
   "manifest-src 'self'",
