@@ -12,7 +12,7 @@
  */
 import { db } from "./db";
 import { getManual } from "@/content/manuais";
-import { createPixOrder, getOrder } from "./mercadopago";
+import { createPixOrder, createCardOrder, getOrder } from "./mercadopago";
 import { createPaymentToken } from "./payment-token";
 import { buildManualPdf } from "./docgen/manual-pdf";
 import { sendManualDeliveryEmail } from "./email";
@@ -86,6 +86,96 @@ export async function createManualOrder(input: {
     qrCode: pix.pix?.qrCode ?? null,
     qrCodeBase64: pix.pix?.qrCodeBase64 ?? null,
   };
+}
+
+/**
+ * Cria só o pedido (rascunho), sem gerar pagamento ainda.
+ *
+ * É o ponto de partida do fluxo de cartão: primeiro grava nome+e-mail e devolve
+ * o id+token, depois o Brick do Mercado Pago manda o cartão para /cartao. O
+ * caminho do Pix continua usando createManualOrder (pedido + Pix num passo só).
+ */
+export async function createManualDraft(input: {
+  slug: string;
+  nome: string;
+  email: string;
+}): Promise<{ orderId: string; token: string; amountCents: number }> {
+  const manual = getManual(input.slug);
+  if (!manual) throw new Error("Manual não encontrado");
+
+  const order = await db.manualOrder.create({
+    data: {
+      manualSlug: manual.slug,
+      buyerName: input.nome.trim(),
+      buyerEmail: input.email.toLowerCase().trim(),
+      amountCents: manual.precoCents,
+      provider: "mercadopago",
+      status: "PENDING",
+    },
+  });
+
+  return {
+    orderId: order.id,
+    token: createPaymentToken(order.id),
+    amountCents: manual.precoCents,
+  };
+}
+
+/**
+ * Cobra o manual no cartão a partir do token gerado pelo Brick no navegador.
+ *
+ * O valor NÃO vem do cliente: é o preço fixo do manual gravado no pedido. Se
+ * aprovado na hora, marca e entrega (reusa finalizeManualOrder, idempotente).
+ * Recusa vira CardDeclinedError lá no createCardOrder e sobe para a rota.
+ */
+export async function payManualWithCard(
+  orderId: string,
+  input: {
+    token: string;
+    paymentMethodId: string;
+    installments: number;
+    issuerId?: string;
+    payerEmail?: string;
+    cpf?: string;
+  },
+): Promise<{ paid: boolean; pending: boolean; status: string }> {
+  const order = await db.manualOrder.findUnique({ where: { id: orderId } });
+  if (!order) throw new Error("Pedido não encontrado");
+  if (order.status === "PAID") return { paid: true, pending: false, status: "processed" };
+
+  const manual = getManual(order.manualSlug);
+  if (!manual) throw new Error("Manual não encontrado");
+
+  const mp = await createCardOrder({
+    appealId: order.id,
+    amountCents: order.amountCents,
+    description: `Manual em PDF - ${manual.titulo}`.slice(0, 120),
+    token: input.token,
+    paymentMethodId: input.paymentMethodId,
+    installments: input.installments,
+    issuerId: input.issuerId,
+    payer: {
+      email: input.payerEmail || order.buyerEmail,
+      firstName: order.buyerName.split(" ")[0] || undefined,
+      lastName: order.buyerName.split(" ").slice(1).join(" ") || undefined,
+      cpf: input.cpf?.replace(/\D/g, "") || undefined,
+    },
+  });
+
+  await db.manualOrder.update({
+    where: { id: orderId },
+    data: {
+      paymentMethod: "credit_card",
+      mercadopagoOrderId: mp.orderId,
+      mercadopagoPaymentId: mp.paymentId,
+      ...(mp.paid ? { status: "PAID", paidAt: new Date() } : {}),
+    },
+  });
+
+  if (mp.paid) await finalizeManualOrder(orderId);
+
+  const pending = mp.status === "processing" || mp.status === "action_required";
+  return { paid: mp.paid, pending, status: mp.status };
 }
 
 /**

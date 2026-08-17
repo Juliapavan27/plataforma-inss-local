@@ -28,3 +28,16 @@ export const PIX_DISCOUNT_PERCENT = Math.round(
  * atualizada no servidor), o selo diria "0% de desconto".
  */
 export const HAS_PIX_DISCOUNT = PIX_DISCOUNT_PERCENT > 0;
+
+/** Número máximo de parcelas no cartão (Diamante). */
+export const MAX_INSTALLMENTS = 12;
+
+/**
+ * Valor da parcela no máximo de vezes, em centavos (total ÷ 12).
+ *
+ * É a referência "sem juros" para a vitrine — só é exata na fatura se o
+ * Mercado Pago estiver com "parcelamento sem juros até 12x" ativado. Sem isso,
+ * o comprador paga juros e a parcela real fica maior; nesse caso, trocar o
+ * rótulo por "em até 12x" para não anunciar um número que não se cumpre.
+ */
+export const INSTALLMENT_CENTS = Math.round(PRICE_CARD_CENTS / MAX_INSTALLMENTS);
