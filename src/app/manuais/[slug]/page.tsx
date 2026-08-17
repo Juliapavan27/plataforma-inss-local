@@ -81,7 +81,7 @@ function FounderBand() {
           <img
             src="/julia-matos.jpeg"
             alt="Julia Matos, fundadora da Recurso Fácil"
-            className="h-24 w-24 flex-none rounded-2xl object-cover shadow-lift ring-2 ring-white/15"
+            className="h-32 w-32 flex-none rounded-2xl object-cover shadow-lift ring-2 ring-white/15"
           />
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gold-300">
